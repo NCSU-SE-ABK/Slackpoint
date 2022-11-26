@@ -1,3 +1,5 @@
+Current issues (as of November 25th): https://github.com/nehakale8/slackpoint/issues
+
 <img src = "https://user-images.githubusercontent.com/48649849/194794889-3d3dc808-25f7-4c91-bfd5-10f9294e2d41.png" width="1080" height="200"/> 
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
