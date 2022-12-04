@@ -31,7 +31,6 @@ def getUsers(channel_id):
     result = slack_client.conversations_members(channel= channel_id)
     for user in result['members']:
         info = slack_client.users_info(user = user).data
-        print(info)
         if 'real_name' in info['user'].keys(): 
             if(info['user']['real_name'] != 'bot'):
                 users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
@@ -51,7 +50,6 @@ def interactive_endpoint():
 
     """
     payload = json.loads(request.form.get("payload"))
-    print(payload)
     if payload["type"] == "block_actions":
         actions = payload["actions"]
         if len(actions) > 0:
