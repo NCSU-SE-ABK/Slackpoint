@@ -24,5 +24,16 @@ CREATE TABLE assignment (
       REFERENCES task(task_id)   
 );
 
-ALTER TABLE assignment
-  RENAME COLUMN dassignment_updated_on TO assignment_updated_on;
+
+CREATE SEQUENCE IF NOT EXISTS user_user_id_seq;
+
+SELECT SETVAL('user_user_id_seq', (
+  SELECT max(user_id) FROM "user")
+);
+
+ALTER TABLE "user"
+ALTER COLUMN user_id
+SET DEFAULT nextval('user_user_id_seq'::regclass);
+
+ALTER SEQUENCE user_user_id_seq
+OWNED BY "user".user_id;
