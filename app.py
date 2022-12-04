@@ -2,6 +2,7 @@ from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
 import json
+import psycopg2
 
 from commands.help import Help
 from models import db
@@ -25,6 +26,17 @@ slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
 
+def getUsers(channel_id): 
+    users = []
+    result = slack_client.conversations_members(channel= channel_id)
+    for user in result['members']:
+        info = slack_client.users_info(user = user).data
+        print(info)
+        if 'real_name' in info['user'].keys(): 
+            if(info['user']['real_name'] != 'bot'):
+                users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
+    return users
+
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -39,6 +51,7 @@ def interactive_endpoint():
 
     """
     payload = json.loads(request.form.get("payload"))
+    print(payload)
     if payload["type"] == "block_actions":
         actions = payload["actions"]
         if len(actions) > 0:
@@ -52,6 +65,7 @@ def interactive_endpoint():
                 desc = None
                 deadline = None
                 points = None
+                assignee = None
                 for _, val in state_values.items():
                     if "create_action_description" in val:
                         desc = val["create_action_description"]["value"]
@@ -64,13 +78,16 @@ def interactive_endpoint():
                             ]
                         else:
                             points = None
+                    elif "create_action_assignees" in val: 
+                        if val["create_action_assignees"]["selected_option"] is not None: 
+                            assignee = val["create_action_assignees"]["selected_option"]["value"]
                 if desc is None or deadline is None or points is None:
                     error_blocks = helper.get_error_payload_blocks("createtask")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline)
+                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, assignee=assignee)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -171,12 +188,13 @@ def create():
 
     """
 
-    ct = CreateTask()
-    blocks = ct.create_task_input_blocks()
-
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
+
+    ct = CreateTask(getUsers(channel_id))
+    blocks = ct.create_task_input_blocks()
+
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 

@@ -18,7 +18,7 @@ class CreateTask:
 
     greetings = ["Awesome", "Great", "Congratulations", "Well done", "Let's go"]
 
-    def __init__(self):
+    def __init__(self, users=[]):
         """
         Constructor to initialize payload object
 
@@ -33,6 +33,7 @@ class CreateTask:
             "response_type": "ephemeral", 
             "blocks": []
         }
+        self.users = users
 
     def create_task_input_blocks(self):
         """
@@ -98,6 +99,24 @@ class CreateTask:
             },
             "label": {"type": "plain_text", "text": "Points", "emoji": True},
         }
+
+        block_users = {
+            "type": "input",
+            "element": {
+                "type": "static_select",
+                "placeholder": {"type": "plain_text", "text": "Select", "emoji": True},
+                "options": [],
+                "action_id": "create_action_assignees",
+            },
+            "label": {"type": "plain_text", "text": "Assignees", "emoji": True},
+        }
+
+        for user in self.users: 
+            placeholder =  {"text": {"type": "plain_text", "emoji": False}}
+            placeholder["text"]["text"] = user["name"]
+            placeholder["value"] = user["user_id"]
+            block_users["element"]["options"].append(placeholder)
+        
         block_actions_button = {
             "type": "button",
             "text": {
@@ -113,10 +132,11 @@ class CreateTask:
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
+        blocks.append(block_users)
         blocks.append(block_actions)
         return blocks
 
-    def create_task(self, desc, points, deadline):
+    def create_task(self, desc, points, deadline, assignee):
         """
         Creates a task in database and returns payload with success message along with the newly created Task ID
 
@@ -143,9 +163,24 @@ class CreateTask:
         # task id
         id = task.task_id
 
-        # add the task in assignment, without user assignment
+        # check if user already exists in the user table
+        # if he/she doesn't exist, then add to the user table
+        # using the primary key id from the user table, assign user_id in the next block
+        exists = db.session.query(db.exists().where(User.slack_user_id == assignee)).scalar()
+        if not exists: 
+            user = User()
+            user.slack_user_id = assignee
+            db.session.add(user)
+            db.session.commit()
+            db.session.refresh(user)
+
+
+        # add the task in assignment, depending on whether assignee is None or not
         assignment = Assignment()
         assignment.assignment_id = id
+        if(assignee is not None): 
+            assignee_user_id = User.query.filter_by(slack_user_id=assignee).all()
+            assignment.user_id = assignee_user_id[0].user_id
         assignment.progress = 0
         db.session.add(assignment)
         db.session.commit()
