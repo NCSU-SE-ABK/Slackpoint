@@ -12,7 +12,7 @@ class Task(db.Model):
 
     __tablename__ = "task"
 
-    task_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    task_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.Text())
     points = db.Column(db.Integer)
     deadline = db.Column(db.Date)
