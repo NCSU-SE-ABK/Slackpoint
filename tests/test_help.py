@@ -1,5 +1,4 @@
 from commands.help import Help
-import sqlalchemy
 
 
 def test_help():
