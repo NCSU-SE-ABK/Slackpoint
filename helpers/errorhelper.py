@@ -45,7 +45,7 @@ class ErrorHelper:
         error["blocks"].extend(errorBlock_2)
         return error["blocks"]
 
-    def get_command_help(self, command):
+    def get_command_help(self, command, args=[]):
         """
         Get compiled error blocks for a particular command
 
@@ -65,4 +65,12 @@ class ErrorHelper:
             command_help = "The given Task was already completed!"
         elif command == "task_done":
             command_help = "Congratulations your task is completed now!"
+        elif command == "task_updated": 
+            command_help = "The task has been updated!"
+        elif command == "task_cannot_be_updated": 
+            command_help = "The task has not been assigned to you."
+        elif command == "task_assigned": 
+            command_help = "You have been assigned task #" + str(args[1]) + " by " + args[0]
+        elif command == "not_created_by_you": 
+            command_help = "You cannot modify this task."
         return command_help
