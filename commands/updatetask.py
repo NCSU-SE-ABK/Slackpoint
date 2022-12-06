@@ -148,12 +148,38 @@ class UpdateTask:
             },
             "label": {"type": "plain_text", "text": "Assignees", "emoji": True},
         }
+
+        selectedUser = {}
+
+        for user in self.users: 
+            placeholder =  {"text": {"type": "plain_text", "emoji": False}}
+            placeholder["text"]["text"] = user["name"]
+            placeholder["value"] = user["user_id"]
+            if(user["user_id"] == slack_user_id): 
+                selectedUser = placeholder
+            block_users["element"]["options"].append(placeholder)
+
+        block_users["element"]["initial_option"] = selectedUser
+        
+        block_actions_button = {
+            "type": "button",
+            "text": {
+                "type": "plain_text", 
+                "text": "Update task"
+            },
+            "action_id": "update_action_button",
+            "value": str(self.current_task_id)
+        }
+        block_actions = {"type": "actions", "elements": []}
+        block_actions["elements"].append(block_actions_button)
+
         blocks = []
         blocks.append(block_task_id)
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
         blocks.append(block_users)
+        blocks.append(block_actions)
         return blocks
 
 
