@@ -34,7 +34,7 @@ class UpdateTask:
             "response_type": "ephemeral", 
             "blocks": []
         }
-        self.user_id = user_id
+        self.user_id = db.session.query(User).filter_by(slack_user_id=user_id).all()[0].user_id
         self.data = data
         self.users = users
 
@@ -184,7 +184,7 @@ class UpdateTask:
 
 
 
-    def update_task(self, id, desc, points, deadline, assignee, created_by):
+    def update_task(self, id, desc, points, deadline, assignee):
         """
         Update a task in database and returns payload with success message.
 
