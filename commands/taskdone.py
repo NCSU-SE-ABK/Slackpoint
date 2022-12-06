@@ -74,8 +74,16 @@ class TaskDone:
         elif exists is True and task_progress[0].progress == 0.0:
 
             my_query = self.get_or_create(current_slack_id)
-            user_id = my_query.user_id
 
-            db.session.query(Assignment).filter_by(assignment_id=current_task_id).update(dict(progress=1.0, user_id=user_id))
-            db.session.commit()
-            return helper.get_command_help("task_done")
+            # check if the person who has been assigned the task is the one updating it
+            userId = db.session.query(Assignment).filter_by(assignment_id=current_task_id).all()[0].user_id
+            sameUser = db.session.query(User).filter_by(slack_user_id=current_slack_id).all()[0].user_id == userId
+
+            if(sameUser): 
+                user_id = my_query.user_id
+
+                db.session.query(Assignment).filter_by(assignment_id=current_task_id).update(dict(progress=1.0, user_id=user_id))
+                db.session.commit()
+                return helper.get_command_help("task_done")
+            else: 
+                return helper.get_command_help("task_cannot_be_updated")
