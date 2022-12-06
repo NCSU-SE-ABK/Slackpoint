@@ -94,13 +94,13 @@ def interactive_endpoint():
                 else:
                     id = None
                     if(actions[0]["action_id"] == "create_action_button"):
-                        blocks, id = ct.create_task(desc=desc, points=points, deadline=deadline, assignee=assignee)
+                        blocks, id = ct.create_task(desc=desc, points=points, deadline=deadline, assignee=assignee, created_by=user_id)
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
                     else: 
                         id = payload["actions"][0]["value"]
-                        blocks = ut.update_task(id=id, desc=desc, points=points, deadline=deadline, assignee=assignee, created_by=user_id)
+                        blocks = ut.update_task(id=id, desc=desc, points=points, deadline=deadline, assignee=assignee)
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
@@ -157,9 +157,6 @@ def vpending():
     elif(len(text) == 0):
         vp = ViewPoints(progress=0.0)
         payload = vp.get_list()
-
-    vp = ViewPoints(progress=0.0)
-    payload = vp.get_list()
 
     return jsonify(payload)
 
