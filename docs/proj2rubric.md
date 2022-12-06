@@ -19,7 +19,7 @@
 |Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|x|x|
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.|x|x|
-|Use of version control tools|x|x|
+|Use of version control tools|3|Github Commit History|
 |Test cases exist|x|x|
 |Test cases are routinely executed|x|x|
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|x|x|
