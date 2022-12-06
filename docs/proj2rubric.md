@@ -22,7 +22,7 @@
 |Use of version control tools|3|Github Commit History|
 |Test cases exist|x|x|
 |Test cases are routinely executed|x|x|
-|The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|x|x|
+|The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|3|https://github.com/kartikson1/slackpoint/blob/main/CONTRIBUTING.md|
 |Issues are discussed before they are closed|3|Github Closed Issues page|
 |Chat channel: exists|3|[Discord channel](https://discord.gg/2PKBMapCKz)|
 |Test cases: a large proportion of the issues related to handling failing cases.|x|x|
