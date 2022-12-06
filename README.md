@@ -41,81 +41,6 @@ Here is a list of features added during phase 2 of this project:
 - Update tasks: A major functionality that allows updating tasks has been added. A wide array of edge cases have been handled here (such as a person who has not created a task cannot update it, etc).
 - View tasks pending today: Users can view the list of tasks pending today.
 
-### How the Hell do you use this?
-
-List of miracles that slackpoint can perform✨:
-
-- Create a new task
-- Mark task as done
-- View pending tasks
-- View completed tasks
-- Ask for help
-
-lets go over these one by one...
-
-#### **1. Create new task:**
-
-You can create a new task by simple using the `/create-task` command. We ask for just a few more parameters in addition to that:
-
-Command: `/create`
-
-![Create Task GIF](https://i.imgur.com/lUtX23a.gif)
-
-This particular command will create a new task with the description as `Hey! This is my new task` having `100` points and a deadline of `15th October 2022`
-
-#### **2. Mark task as done:**
-
-Here you can mark a task as completed. You just need to give the task ID as a parameter
-
-Command: `/task-done [task ID]`
-
-Example:
-`/task-done 10214`
-
-![Task Done GIF](https://i.imgur.com/gOB6dVs.gif)
-
-This will mark the task having task ID `10214` as completed. Further, updates records to show that this task is completed by user who posted this command
-
-#### **3. View pending tasks:**
-
-This command will return the list of incomplete tasks. Relax! no parameters required here
-
-Command: `/viewpending [no parameters]`
-
-![View pending GIF](https://i.imgur.com/TAnNoSO.gif)
-
-Above command will display a list of pending tasks
-
-#### **4. View completed tasks:**
-
-Like the above command this will return a list of completed tasks. No parameters here as well!
-
-Command: `/viewcompleted [no parameter]`
-
-![View completed GIF](https://i.imgur.com/3SFQU2N.gif)
-
-Above command will display a list of completed tasks
-
-#### **5. Leaderboard:**
-
-Want to get competitive? Take a peek at the leaderboard and try to beat the winner!
-
-Command: `/leaderboard [no parameters]`
-
-![Leaderboard GIF](https://i.imgur.com/LNfVFHX.gif)
-
-It displays the list of the top performers on the channel along with their points.
-
-#### **6. Help:**
-
-Newbie at using slackpoint? You could use some help...
-
-Command: `/help [no parameters]`
-
-![Help GIF](https://i.imgur.com/RNykp6p.gif)
-
-This will provide you will all the available commands and how to use them. Same sh\*t this section is doing.
-
 ## Project documentation
 
 The `docs` folder incorporates all necessary documents and documentation in our project.
@@ -219,6 +144,82 @@ Next command to create the database - 'db.create_all()'
 - pylint
 - coverage
 - pytest-cov
+
+### How the Hell do you use this?
+
+List of miracles that slackpoint can perform✨:
+
+- Create a new task
+- Mark task as done
+- View pending tasks
+- View completed tasks
+- Ask for help
+
+lets go over these one by one...
+
+#### **1. Create new task:**
+
+You can create a new task by simple using the `/create-task` command. We ask for just a few more parameters in addition to that:
+
+Command: `/create`
+
+![Create Task GIF](https://i.imgur.com/lUtX23a.gif)
+
+This particular command will create a new task with the description as `Hey! This is my new task` having `100` points and a deadline of `15th October 2022`
+
+#### **2. Mark task as done:**
+
+Here you can mark a task as completed. You just need to give the task ID as a parameter
+
+Command: `/task-done [task ID]`
+
+Example:
+`/task-done 10214`
+
+![Task Done GIF](https://i.imgur.com/gOB6dVs.gif)
+
+This will mark the task having task ID `10214` as completed. Further, updates records to show that this task is completed by user who posted this command
+
+#### **3. View pending tasks:**
+
+This command will return the list of incomplete tasks. Relax! no parameters required here
+
+Command: `/viewpending [no parameters]`
+
+![View pending GIF](https://i.imgur.com/TAnNoSO.gif)
+
+Above command will display a list of pending tasks
+
+#### **4. View completed tasks:**
+
+Like the above command this will return a list of completed tasks. No parameters here as well!
+
+Command: `/viewcompleted [no parameter]`
+
+![View completed GIF](https://i.imgur.com/3SFQU2N.gif)
+
+Above command will display a list of completed tasks
+
+#### **5. Leaderboard:**
+
+Want to get competitive? Take a peek at the leaderboard and try to beat the winner!
+
+Command: `/leaderboard [no parameters]`
+
+![Leaderboard GIF](https://i.imgur.com/LNfVFHX.gif)
+
+It displays the list of the top performers on the channel along with their points.
+
+#### **6. Help:**
+
+Newbie at using slackpoint? You could use some help...
+
+Command: `/help [no parameters]`
+
+![Help GIF](https://i.imgur.com/RNykp6p.gif)
+
+This will provide you will all the available commands and how to use them. Same sh\*t this section is doing.
+
 
 ### Future of this project
 
