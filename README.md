@@ -7,16 +7,16 @@
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
 [![build](https://github.com/mithildani/se22-hw1-grp14/actions/workflows/test.yml/badge.svg)](https://github.com/nehakale8/slackpoint/actions)
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/nehakale8/slackpoint)](https://github.com/nehakale8/slackpoint/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/commits/main)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
 
 <!-- More badges: issues, closed issues, forks, build, contributors -->
 
-[![GitHub issues](https://img.shields.io/github/issues/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/issues?q=is%3Aissue+is%3Aclosed)
-![GitHub forks](https://img.shields.io/github/forks/kartikson1/Auction-Sphere?style=social)
-[![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/graphs/contributors)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/Auction-Sphere/actions)
+[![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
+![GitHub forks](https://img.shields.io/github/forks/kartikson1/slackpoint?style=social)
+[![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/graphs/contributors)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
 
 Gamify your slack tasks! 💻
 
