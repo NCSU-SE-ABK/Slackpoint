@@ -158,9 +158,6 @@ def vpending():
         vp = ViewPoints(progress=0.0)
         payload = vp.get_list()
 
-    vp = ViewPoints(progress=0.0)
-    payload = vp.get_list()
-
     return jsonify(payload)
 
 
