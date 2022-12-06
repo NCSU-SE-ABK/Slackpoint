@@ -185,4 +185,37 @@ class UpdateTask:
 
 
     def update_task(self, id, desc, points, deadline, assignee, created_by):
-        print("Update")
+        response = deepcopy(self.base_create_task_block_format)
+
+        creatorUserId = Task.query.filter_by(task_id=id).all()[0].created_by
+        sameUser = (creatorUserId == self.user_id)
+        if(not sameUser): 
+            response["text"]["text"] = "You are not allowed to make changes to this task."
+
+        else:
+
+            # check if the new user exists in the User table
+            exists = db.session.query(db.exists().where(User.slack_user_id == assignee)).scalar()
+            if not exists: 
+                user = User()
+                user.slack_user_id = assignee
+                db.session.add(user)
+                db.session.commit()
+                db.session.refresh(user)    
+            
+            # PK associated with the user added 
+            user_id = User.query.filter_by(slack_user_id=assignee).all()[0].user_id
+            #user_id = db.session.query(db.exists().where(User.slack_user_id == assignee)).all()[0]
+
+            # DB call to update task
+            db.session.query(Task).filter_by(task_id=id).update(dict(description=desc, points=points, deadline=deadline))  
+            db.session.commit()
+
+            # DB call to update assignment
+            db.session.query(Assignment).filter_by(assignment_id=id).update(dict(user_id=user_id))
+            db.session.commit()
+
+            response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=id)
+
+        self.payload["blocks"].append(response)
+        return self.payload["blocks"]
