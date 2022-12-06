@@ -230,6 +230,26 @@ def create():
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
+@app.route("/updatetask", methods=["POST"])
+def update(): 
+    """
+    Endpoint to update a task, this endpoint triggers an ephemeral message for the user to edit task details for updation
+    The form will be prepopulated with the values that were entered during the task creation/previous task updation
+    :param:
+    :type:
+    :raise:
+    :return: Response object with 200 HTTP status
+    :rtype: Response
+    """
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    ut = UpdateTask(user_id, data, getUsers(channel_id))
+    taskExists = ut.checkTaskID()
+    if taskExists:
+        blocks = ut.create_task_input_blocks()
+        slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
 
 @app.route("/help", methods=["POST"])
 def help():
