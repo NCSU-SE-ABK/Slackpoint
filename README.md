@@ -33,8 +33,9 @@ A lot of teams use Slack to get things done. However when you have ton of things
 # Project 2
 
 ## Scalability
-po
+
 - Deployment of the database from local to the cloud ☁️ - on Heroku Postgres which uses AWS EC2 instances at the backend to scale up and down dewpending on the amount of data
+
   <br/>
   <img src = './assets/HerokuDB.png' width='650' height='450'/>
   <br/>
