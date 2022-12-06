@@ -185,6 +185,20 @@ class UpdateTask:
 
 
     def update_task(self, id, desc, points, deadline, assignee, created_by):
+        """
+        Update a task in database and returns payload with success message.
+
+        :param desc: Description of task
+        :type desc: str
+        :param points: Points of task
+        :type points: int
+        :param deadline: Deadline of task
+        :type deadline: Date
+        :raise:
+        :return: Blocks list of response payload
+        :rtype: list
+
+        """
         response = deepcopy(self.base_create_task_block_format)
 
         creatorUserId = Task.query.filter_by(task_id=id).all()[0].created_by
