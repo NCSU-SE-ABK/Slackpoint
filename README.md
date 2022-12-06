@@ -8,7 +8,6 @@
 [![build](https://github.com/mithildani/se22-hw1-grp14/actions/workflows/test.yml/badge.svg)](https://github.com/nehakale8/slackpoint/actions)
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/nehakale8/slackpoint)](https://github.com/nehakale8/slackpoint/commits/main)
-[![codecov](https://codecov.io/gh/nehakale8/slackpoint/branch/main/graph/badge.svg?token=1H92SAVB5S)](https://codecov.io/gh/nehakale8/slackpoint)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
 
 <!-- More badges: issues, closed issues, forks, build, contributors -->
