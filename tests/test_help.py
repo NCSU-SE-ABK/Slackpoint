@@ -48,7 +48,18 @@ def test_help():
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.",
+                    "text": ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks. To view pending tasks only for yourself, just try the command */view-pending me*, and there you go! SlackPoint would show you a list of tasks assigned to you. To view pending tasks due today, just try the command */view-pending today*, and SlackPoint will show you a list of tasks with today's deadline.",
+                },
+            },
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": "*Update Task*"},
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text":  ">To update a task, just run the command */update-task* <Task ID>, edit the details and hit submit!",
                 },
             },
             {"type": "section", "text": {"type": "mrkdwn", "text": "*Leaderboard*"}},
@@ -77,4 +88,8 @@ def test_help():
             },
         ],
     }
+
+    print(payload)
+    print("*************")
+    print(expected_payload)
     assert payload == expected_payload
