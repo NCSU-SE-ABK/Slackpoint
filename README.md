@@ -1,6 +1,6 @@
 # Slackpoint 2.0
 
-<img src = "./assets/Logo.png" width="375" height="200"/> 
+<img src = "./assets/Logo.png" width="370" height="200"/> 
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
 [![DOI](https://zenodo.org/badge/570734706.svg)](https://zenodo.org/badge/latestdoi/570734706)
@@ -11,8 +11,6 @@
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/commits/main)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
-
-<!-- More badges: issues, closed issues, forks, build, contributors -->
 
 [![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
