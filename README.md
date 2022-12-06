@@ -18,6 +18,10 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/graphs/contributors)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
 
+Click on the image below to view the demo video of the project
+
+[![Demo Vidoe of the project](https://img.youtube.com/vi/AG6aSE3xFzE/0.jpg)](https://www.youtube.com/watch?v=AG6aSE3xFzE)
+
 Gamify your slack tasks! 💻
 
 A lot of teams use Slack to get things done. However when you have ton of things to do with no short term rewards in sight, it gets difficult to check off those tasks. That's where SlackPoint comes to the rescue! SlackPoint aims to make work more fun and get people motivated to finish their tasks by gamifying Slack!
