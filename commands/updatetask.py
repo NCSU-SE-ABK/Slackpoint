@@ -89,10 +89,24 @@ class UpdateTask:
             },
             "label": {"type": "plain_text", "text": "Description", "emoji": True},
         }
-
+        block_deadline = {
+            "type": "input",
+            "element": {
+                "type": "datepicker",
+                "initial_date": deadline,
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select a date",
+                    "emoji": True,
+                },
+                "action_id": "create_action_deadline",
+            },
+            "label": {"type": "plain_text", "text": "Deadline", "emoji": True},
+        }
         blocks = []
         blocks.append(block_task_id)
         blocks.append(block_description)
+        blocks.append(block_deadline)
         return blocks
 
 
