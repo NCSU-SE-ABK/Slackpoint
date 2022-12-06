@@ -56,3 +56,15 @@ class ViewDeadlineTasks:
                 deadline=task.deadline,
             )
             self.payload["blocks"].append(point)
+        if not self.payload["blocks"]:
+            self.payload["blocks"].append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": ">Currently there are no SlackPoints available",
+                    },
+                }
+            )
+        return self.payload
+
