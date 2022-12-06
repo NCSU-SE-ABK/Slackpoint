@@ -246,21 +246,3 @@ To overcome this fear and to take on challenges, we have named our group **Roach
 ### Chat Channel
 
 <code><a href="https://app.slack.com/client/T03VB79B2GG/C03U705CJ15" target="_blank"><img height="30" width="100" src="https://user-images.githubusercontent.com/111834635/194175304-834d5663-b6bb-4e38-981d-98bc1bf028b8.png"></a></code>
-
-### Meet our team
-
-- [@MithilDani](https://www.github.com/mithildani)
-  A studious nearsighted bespectacled charming individual who is an expert at building Django applications, designing optimal solutions and has an extensive work experience of 2 years in the IT industry.
-- [@NehaKale](https://www.github.com/nehakale8)
-  A hardworking bespectacled Machine Learning expert who has multiple AI and ML projects and research paper contributions. She is an expert at providing out-of-the-box solutions and always has an unique perspective.
-  She also provides our group with the much needed diversity :sweat_smile:
-- [@RishikeshYelne](https://www.github.com/rishikesh-yelne)
-  An old, very old, almost ancient bespectacled individual (so many bespectacled members :nerd*face:) with a work experience of 5 years in the IT industry. He is proficient and well-versed with the .NET Framework, which he claims to be highly relevant and at par with the newer technologies. Let's just respect his ancient age and agree with him for now. *-laughs in Python-\_
-- [@VanshMehta](https://github.com/vanshmehta-7)
-  A self-proclaimed charming good-looking handsome individual who is a Java enthusiast. A constant source of good jokes and efficient code, he has charmed his way into our group, just like Shah Rukh Khan does it in Bollywood movies.
-- [@RitwikVaidya](https://www.github.com/ritwik4690)
-  A no-nonsense serious and dedicated prankster / comedian of the group, with an unique knack at solving programming questions and a strong supporter of C++ programming language.
-
-### Reach out to us!
-
-For any doubts or queries, reach out to our Developer Team @ slackpoint.developers@gmail.com
