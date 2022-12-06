@@ -14,7 +14,7 @@
 |Number of commits: by different people|3|Commit History|
 |Issues reports: there are many|3|Issues are reported|
 |Issues are being closed|3|Issues are being closed|
-|DOI badge: exists|x|x|
+|DOI badge: exists|3|https://zenodo.org/badge/latestdoi/570734706|
 |Docs: doco generated, format not ugly|x|x|
 |Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|x|x|
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
