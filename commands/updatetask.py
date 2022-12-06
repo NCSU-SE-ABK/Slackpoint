@@ -103,10 +103,46 @@ class UpdateTask:
             },
             "label": {"type": "plain_text", "text": "Deadline", "emoji": True},
         }
+        block_points = {
+            "type": "input",
+            "element": {
+                "type": "static_select",
+                "placeholder": {"type": "plain_text", "text": "Select", "emoji": True},
+                "options": [
+                    {
+                        "text": {"type": "plain_text", "text": "1", "emoji": False},
+                        "value": "1",
+                    },
+                    {
+                        "text": {"type": "plain_text", "text": "2", "emoji": False},
+                        "value": "2",
+                    },
+                    {
+                        "text": {"type": "plain_text", "text": "3", "emoji": False},
+                        "value": "3",
+                    },
+                    {
+                        "text": {"type": "plain_text", "text": "4", "emoji": False},
+                        "value": "4",
+                    },
+                    {
+                        "text": {"type": "plain_text", "text": "5", "emoji": False},
+                        "value": "5",
+                    },
+                ],
+                "initial_option": {
+                    "text": {"type": "plain_text", "text": points, "emoji": False},
+                    "value": points,
+                },
+                "action_id": "create_action_points",
+            },
+            "label": {"type": "plain_text", "text": "Points", "emoji": True},
+        }
         blocks = []
         blocks.append(block_task_id)
         blocks.append(block_description)
         blocks.append(block_deadline)
+        blocks.append(block_points)
         return blocks
 
 
