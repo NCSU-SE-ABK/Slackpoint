@@ -34,12 +34,6 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 Here is a list of features added during phase 2 of this project:
 
-- Deployment of the database from local to the cloud ☁️ - on AWS RDS instances, via Heroku - https://slackpoint-server.herokuapp.com/.
-
-- Deployment of the server from ngrok to the cloud ☁️ - on AWS EC2 instances, via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
-  <br/>
-  <img src = './assets/HerokuDB.png' width='900' height='600'/>
-  <br/>
 - Functionality for assigning a user while creating task - tasks can now be assigned to different members of the slack channel.
 - Ensuring that the person updating task to completed has to be the same person who the task has been assigned to.
 - Viewpending tasks for me - Any user can now see what tasks assigned to them specifically are pending. This enables real-time agile board style coordination on slack.
