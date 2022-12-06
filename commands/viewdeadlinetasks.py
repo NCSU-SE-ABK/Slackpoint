@@ -3,6 +3,18 @@ from copy import deepcopy
 from models import *
 
 class ViewDeadlineTasks:
+    """
+    This class is used to view a list of tasks on the slack bot as per the user they have been assigned to
+    """
+
+    base_point_block_format = {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": ">SP-{id} ({points} SlackPoints) {description} [Deadline: {deadline}]",
+        },
+    }
+
     def __init__(self):
         """
         Initialise ViewTasks Class. Set progress for filtering tasks.
