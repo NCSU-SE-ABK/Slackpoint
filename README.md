@@ -30,7 +30,18 @@ A lot of teams use Slack to get things done. However when you have ton of things
 <br/>
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" height="40" /> PostgreSQL
 
-## Project 2 features
+# Project 2
+
+## Scalability
+
+- Deployment of the database from local to the cloud ☁️ - on AWS RDS instances, via Heroku - https://slackpoint-server.herokuapp.com/.
+
+- Deployment of the server from ngrok to the cloud ☁️ - on AWS EC2 instances, via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
+  <br/>
+  <img src = './assets/HerokuDB.png' width='60' height='40'/>
+  <br/>
+
+## Features
 
 Here is a list of features added during phase 2 of this project:
 
