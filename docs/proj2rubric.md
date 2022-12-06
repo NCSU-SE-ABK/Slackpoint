@@ -25,7 +25,7 @@
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|3|https://github.com/kartikson1/slackpoint/blob/main/CONTRIBUTING.md|
 |Issues are discussed before they are closed|3|Github Closed Issues page|
 |Chat channel: exists|3|[Discord channel](https://discord.gg/2PKBMapCKz)|
-|Test cases: a large proportion of the issues related to handling failing cases.|x|x|
+|Test cases: a large proportion of the issues related to handling failing cases.|2|https://github.com/kartikson1/slackpoint/issues|
 |Evidence that the whole team is using the same tools: everyone can get to all tools and files|3|Visible in [insights](https://github.com/kartikson1/slackpoint/graphs/contributors)|
 |Evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people)|3|Visible in GH [insights](https://github.com/kartikson1/slackpoint/graphs/contributors)|
 |Evidence that the whole team is using the same tools (e.g. tutor can ask anyone to share screen, they demonstrate the system running on their computer)|3|Visible in commits|
