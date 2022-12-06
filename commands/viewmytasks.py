@@ -27,3 +27,47 @@ class ViewMyTasks:
         """
         self.user_id = user_id
         self.payload = {"response_type": "ephemeral", "blocks": []}
+
+    def get_list(self):
+
+        tasks = []
+        # db query to get all tasks that have progress < 1
+
+        user_id = User.query.filter_by(slack_user_id=self.user_id).all()[0].user_id
+        tasks_with_progress = (
+            Task.query.join(Assignment)
+            .add_columns(
+                Assignment.user_id,
+                Assignment.progress,
+                Task.task_id,
+                Task.points,
+                Task.description,
+                Task.deadline,
+            )
+            .filter(Assignment.user_id == user_id)
+            .filter(Assignment.progress < 1)
+            .all()
+        )
+        tasks.extend(tasks_with_progress)
+
+        # parse them
+        for task in tasks:
+            point = deepcopy(self.base_point_block_format)
+            point["text"]["text"] = point["text"]["text"].format(
+                id=task.task_id,
+                points=task.points,
+                description=task.description,
+                deadline=task.deadline,
+            )
+            self.payload["blocks"].append(point)
+        if not self.payload["blocks"]:
+            self.payload["blocks"].append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": ">Currently there are no SlackPoints available",
+                    },
+                }
+            )
+        return self.payload
