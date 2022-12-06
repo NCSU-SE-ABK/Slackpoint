@@ -24,7 +24,7 @@
 |Test cases are routinely executed|x|x|
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|x|x|
 |Issues are discussed before they are closed|x|x|
-|Chat channel: exists|3|Discord channel|
+|Chat channel: exists|3|D[Discord channel](https://discord.gg/2PKBMapCKz)|
 |Test cases: a large proportion of the issues related to handling failing cases.|x|x|
 |Evidence that the whole team is using the same tools: everyone can get to all tools and files|3|Visible in [insights](https://github.com/kartikson1/slackpoint/graphs/contributors)|
 |Evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people)|3|Visible in GH [insights](https://github.com/kartikson1/slackpoint/graphs/contributors)|
