@@ -6,7 +6,7 @@ How can I contribute to this awesome initiative?
 
 #### (1) Clone the se22 repository and enter into it
 ```
-git clone https://github.com/nehakale8/slackpoint.git
+git clone https://github.com/kartikson1/slackpoint.git
 cd slackpoint
 ```
 
