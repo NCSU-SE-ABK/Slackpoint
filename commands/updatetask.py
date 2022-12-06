@@ -39,7 +39,17 @@ class UpdateTask:
         self.users = users
 
     def checkTaskID(self): 
-        print("Check")
+        helper = ErrorHelper()
+        self.current_task_id = int(self.data.get('text'))
+
+        # check if task id exists
+        exists = db.session.query(db.exists().where(Task.task_id == self.current_task_id)).scalar()
+
+        if exists: 
+            return True
+
+        else: 
+            helper.get_command_help("no_task_id")
 
 
     def update_task(self, id, desc, points, deadline, assignee, created_by):
