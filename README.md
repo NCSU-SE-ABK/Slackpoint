@@ -10,6 +10,14 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/nehakale8/slackpoint)](https://github.com/nehakale8/slackpoint/commits/main)
 [![codecov](https://codecov.io/gh/nehakale8/slackpoint/branch/main/graph/badge.svg?token=1H92SAVB5S)](https://codecov.io/gh/nehakale8/slackpoint)
 
+<!-- More badges: issues, closed issues, forks, build, contributors -->
+
+[![GitHub issues](https://img.shields.io/github/issues/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/issues?q=is%3Aissue+is%3Aclosed)
+![GitHub forks](https://img.shields.io/github/forks/kartikson1/Auction-Sphere?style=social)
+[![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/Auction-Sphere)](https://github.com/kartikson1/Auction-Sphere/graphs/contributors)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/Auction-Sphere/actions)
+
 Gamify your slack tasks! 💻
 
 A lot of teams use Slack to get things done. However when you have ton of things to do with no short term rewards in sight, it gets difficult to check off those tasks. That's where SlackPoint comes to the rescue! SlackPoint aims to make work more fun and get people motivated to finish their tasks by gamifying Slack!
