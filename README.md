@@ -1,6 +1,6 @@
 # Slackpoint 2.0
 
-<img src = "https://user-images.githubusercontent.com/48649849/194794889-3d3dc808-25f7-4c91-bfd5-10f9294e2d41.png" width="1080" height="200"/> 
+<img src = "./assets/Logo.png" width="1080" height="200"/> 
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
 [![DOI](https://zenodo.org/badge/570734706.svg)](https://zenodo.org/badge/latestdoi/570734706)
