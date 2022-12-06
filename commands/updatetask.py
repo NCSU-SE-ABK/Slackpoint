@@ -138,11 +138,22 @@ class UpdateTask:
             },
             "label": {"type": "plain_text", "text": "Points", "emoji": True},
         }
+        block_users = {
+            "type": "input",
+            "element": {
+                "type": "static_select",
+                "placeholder": {"type": "plain_text", "text": "Select", "emoji": True},
+                "options": [],
+                "action_id": "create_action_assignees",
+            },
+            "label": {"type": "plain_text", "text": "Assignees", "emoji": True},
+        }
         blocks = []
         blocks.append(block_task_id)
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
+        blocks.append(block_users)
         return blocks
 
 
