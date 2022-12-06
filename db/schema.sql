@@ -1,3 +1,9 @@
+
+TRUNCATE TABLE task;
+TRUNCATE TABLE "user";
+TRUNCATE TABLE assignment;
+
+
 CREATE TABLE task (
    task_id SERIAL PRIMARY KEY, 
    description VARCHAR(255),
@@ -23,17 +29,9 @@ CREATE TABLE assignment (
    FOREIGN KEY(assignment_id)
       REFERENCES task(task_id)   
 );
+ALTER TABLE task
+ADD COLUMN created_by INT;
 
+ALTER TABLE task
+ADD CONSTRAINT fk_task_user FOREIGN KEY(created_by) REFERENCES "user"(user_id);
 
-CREATE SEQUENCE IF NOT EXISTS user_user_id_seq;
-
-SELECT SETVAL('user_user_id_seq', (
-  SELECT max(user_id) FROM "user")
-);
-
-ALTER TABLE "user"
-ALTER COLUMN user_id
-SET DEFAULT nextval('user_user_id_seq'::regclass);
-
-ALTER SEQUENCE user_user_id_seq
-OWNED BY "user".user_id;
