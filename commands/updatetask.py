@@ -50,6 +50,40 @@ class UpdateTask:
 
         else: 
             helper.get_command_help("no_task_id")
+    def create_task_input_blocks(self):
+        """
+        Create blocks list containing input fields for description, deadline, points of a task, along with a button to update the task
+        Ensure that the fields are prepoulated with the values that already exist in the database
+
+        :param:
+        :type:
+        :raise:
+        :return: Blocks list
+        :rtype: list
+
+        """
+
+        task = db.session.query(Task).filter_by(task_id=self.current_task_id).all()[0]
+        description = str(task.description)
+        deadline = str(task.deadline.strftime("%Y-%m-%d"))
+        points = str(task.points)
+
+        user_id = db.session.query(Assignment).filter_by(assignment_id=self.current_task_id).all()
+        if(user_id): 
+            slack_user_id = db.session.query(User).filter_by(user_id=user_id[0].user_id).all()[0].slack_user_id
+
+        block_task_id = {
+            "type": "header", 
+            "text": {
+                "type": "plain_text", 
+                "text": "Task " + str(self.current_task_id) + ": ", 
+            }, 
+        }
+
+        blocks = []
+        blocks.append(block_task_id)
+        return blocks
+
 
 
     def update_task(self, id, desc, points, deadline, assignee, created_by):
