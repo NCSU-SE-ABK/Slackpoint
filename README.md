@@ -33,13 +33,14 @@ A lot of teams use Slack to get things done. However when you have ton of things
 # Project 2
 
 ## Scalability
-
-- Deployment of the database from local to the cloud ☁️ - on AWS RDS instances, via Heroku - https://slackpoint-server.herokuapp.com/.
-
-- Deployment of the server from ngrok to the cloud ☁️ - on AWS EC2 instances, via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
+po
+- Deployment of the database from local to the cloud ☁️ - on Heroku Postgres which uses AWS EC2 instances at the backend to scale up and down dewpending on the amount of data
   <br/>
   <img src = './assets/HerokuDB.png' width='650' height='450'/>
   <br/>
+
+- Deployment of the server from ngrok to the cloud ☁️ - via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
+  
 
 ## Features
 
