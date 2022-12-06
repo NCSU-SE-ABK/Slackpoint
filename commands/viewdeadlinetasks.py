@@ -46,3 +46,13 @@ class ViewDeadlineTasks:
         )
         tasks.extend(tasks_with_deadline)
 
+        # parse them
+        for task in tasks:
+            point = deepcopy(self.base_point_block_format)
+            point["text"]["text"] = point["text"]["text"].format(
+                id=task.task_id,
+                points=task.points,
+                description=task.description,
+                deadline=task.deadline,
+            )
+            self.payload["blocks"].append(point)
