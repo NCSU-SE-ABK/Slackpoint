@@ -147,6 +147,17 @@ def vpending():
     user_id = data.get("user_id")
     text = data.get("text")
 
+    payload = None
+    if(text == "me"):
+        vt = ViewMyTasks(user_id) 
+        payload = vt.get_list()
+    elif(text == "today"): 
+        vdt = ViewDeadlineTasks()
+        payload = vdt.get_list()
+    elif(len(text) == 0):
+        vp = ViewPoints(progress=0.0)
+        payload = vp.get_list()
+
     vp = ViewPoints(progress=0.0)
     payload = vp.get_list()
 
