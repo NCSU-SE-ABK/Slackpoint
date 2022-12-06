@@ -20,7 +20,7 @@
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.|x|x|
 |Use of version control tools|3|Github Commit History|
-|Test cases exist|x|x|
+|Test cases exist|1|x|
 |Test cases are routinely executed|x|x|
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|3|https://github.com/kartikson1/slackpoint/blob/main/CONTRIBUTING.md|
 |Issues are discussed before they are closed|3|Github Closed Issues page|
