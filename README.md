@@ -1,3 +1,5 @@
+# Slackpoint 2.0
+
 <img src = "https://user-images.githubusercontent.com/48649849/194794889-3d3dc808-25f7-4c91-bfd5-10f9294e2d41.png" width="1080" height="200"/> 
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
@@ -30,7 +32,6 @@ A lot of teams use Slack to get things done. However when you have ton of things
 <br/>
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" height="40" /> PostgreSQL
 
-# Project 2
 
 ## Scalability
 
@@ -76,10 +77,22 @@ Tech stack: Flask, PostgreSQL
 
 ## Run Locally
 
+Clone the project
+
+```bash
+  git clone https://github.com/kartikson1/slackpoint.git
+```
+
+Go to the project directory
+
+```bash
+  cd Slackpoint
+```
+
 Create a virtual environment:
 
 ```bash
-  python3.x -m venv test_env
+  python3 -m venv test_env
 ```
 
 Activate the virtual environment:
@@ -93,18 +106,6 @@ Windows:
 
 ```bash
   ./test_env/Scripts/activate
-```
-
-Clone the project
-
-```bash
-  git clone https://github.com/nehakale8/slackpoint.git
-```
-
-Go to the project directory
-
-```bash
-  cd Slackpoint
 ```
 
 Install dependencies
@@ -160,7 +161,8 @@ Next command to create the database - 'db.create_all()'
 - coverage
 - pytest-cov
 
-### How the Hell do you use this?
+
+# Slackpoint 1.0
 
 List of miracles that slackpoint can perform✨:
 
@@ -234,17 +236,6 @@ Command: `/help [no parameters]`
 ![Help GIF](https://i.imgur.com/RNykp6p.gif)
 
 This will provide you will all the available commands and how to use them. Same sh\*t this section is doing.
-
-
-### Future of this project
-
-- Assign users to tasks while creating each task
-- Add a command to reassign users
-- Add a command to edit an existing task
-- Progress of a task is currently binary. It can be improved to allow a percentage progress improvement
-- Deploy the service on the cloud
-- Improve code coverage
-- UI/UX: Improve leaderboard command response to show gifs/graphs to further make the leaderboard more attractive and gamify it
 
 
 ### Chat Channel
