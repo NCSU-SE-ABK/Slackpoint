@@ -239,6 +239,6 @@ Command: `/help [no parameters]`
 This will provide you will all the available commands and how to use them. Same sh\*t this section is doing.
 
 
-### Chat Channel
+### Old Chat Channel
 
 <code><a href="https://app.slack.com/client/T03VB79B2GG/C03U705CJ15" target="_blank"><img height="30" width="100" src="https://user-images.githubusercontent.com/111834635/194175304-834d5663-b6bb-4e38-981d-98bc1bf028b8.png"></a></code>
