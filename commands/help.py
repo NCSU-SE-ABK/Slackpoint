@@ -35,6 +35,12 @@ class Help:
         self.commands_dictionary["viewpending"] = [
             "*View Pending Task*",
             ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.",
+            ">To view pending tasks only for yourself, just try the command */view-pending me*, and there you go! SlackPoint would show you a list of tasks assigned to you.",
+            ">To view pending tasks due today, just try the command */view-pending today*, and SlackPoint will show you a list of tasks with today's deadline.",
+        ]
+        self.commands_dictionary["updatetask"] = [
+            "*Update Task*",
+            ">To update a task, just run the command */update-task* <Task ID>, edit the details and hit submit!",
         ]
         self.commands_dictionary["leaderboard"] = [
             "*Leaderboard*",
