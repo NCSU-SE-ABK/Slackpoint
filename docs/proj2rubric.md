@@ -20,8 +20,8 @@
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.|3|[README.md](https://github.com/kartikson1/slackpoint/blob/main/backend/README.md)|
 |Use of version control tools|3|Github Commit History|
-|Test cases exist|1|x|
-|Test cases are routinely executed|x|x|
+|Test cases exist|3|https://github.com/kartikson1/slackpoint/tree/main/tests|
+|Test cases are routinely executed|3|https://github.com/kartikson1/slackpoint/actions|
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|3|https://github.com/kartikson1/slackpoint/blob/main/CONTRIBUTING.md|
 |Issues are discussed before they are closed|3|Github Closed Issues page|
 |Chat channel: exists|3|[Discord channel](https://discord.gg/2PKBMapCKz)|
