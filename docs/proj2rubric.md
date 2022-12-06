@@ -8,12 +8,12 @@
 |Use of syntax checkers.|3||
 |Use of code coverage|x|x|
 |Other automated analysis tools|x|x|
-|Workload is spread over the whole team (one team member is often Xtimes more productive than the others...|x|x|
-|but nevertheless, here is a track record that everyone is contributing a lot)|x|x|
-|Number of commits|x|x|
-|Number of commits: by different people|x|x|
-|Issues reports: there are many|x|x|
-|Issues are being closed|x|x|
+|Workload is spread over the whole team (one team member is often Xtimes more productive than the others...|3|Insights|
+|but nevertheless, here is a track record that everyone is contributing a lot)|3|Insights|
+|Number of commits|3|Commit History|
+|Number of commits: by different people|3|Commit History|
+|Issues reports: there are many|3|Issues are reported|
+|Issues are being closed|3|Issues are being closed|
 |DOI badge: exists|x|x|
 |Docs: doco generated, format not ugly|x|x|
 |Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|x|x|
