@@ -80,8 +80,19 @@ class UpdateTask:
             }, 
         }
 
+        block_description = {
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "create_action_description",
+                "initial_value": description,
+            },
+            "label": {"type": "plain_text", "text": "Description", "emoji": True},
+        }
+
         blocks = []
         blocks.append(block_task_id)
+        blocks.append(block_description)
         return blocks
 
 
