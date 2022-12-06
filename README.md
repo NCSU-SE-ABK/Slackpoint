@@ -38,7 +38,7 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 - Deployment of the server from ngrok to the cloud ☁️ - on AWS EC2 instances, via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
   <br/>
-  <img src = './assets/HerokuDB.png' width='60' height='40'/>
+  <img src = './assets/HerokuDB.png' width='650' height='450'/>
   <br/>
 
 ## Features
