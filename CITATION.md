@@ -1,1 +1,1 @@
-Neha Kale, Vansh Mehta, Mithil Dani, Rishikesh Yelne, & Ritwik Vaidya. (2022). nehakale8/slackpoint: v1.0.0 (v1.0.0-alpha). Zenodo. https://doi.org/10.5281/zenodo.7145407
+Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). Group 3 CSC 510 Fall 2022. Version (1.0.0). Retrieved October 8, 2022, from https://doi.org/10.5281/zenodo.7402494
