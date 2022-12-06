@@ -52,7 +52,7 @@ class ViewDeadlineTasks:
                 Task.description,
                 Task.deadline,
             )
-            .filter(Task.deadline == datetime.utcnow().strftime("%Y-%m-%d"))
+            .filter(Task.deadline == datetime.now().strftime("%Y-%m-%d"))
             .filter(Assignment.progress < 1)
             .all()
         )
