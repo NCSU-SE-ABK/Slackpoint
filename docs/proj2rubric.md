@@ -6,7 +6,7 @@
 |Use of style checkers|3||
 |Use of code formatters.|3||
 |Use of syntax checkers.|3||
-|Use of code coverage|x|x|
+|Use of code coverage|3|https://app.codecov.io/gh/kartikson1/slackpoint|
 |Other automated analysis tools|x|x|
 |Workload is spread over the whole team (one team member is often Xtimes more productive than the others...|3|Insights|
 |but nevertheless, here is a track record that everyone is contributing a lot)|3|Insights|
@@ -15,7 +15,7 @@
 |Issues reports: there are many|3|Issues are reported|
 |Issues are being closed|3|Issues are being closed|
 |DOI badge: exists|3|https://zenodo.org/badge/latestdoi/570734706|
-|Docs: doco generated, format not ugly|x|x|
+|Docs: doco generated, format not ugly|1|x|
 |Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|x|x|
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.|x|x|
