@@ -1,6 +1,6 @@
 |Notes|Self Assessment|evidence|
 |-----|---------------|--------|
-|Video1|x|x|
+|Video2|x|x|
 |Bonus: Xfold improvement|x|x|
 |Docs: what: point descriptions of each class/function (in isolation)|x|x|
 |Use of style checkers|x|x|
