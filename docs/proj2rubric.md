@@ -15,8 +15,8 @@
 |Issues reports: there are many|3|Issues are reported|
 |Issues are being closed|3|Issues are being closed|
 |DOI badge: exists|3|https://zenodo.org/badge/latestdoi/570734706|
-|Docs: doco generated, format not ugly|1|x|
-|Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|x|x|
+|Docs: doco generated, format not ugly|1|https://github.com/kartikson1/slackpoint/tree/main/docs|
+|Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|3|Detailed demo present in Readme.md|
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|x|x|
 |Docs: short video, animated, hosted on your repo. That convinces people why they want to work on your code.|x|x|
 |Use of version control tools|3|Github Commit History|
