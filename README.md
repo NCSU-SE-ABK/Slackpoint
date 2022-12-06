@@ -230,18 +230,6 @@ Next command to create the database - 'db.create_all()'
 - Improve code coverage
 - UI/UX: Improve leaderboard command response to show gifs/graphs to further make the leaderboard more attractive and gamify it
 
-## Developed by RoachPack
-
-Heyy! We are a group of Graduate students at NC State University, or to be more specific, we are dreamers who want to be pioneers of the Computer Science world.
-Consider this homework to be one of our many steps at achieving our dreams! :wink:
-
-### Why RoachPack?
-
-Good question!
-We are international students, visiting the United States for the first time. We all live near the Centinnial campus of NC State University.
-Our eyes ready to take in the grandeur and technological advancements of the United States, we were rather welcomed by a group of Anthropods which we all are afraid of.
-Yup, you guessed it right. Cockroaches!
-To overcome this fear and to take on challenges, we have named our group **RoachPack**! :muscle:
 
 ### Chat Channel
 
