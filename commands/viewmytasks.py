@@ -29,7 +29,16 @@ class ViewMyTasks:
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def get_list(self):
+        """
+        Return a list of tasks formatted in a slack message payload.
 
+        :param None:
+        :type None:
+        :raise None:
+        :return: Slack message payload with list of tasks.
+        :rtype: dict
+
+        """
         tasks = []
         # db query to get all tasks that have progress < 1
 
