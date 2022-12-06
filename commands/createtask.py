@@ -136,7 +136,7 @@ class CreateTask:
         blocks.append(block_actions)
         return blocks
 
-    def create_task(self, desc, points, deadline, assignee):
+    def create_task(self, desc, points, deadline, assignee, created_by):
         """
         Creates a task in database and returns payload with success message along with the newly created Task ID
 
@@ -156,6 +156,18 @@ class CreateTask:
         task.description = desc
         task.points = points
         task.deadline = deadline
+
+        exists = db.session.query(db.exists().where(User.slack_user_id == created_by)).scalar()
+        if not exists: 
+            user = User()
+            user.slack_user_id = created_by
+            db.session.add(user)
+            db.session.commit()
+            db.session.refresh(user)
+
+        created_user_id = User.query.filter_by(slack_user_id=created_by).all()[0].user_id
+
+        task.created_by = created_user_id
         db.session.add(task)
         db.session.commit()
         db.session.refresh(task)
@@ -188,4 +200,4 @@ class CreateTask:
         response = deepcopy(self.base_create_task_block_format)
         response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=id)
         self.payload["blocks"].append(response)
-        return self.payload["blocks"]
+        return self.payload["blocks"], id
