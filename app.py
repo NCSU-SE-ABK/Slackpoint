@@ -18,6 +18,10 @@ from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
 
+import ssl
+import certifi
+
+from models import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
@@ -25,7 +29,8 @@ db.init_app(app)
 
 
 # instantiating slack client
-slack_client = WebClient(Config.SLACK_BOT_TOKEN)
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+slack_client = WebClient(Config.SLACK_BOT_TOKEN, ssl=ssl_context)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
