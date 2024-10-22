@@ -33,4 +33,12 @@ jobs:
       # Step 4: Run the tests with pytest
       - name: Run tests
         run: |
-          pytest
+          pytest > pytest_output.txt
+          cat pytest_output.txt
+
+      # Step 5: Post pytest results as a comment on the pull request
+      - name: Comment pytest results on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2.9.0
+        with:
+          path: pytest_output.txt
