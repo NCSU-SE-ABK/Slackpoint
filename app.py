@@ -407,5 +407,75 @@ def leaderboard():
     return jsonify(payload)
 
 
+
+# Function to send the reminder message
+def send_reminder(channel_id, message):
+    try:
+        # Enhanced formatted Slack reminder message
+        response = slack_client.chat_postMessage(
+            channel=channel_id,
+            blocks=[
+                {
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "⏰ Reminder Notification",
+                        "emoji": True
+                    }
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"*🔔 Reminder:* {message}"
+                    }
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": ":bell: This is your scheduled reminder. Stay on top of your tasks!"
+                        }
+                    ]
+                }
+            ]
+        )
+        print(f"Message sent to {channel_id}: {message}")
+    except SlackApiError as e:
+        # Print the specific error if there's an issue
+        print(f"Error sending reminder: {e.response['error']}")
+
+
+def get_channel_id(channel_name):
+    try:
+        response = slack_client.conversations_list()
+        channels = response['channels']
+        for channel in channels:
+            if channel['name'] == channel_name.strip("#"):  # Remove '#' if present
+                return channel['id']
+    except SlackApiError as e:
+        print(f"Error fetching channels: {e.response['error']}")
+    return None
+
+
+# Background thread to check and send reminders
+def reminder_worker():
+    while True:
+        now = datetime.now()
+        for reminder in reminders[:]:  # Copy to avoid mutation issues
+            if reminder["time"] <= now:
+                send_reminder(reminder["channel"], reminder["message"])
+                reminders.remove(reminder)
+        time.sleep(1)
+
+
+# Start the background worker
+threading.Thread(target=reminder_worker, daemon=True).start()
+
+print("Starting the server 1")
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
