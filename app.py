@@ -121,52 +121,52 @@ def interactive_endpoint():
                             blocks=[{"type": "section", "text": {"type": "plain_text", "text": message}}]
                         )
         # additional functionality for reminder interacivity
-        elif actions[0]["action_id"] == "submit_reminder":
-            # Extract selected date, time, and message
-            selected_date = payload["state"]["values"]["reminder_date"]["select_date"]["selected_date"]
-            selected_time = payload["state"]["values"]["reminder_time"]["select_time"]["selected_time"]
-            reminder_message = payload["state"]["values"]["reminder_message"]["message_input"]["value"]
-            channel_id = payload["channel"]["id"]
+            elif actions[0]["action_id"] == "submit_reminder":
+                # Extract selected date, time, and message
+                selected_date = payload["state"]["values"]["reminder_date"]["select_date"]["selected_date"]
+                selected_time = payload["state"]["values"]["reminder_time"]["select_time"]["selected_time"]
+                reminder_message = payload["state"]["values"]["reminder_message"]["message_input"]["value"]
+                channel_id = payload["channel"]["id"]
 
-            # Combine date and time to create a datetime object
-            reminder_datetime = datetime.strptime(f"{selected_date} {selected_time}", "%Y-%m-%d %H:%M")
+                # Combine date and time to create a datetime object
+                reminder_datetime = datetime.strptime(f"{selected_date} {selected_time}", "%Y-%m-%d %H:%M")
 
-            # Schedule the reminder
-            reminders.append({
-                "channel": channel_id,
-                "message": reminder_message,
-                "time": reminder_datetime
-            })
+                # Schedule the reminder
+                reminders.append({
+                    "channel": channel_id,
+                    "message": reminder_message,
+                    "time": reminder_datetime
+                })
 
-            # Build a nicely formatted confirmation response
-            response = {
-                "replace_original": True,
-                "blocks": [
-                    {
-                        "type": "header",
-                        "text": {"type": "plain_text", "text": "✅ Reminder Scheduled!"}
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": f"*Message:* {reminder_message}\n*Scheduled For:* {reminder_datetime.strftime('%A, %B %d at %I:%M %p')}"
-                        }
-                    },
-                    {
-                        "type": "divider"
-                    },
-                    {
-                        "type": "context",
-                        "elements": [
-                            {
+                # Build a nicely formatted confirmation response
+                response = {
+                    "replace_original": True,
+                    "blocks": [
+                        {
+                            "type": "header",
+                            "text": {"type": "plain_text", "text": "✅ Reminder Scheduled!"}
+                        },
+                        {
+                            "type": "section",
+                            "text": {
                                 "type": "mrkdwn",
-                                "text": ":bell: You'll receive a reminder in the specified channel at the scheduled time."
+                                "text": f"*Message:* {reminder_message}\n*Scheduled For:* {reminder_datetime.strftime('%A, %B %d at %I:%M %p')}"
                             }
-                        ]
-                    }
-                ]
-            }
+                        },
+                        {
+                            "type": "divider"
+                        },
+                        {
+                            "type": "context",
+                            "elements": [
+                                {
+                                    "type": "mrkdwn",
+                                    "text": ":bell: You'll receive a reminder in the specified channel at the scheduled time."
+                                }
+                            ]
+                        }
+                    ]
+                }
 
     return make_response("", 200)
 
