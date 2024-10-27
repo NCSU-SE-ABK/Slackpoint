@@ -18,6 +18,8 @@ from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
 
+# List to store reminders
+reminders = []
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
@@ -30,19 +32,19 @@ slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
 
-def getUsers(channel_id): 
+def getUsers(channel_id):
     users = []
     result = slack_client.conversations_members(channel= channel_id)
     for user in result['members']:
         info = slack_client.users_info(user = user).data
-        if 'real_name' in info['user'].keys(): 
+        if 'real_name' in info['user'].keys():
             if(info['user']['real_name'] != 'bot'):
                 users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
     return users
 
-def findName(slack_id, channel_id): 
-    for element in getUsers(channel_id): 
-        if(element['user_id'] == slack_id): 
+def findName(slack_id, channel_id):
+    for element in getUsers(channel_id):
+        if(element['user_id'] == slack_id):
             return element['name']
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
@@ -83,9 +85,9 @@ def interactive_endpoint():
                             ]
                         else:
                             points = None
-                    elif "create_action_assignees" in val: 
-                        if val["create_action_assignees"]["selected_option"] is not None: 
-                            assignee = val["create_action_assignees"]["selected_option"]["value"] 
+                    elif "create_action_assignees" in val:
+                        if val["create_action_assignees"]["selected_option"] is not None:
+                            assignee = val["create_action_assignees"]["selected_option"]["value"]
                 if desc is None or deadline is None or points is None:
                     error_blocks = helper.get_error_payload_blocks("createtask")
                     slack_client.chat_postEphemeral(
@@ -98,19 +100,66 @@ def interactive_endpoint():
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
-                    else: 
+                    else:
                         id = payload["actions"][0]["value"]
                         blocks = ut.update_task(id=id, desc=desc, points=points, deadline=deadline, assignee=assignee)
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
-                    if(assignee): 
+                    if(assignee):
                         assignerName = findName(user_id, channel_id)
-                        
+
                         message = "Task #" + str(id) + " has been assigned to you by " + assignerName
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=assignee, blocks=[{"type": "section", "text": {"type": "plain_text", "text": message}}]
                         )
+        # additional functionality for reminder interacivity
+        elif actions[0]["action_id"] == "submit_reminder":
+            # Extract selected date, time, and message
+            selected_date = payload["state"]["values"]["reminder_date"]["select_date"]["selected_date"]
+            selected_time = payload["state"]["values"]["reminder_time"]["select_time"]["selected_time"]
+            reminder_message = payload["state"]["values"]["reminder_message"]["message_input"]["value"]
+            channel_id = payload["channel"]["id"]
+
+            # Combine date and time to create a datetime object
+            reminder_datetime = datetime.strptime(f"{selected_date} {selected_time}", "%Y-%m-%d %H:%M")
+
+            # Schedule the reminder
+            reminders.append({
+                "channel": channel_id,
+                "message": reminder_message,
+                "time": reminder_datetime
+            })
+
+            # Build a nicely formatted confirmation response
+            response = {
+                "replace_original": True,
+                "blocks": [
+                    {
+                        "type": "header",
+                        "text": {"type": "plain_text", "text": "✅ Reminder Scheduled!"}
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"*Message:* {reminder_message}\n*Scheduled For:* {reminder_datetime.strftime('%A, %B %d at %I:%M %p')}"
+                        }
+                    },
+                    {
+                        "type": "divider"
+                    },
+                    {
+                        "type": "context",
+                        "elements": [
+                            {
+                                "type": "mrkdwn",
+                                "text": ":bell: You'll receive a reminder in the specified channel at the scheduled time."
+                            }
+                        ]
+                    }
+                ]
+            }
                         
     return make_response("", 200)
 
