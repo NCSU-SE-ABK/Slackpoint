@@ -3,7 +3,10 @@ from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
 import json
 import psycopg2
-import datetime
+from slack.errors import SlackApiError
+from datetime import datetime, timedelta
+import threading
+import time
 
 from commands.help import Help
 from models import db
@@ -25,27 +28,29 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
 db.init_app(app)
 
-
 # instantiating slack client
 slack_client = WebClient(Config.SLACK_BOT_TOKEN)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
 
+
 def getUsers(channel_id):
     users = []
-    result = slack_client.conversations_members(channel= channel_id)
+    result = slack_client.conversations_members(channel=channel_id)
     for user in result['members']:
-        info = slack_client.users_info(user = user).data
+        info = slack_client.users_info(user=user).data
         if 'real_name' in info['user'].keys():
-            if(info['user']['real_name'] != 'bot'):
+            if info['user']['real_name'] != "bot":
                 users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
     return users
 
+
 def findName(slack_id, channel_id):
     for element in getUsers(channel_id):
-        if(element['user_id'] == slack_id):
+        if element['user_id'] == slack_id:
             return element['name']
+
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -61,7 +66,7 @@ def interactive_endpoint():
     if payload["type"] == "block_actions":
         actions = payload["actions"]
         if len(actions) > 0:
-            if actions[0]["action_id"] in ["create_action_button", "update_action_button"] :
+            if actions[0]["action_id"] in ["create_action_button", "update_action_button"]:
                 # Create Task or Update Task - button was clicked
                 channel_id = payload["container"]["channel_id"]
                 user_id = payload["user"]["id"]
@@ -95,8 +100,9 @@ def interactive_endpoint():
                     )
                 else:
                     id = None
-                    if(actions[0]["action_id"] == "create_action_button"):
-                        blocks, id = ct.create_task(desc=desc, points=points, deadline=deadline, assignee=assignee, created_by=user_id)
+                    if (actions[0]["action_id"] == "create_action_button"):
+                        blocks, id = ct.create_task(desc=desc, points=points, deadline=deadline, assignee=assignee,
+                                                    created_by=user_id)
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
@@ -106,12 +112,13 @@ def interactive_endpoint():
                         slack_client.chat_postEphemeral(
                             channel=channel_id, user=user_id, blocks=blocks
                         )
-                    if(assignee):
+                    if (assignee):
                         assignerName = findName(user_id, channel_id)
 
                         message = "Task #" + str(id) + " has been assigned to you by " + assignerName
                         slack_client.chat_postEphemeral(
-                            channel=channel_id, user=assignee, blocks=[{"type": "section", "text": {"type": "plain_text", "text": message}}]
+                            channel=channel_id, user=assignee,
+                            blocks=[{"type": "section", "text": {"type": "plain_text", "text": message}}]
                         )
         # additional functionality for reminder interacivity
         elif actions[0]["action_id"] == "submit_reminder":
@@ -160,7 +167,7 @@ def interactive_endpoint():
                     }
                 ]
             }
-                        
+
     return make_response("", 200)
 
 
@@ -197,13 +204,13 @@ def vpending():
     text = data.get("text")
 
     payload = None
-    if(text == "me"):
-        vt = ViewMyTasks(user_id) 
+    if (text == "me"):
+        vt = ViewMyTasks(user_id)
         payload = vt.get_list()
-    elif(text == "today"): 
+    elif (text == "today"):
         vdt = ViewDeadlineTasks()
         payload = vdt.get_list()
-    elif(len(text) == 0):
+    elif (len(text) == 0):
         vp = ViewPoints(progress=0.0)
         payload = vp.get_list()
 
@@ -253,6 +260,71 @@ def taskdone():
     return jsonify(payload)
 
 
+@app.route("/reminder", methods=["POST"])
+def reminder():
+    channel_id = request.form.get("channel_id")
+    user_id = request.form.get("user_id")
+
+    # Send interactive message to capture date, time, and message
+    slack_client.chat_postMessage(
+        channel=channel_id,
+        blocks=[
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": "Please select the date, time, and message for your reminder."}
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "input",
+                "block_id": "reminder_date",
+                "element": {
+                    "type": "datepicker",
+                    "action_id": "select_date",
+                    "placeholder": {"type": "plain_text", "text": "Select a date"}
+                },
+                "label": {"type": "plain_text", "text": "Date"}
+            },
+            {
+                "type": "input",
+                "block_id": "reminder_time",
+                "element": {
+                    "type": "timepicker",
+                    "action_id": "select_time",
+                    "placeholder": {"type": "plain_text", "text": "Select a time"}
+                },
+                "label": {"type": "plain_text", "text": "Time"}
+            },
+            {
+                "type": "input",
+                "block_id": "reminder_message",
+                "element": {
+                    "type": "plain_text_input",
+                    "action_id": "message_input",
+                    "placeholder": {"type": "plain_text", "text": "Enter reminder message"}
+                },
+                "label": {"type": "plain_text", "text": "Message"}
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Set Reminder"},
+                        "action_id": "submit_reminder"
+                    }
+                ]
+            }
+        ],
+        text="Schedule a reminder",
+    )
+
+    return jsonify({"status": "success"}), 200
+
+
+
+
 @app.route("/create", methods=["POST"])
 def create():
     """
@@ -276,8 +348,9 @@ def create():
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
+
 @app.route("/updatetask", methods=["POST"])
-def update(): 
+def update():
     """
     Endpoint to update a task, this endpoint triggers an ephemeral message for the user to edit task details for updation
     The form will be prepopulated with the values that were entered during the task creation/previous task updation
@@ -296,6 +369,7 @@ def update():
         blocks = ut.create_task_input_blocks()
         slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
+
 
 @app.route("/help", methods=["POST"])
 def help():
