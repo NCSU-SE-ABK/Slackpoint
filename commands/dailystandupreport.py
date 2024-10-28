@@ -48,13 +48,11 @@ class DailyStandupReport:
             args=[]
         )
 
-        # Use app context to send a message when scheduling is complete
-        with self.app.app_context():
-            from app import slack_client
-            slack_client.chat_postMessage(
-                channel=self.channel_id,
-                text=f"Daily Standup Report schedule started - scheduled for {report_time}"
-            )
+        from app import slack_client
+        slack_client.chat_postMessage(
+            channel=self.channel_id,
+            text=f"Daily Standup Report schedule started - scheduled for {report_time}"
+        )
 
     def send_daily_report(self):
         """
