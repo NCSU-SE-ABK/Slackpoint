@@ -386,6 +386,18 @@ def leaderboard():
 
 # Function to send the reminder message
 def send_reminder(channel_id, message, task_id):
+    """
+    Function to send a reminder message to a specified Slack channel.
+
+    :param channel_id: The ID of the Slack channel where the reminder will be sent.
+    :type channel_id: str
+    :param message: The reminder message to be sent.
+    :type message: str
+    :param task_id: The ID of the task associated with the reminder.
+    :type task_id: str
+    :raise: SlackApiError if there is an error sending the message.
+    :return: None
+    """
     try:
         response = slack_client.chat_postMessage(
             channel=channel_id,
