@@ -17,7 +17,10 @@ from helpers.errorhelper import ErrorHelper
 from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
+from commands.requesthelp import RequestHelp
 
+import ssl
+import certifi
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
@@ -25,7 +28,8 @@ db.init_app(app)
 
 
 # instantiating slack client
-slack_client = WebClient(Config.SLACK_BOT_TOKEN)
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+slack_client = WebClient(Config.SLACK_BOT_TOKEN, ssl=ssl_context)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
@@ -37,7 +41,7 @@ def getUsers(channel_id):
         info = slack_client.users_info(user = user).data
         if 'real_name' in info['user'].keys(): 
             if(info['user']['real_name'] != 'bot'):
-                users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
+                users.append({"name": info['user']['real_name'], "user_id": info['user']['id'], "username": info['user']['name']})
     return users
 
 def findName(slack_id, channel_id): 
@@ -281,6 +285,27 @@ def leaderboard():
 
     l = Leaderboard()
     payload = l.view_leaderboard()
+    return jsonify(payload)
+
+@app.route("/requesthelp", methods=["POST"])
+def request_help():
+    """
+    Endpoint to request help on a task.
+
+    :return: JSON response with confirmation or error message.
+    :rtype: Response
+    """
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    text = data.get("text")
+
+    # Assume teammates are retrieved with their Slack IDs and names
+    teammates = getUsers(channel_id)
+
+    rh = RequestHelp(app, data, teammates=teammates)
+    payload = rh.request_help()
+
     return jsonify(payload)
 
 
