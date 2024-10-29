@@ -75,7 +75,7 @@ class RequestHelp:
                 self.payload["blocks"].append(response)
                 return self.payload
 
-            task_id = int(command_parts[1])  # Task ID should be the first part of the command
+            task_id = int(command_parts[0])  # Task ID should be the first part of the command
             user_id = self.data.get("user_id")
 
             # Validate task existence, ownership, and completion status
