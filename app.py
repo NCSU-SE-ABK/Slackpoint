@@ -196,6 +196,16 @@ def taskdone():
 
 @app.route("/reminder", methods=["POST"])
 def reminder():
+    """
+    Endpoint to set a reminder for a user. This endpoint triggers an interactive message
+    for the user to enter the date, time, message, and select a task for the reminder.
+
+    :param: None
+    :type: None
+    :raise: None
+    :return: Response object with status of the reminder setup
+    :rtype: Response
+    """
     channel_id = request.form.get("channel_id")
     user_id = request.form.get("user_id")
     print("User ID", user_id)
