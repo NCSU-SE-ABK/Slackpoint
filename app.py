@@ -437,6 +437,15 @@ def send_reminder(channel_id, message, task_id):
 
 
 def get_channel_id(channel_name):
+    """
+    Function to get the ID of a Slack channel given its name.
+
+    :param channel_name: The name of the Slack channel.
+    :type channel_name: str
+    :raise: SlackApiError if there is an error fetching the channels.
+    :return: The ID of the Slack channel if found, otherwise None.
+    :rtype: str or None
+    """
     try:
         response = slack_client.conversations_list()
         channels = response['channels']
