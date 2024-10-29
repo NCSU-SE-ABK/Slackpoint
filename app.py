@@ -292,7 +292,7 @@ def leaderboard():
 print("Starting standup report schedule")
 with app.app_context():
     slack_client.conversations_join(channel='C07T6TACHJA')
-    daily_report = DailyStandupReport("C07T6TACHJA")
+    daily_report = DailyStandupReport(app, "C07T6TACHJA")
     daily_report.schedule_daily_report(report_time="15:59")
 
 if __name__ == "__main__":

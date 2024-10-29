@@ -20,9 +20,10 @@ class DailyStandupReport:
         },
     }
 
-    def __init__(self, channel_id):
+    def __init__(self, app, channel_id):
         self.scheduler = BackgroundScheduler()
         self.scheduler.start()
+        self.app = app
         self.channel_id = channel_id
 
     def schedule_daily_report(self, report_time="09:00"):
@@ -49,63 +50,64 @@ class DailyStandupReport:
         )
 
         from app import slack_client
-        slack_client.chat_postMessage(
-            channel=self.channel_id,
-            text=f"Daily Standup Report schedule started - scheduled for {report_time}"
-        )
+        with self.app.app_context():
+            slack_client.chat_postMessage(
+                channel=self.channel_id,
+                text=f"Daily Standup Report schedule started - scheduled for {report_time}"
+            )
 
     def send_daily_report(self):
         """
         Compiles and sends the daily standup report to the Slack channel.
         """
-        # Push the app context before performing any database queries
         # Get list of users from the database
-        users = User.query.all()
+        with self.app.app_context():
+            users = User.query.all()
 
-        final_message = ""
+            final_message = ""
 
-        # Compile a report for each user
-        for user in users:
-            final_message += f"*Daily Standup Report for <@{user.slack_user_id}>*" + "\n\n"
+            # Compile a report for each user
+            for user in users:
+                final_message += f"*Daily Standup Report for <@{user.slack_user_id}>*" + "\n\n"
 
-            final_message += "*Recently completed tasks:*" + "\n"
+                final_message += "*Recently completed tasks:*" + "\n"
 
-            recently_completed = ViewMyTasks(user.slack_user_id).get_completed_tasks()
-            if recently_completed.get("blocks", []):
-                for block in recently_completed["blocks"]:
-                    final_message += block["text"]["text"] + "\n"
-            else:
-                final_message += "None" + "\n"
+                recently_completed = ViewMyTasks(user.slack_user_id).get_completed_tasks()
+                if recently_completed.get("blocks", []):
+                    for block in recently_completed["blocks"]:
+                        final_message += block["text"]["text"] + "\n"
+                else:
+                    final_message += "None" + "\n"
 
-            final_message += "\n"
+                final_message += "\n"
 
-            due_soon = ViewMyTasks(user.slack_user_id).get_upcoming_tasks()
+                due_soon = ViewMyTasks(user.slack_user_id).get_upcoming_tasks()
 
-            final_message += "*Tasks due soon:*" + "\n"
+                final_message += "*Tasks due soon:*" + "\n"
 
-            if due_soon.get("blocks", []):
-                for block in due_soon["blocks"]:
-                    final_message += block["text"]["text"] + "\n"
-            else:
-                final_message += "None" + "\n"
+                if due_soon.get("blocks", []):
+                    for block in due_soon["blocks"]:
+                        final_message += block["text"]["text"] + "\n"
+                else:
+                    final_message += "None" + "\n"
 
-            final_message += "\n"
+                final_message += "\n"
 
-            past_due = ViewMyTasks(user.slack_user_id).get_past_due_tasks()
+                past_due = ViewMyTasks(user.slack_user_id).get_past_due_tasks()
 
-            # final_message += f"|{past_due}|"
+                # final_message += f"|{past_due}|"
 
-            final_message += "*Tasks past due:*" + "\n"
+                final_message += "*Tasks past due:*" + "\n"
 
-            if past_due.get("blocks", []):
-                for block in past_due["blocks"]:
-                    final_message += block["text"]["text"] + "\n"
-            else:
-                final_message += "None" + "\n"
+                if past_due.get("blocks", []):
+                    for block in past_due["blocks"]:
+                        final_message += block["text"]["text"] + "\n"
+                else:
+                    final_message += "None" + "\n"
 
-            final_message += "\n\n\n"
+                final_message += "\n\n\n"
 
-        self.post_to_slack({"text": {"text": final_message}})
+            self.post_to_slack({"text": {"text": final_message}})
 
     def post_to_slack(self, report_payload):
         """
@@ -115,16 +117,17 @@ class DailyStandupReport:
         """
         try:
             from app import slack_client
-            blocks = report_payload.get("blocks", [])
-            if blocks:
-                slack_client.chat_postMessage(
-                    channel=self.channel_id,
-                    blocks=blocks
-                )
-            else:
-                slack_client.chat_postMessage(
-                    channel=self.channel_id,
-                    text=report_payload["text"]["text"]
-                )
+            with self.app.app_context():
+                blocks = report_payload.get("blocks", [])
+                if blocks:
+                    slack_client.chat_postMessage(
+                        channel=self.channel_id,
+                        blocks=blocks
+                    )
+                else:
+                    slack_client.chat_postMessage(
+                        channel=self.channel_id,
+                        text=report_payload["text"]["text"]
+                    )
         except Exception as e:
             print(f"Error sending message to Slack: {e}")
