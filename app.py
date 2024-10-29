@@ -459,6 +459,18 @@ def get_channel_id(channel_name):
 
 # Background thread to check and send reminders
 def reminder_worker():
+    """
+    Background worker function to check and send reminders at the scheduled time.
+
+    This function runs in an infinite loop, checking the current time against the
+    scheduled reminder times. If a reminder's time is due, it sends the reminder
+    message to the specified Slack channel and removes the reminder from the list.
+
+    :param: None
+    :type: None
+    :raise: None
+    :return: None
+    """
     while True:
         now = datetime.now()
         for reminder in reminders[:]:
