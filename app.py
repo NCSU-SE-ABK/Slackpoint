@@ -17,7 +17,12 @@ from helpers.errorhelper import ErrorHelper
 from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
+from commands.dailystandupreport import DailyStandupReport
 
+import ssl
+import certifi
+
+from models import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
@@ -25,7 +30,8 @@ db.init_app(app)
 
 
 # instantiating slack client
-slack_client = WebClient(Config.SLACK_BOT_TOKEN)
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+slack_client = WebClient(Config.SLACK_BOT_TOKEN, ssl=ssl_context)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
@@ -283,6 +289,11 @@ def leaderboard():
     payload = l.view_leaderboard()
     return jsonify(payload)
 
+print("Starting standup report schedule")
+with app.app_context():
+    slack_client.conversations_join(channel='C07T6TACHJA')
+    daily_report = DailyStandupReport(app, "C07T6TACHJA")
+    daily_report.schedule_daily_report(report_time="15:59")
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
