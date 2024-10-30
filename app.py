@@ -275,19 +275,30 @@ def leaderboard():
 @app.route("/requesthelp", methods=["POST"])
 def request_help():
     """
-    Endpoint to request help on a task.
+    Endpoint to request help on a task, notifying specified teammates.
 
     :return: JSON response with confirmation or error message.
     :rtype: Response
+
+    **Why**: Allows users to request assistance on tasks directly from Slack, helping facilitate team
+    collaboration by notifying selected teammates.
+
+    **How**:
+    - Send a Slack command in the format `/requesthelp {task_id} {@teammate1} [@teammate2] ...`
+      where `task_id` is the ID of the task and `@teammate` mentions the teammates to notify.
+    - The endpoint will:
+      1. Validate the task and the user’s ownership.
+      2. Notify the specified teammates if the task exists and is still in progress.
     """
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
     text = data.get("text")
 
-    # Assume teammates are retrieved with their Slack IDs and names
+    # Retrieve list of teammates in the channel with Slack IDs and names
     teammates = getUsers(channel_id)
 
+    # Create an instance of RequestHelp and process the help request
     rh = RequestHelp(app, data, teammates=teammates)
     payload = rh.request_help()
 
