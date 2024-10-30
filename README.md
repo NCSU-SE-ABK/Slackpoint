@@ -58,20 +58,16 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 ## Features
 
-Here is a list of features added during phase 2 of this project:
+Here is a list of features added during phase 3 of this project:
 
-- Functionality for assigning a user while creating task - tasks can now be assigned to different members of the slack channel.
-- Ensuring that the person updating task to completed has to be the same person who the task has been assigned to.
-- Viewpending tasks for me - Any user can now see what tasks assigned to them specifically are pending. This enables real-time agile board style coordination on slack.
-- Notifications: The person who the task is assigned to gets notified when this happens. Notifications have also been added for a variety of edge cases (for instance, if a user tries to mark a task not assigned to them as completed)
-- Update tasks: A major functionality that allows updating tasks has been added. A wide array of edge cases have been handled here (such as a person who has not created a task cannot update it, etc).
-- View tasks pending today: Users can view the list of tasks pending today.
+- Request help: Users can request help from any number of other users for a specific task.
 - Set reminders for upcoming tasks: Get reminded for upcoming tasks!
 - Daily standup notifications: See quickly who is doing what work as well as recently completed work and upcoming deadlines for each member of the team.
 
 ## Project documentation
 
 The `docs` folder incorporates all necessary documents and documentation in our project.
+Visit `docs/_build/html/autoapi/index.html`
 
 ## Tools used
 
