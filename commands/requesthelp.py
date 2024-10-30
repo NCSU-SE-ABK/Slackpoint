@@ -80,19 +80,37 @@ class RequestHelp:
 
             return True, ""
 
+    def process_help_command(self, command_parts):
+        task_id = int(command_parts[0])  # Task ID should be the first part of the command
+        user_id = self.data.get("user_id")
+
+        # Validate task existence, ownership, and completion status
+        valid, message = self.validate_task_and_user(task_id, user_id)
+        if not valid:
+            return message
+
+        # Extract teammate IDs
+        teammate_slack_ids = [
+            part for part in command_parts[1:] if part.startswith("@")
+        ]
+
+        teammate_slack_ids = [x[1:] for x in teammate_slack_ids]
+
+        # check teammates array where username is the slack_id and user_id is what we want instead
+        teammate_slack_user_ids = []
+        for x in teammate_slack_ids:
+            for teammate in self.teammates:
+                if x == teammate["username"]:
+                    teammate_slack_user_ids.append(teammate["user_id"])
+
+        return task_id, user_id, teammate_slack_user_ids
+
     def request_help(self):
         """
-        Processes the help request by validating the task and sending notifications to the specified teammates.
+        Processes the help request by validating the task and notifying teammates.
 
         :return: Payload with success message or error message.
         :rtype: dict
-
-        **Why**: Executes the core functionality of requesting help, validating the request, and notifying
-        teammates if conditions are met.
-        **How**: Example usage -
-        ```
-        response_payload = request_help.request_help()
-        ```
         """
         from app import slack_client
         with self.app.app_context():
@@ -105,23 +123,7 @@ class RequestHelp:
                 self.payload["blocks"].append(response)
                 return self.payload
 
-            task_id = int(command_parts[0])  # Task ID should be the first part of the command
-            user_id = self.data.get("user_id")
-
-            # Validate task existence, ownership, and completion status
-            valid, message = self.validate_task_and_user(task_id, user_id)
-            if not valid:
-                return message
-
-            # Extract teammate IDs
-            teammate_slack_ids = [part for part in command_parts[1:] if part.startswith("@")]
-            teammate_slack_ids = [x[1:] for x in teammate_slack_ids]
-
-            # Convert Slack usernames to user IDs based on teammates array
-            teammate_slack_user_ids = [
-                teammate["user_id"] for x in teammate_slack_ids
-                for teammate in self.teammates if x == teammate["username"]
-            ]
+            task_id, user_id, teammate_slack_user_ids = self.process_help_command(command_parts)
 
             # Notify teammates
             task_info = f"Task SP-{task_id}. Assigned to <@{user_id}>."
