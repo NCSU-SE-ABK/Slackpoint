@@ -20,6 +20,7 @@ from helpers.errorhelper import ErrorHelper
 from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
+from commands.requesthelp import RequestHelp
 from commands.dailystandupreport import DailyStandupReport
 
 import ssl
@@ -46,10 +47,10 @@ def getUsers(channel_id):
     users = []
     result = slack_client.conversations_members(channel=channel_id)
     for user in result['members']:
-        info = slack_client.users_info(user=user).data
-        if 'real_name' in info['user'].keys():
-            if info['user']['real_name'] != "bot":
-                users.append({"name": info['user']['real_name'], "user_id": info['user']['id']})
+        info = slack_client.users_info(user = user).data
+        if 'real_name' in info['user'].keys(): 
+            if(info['user']['real_name'] != 'bot'):
+                users.append({"name": info['user']['real_name'], "user_id": info['user']['id'], "username": info['user']['name']})
     return users
 
 
@@ -449,6 +450,27 @@ def leaderboard():
 
     l = Leaderboard()
     payload = l.view_leaderboard()
+    return jsonify(payload)
+
+@app.route("/requesthelp", methods=["POST"])
+def request_help():
+    """
+    Endpoint to request help on a task.
+
+    :return: JSON response with confirmation or error message.
+    :rtype: Response
+    """
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    text = data.get("text")
+
+    # Assume teammates are retrieved with their Slack IDs and names
+    teammates = getUsers(channel_id)
+
+    rh = RequestHelp(app, data, teammates=teammates)
+    payload = rh.request_help()
+
     return jsonify(payload)
 
 print("Starting standup report schedule")
