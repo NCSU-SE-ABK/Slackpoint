@@ -270,14 +270,19 @@ def taskdone():
 @app.route("/reminder", methods=["POST"])
 def reminder():
     """
-    Endpoint to set a reminder for a user. This endpoint triggers an interactive message
-    for the user to enter the date, time, message, and select a task for the reminder.
+    Endpoint to set a reminder for a user, prompting them to enter details like date, time, message, and
+    select a task. Sends an interactive Slack message with input fields for the reminder setup.
 
-    :param: None
-    :type: None
-    :raise: None
-    :return: Response object with status of the reminder setup
+    :return: JSON response with the status of the reminder setup.
     :rtype: Response
+
+    **Why**: Enables users to schedule task-related reminders directly from Slack, improving task management
+    and helping users stay on top of deadlines.
+
+    **How**:
+    - The user initiates the reminder command, and the bot fetches pending tasks for the user.
+    - A Slack message is sent, prompting the user to select a date, time, task, and message for the reminder.
+    - Example command: `/reminder`
     """
     channel_id = request.form.get("channel_id")
     user_id = request.form.get("user_id")
@@ -288,16 +293,16 @@ def reminder():
     pending_tasks = vt.get_list()["blocks"]
     print("Pending tasks", pending_tasks)
 
+    # Format task options for the interactive message
     task_options = [
-            {
-                "text": {"type": "plain_text", "text": task["text"]["text"]},
-                "value": task["text"]["text"].split(" ")[0].strip()
-            }
-            for task in pending_tasks
-        ]
-    # Ensure pending_tasks is a list of dictionaries
+        {
+            "text": {"type": "plain_text", "text": task["text"]["text"]},
+            "value": task["text"]["text"].split(" ")[0].strip()
+        }
+        for task in pending_tasks
+    ]
 
-    # Check if task_options is empty and handle it
+    # Handle case when no pending tasks are available
     if not task_options:
         task_options = [
             {
@@ -306,7 +311,7 @@ def reminder():
             }
         ]
 
-    # Send interactive message to capture date, time, message, and task
+    # Send interactive message to capture reminder details
     slack_client.chat_postMessage(
         channel=channel_id,
         blocks=[
@@ -373,6 +378,7 @@ def reminder():
     )
 
     return jsonify({"status": "success"}), 200
+
 
 @app.route("/create", methods=["POST"])
 def create():
