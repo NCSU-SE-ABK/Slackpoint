@@ -1,4 +1,6 @@
 from datetime import datetime
+from email.policy import default
+
 from sqlalchemy import ForeignKey
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,7 +19,7 @@ class Task(db.Model):
     points = db.Column(db.Integer)
     deadline = db.Column(db.Date)
     created_on = db.Column(db.DateTime, default=datetime.now())
-    updated_on = db.Column(db.DateTime)
+    updated_on = db.Column(db.DateTime, default=datetime.now())
     created_by = db.Column(db.Integer)
 
     __table_args__ = (db.UniqueConstraint("task_id"),)

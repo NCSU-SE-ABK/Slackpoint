@@ -82,7 +82,10 @@ class TaskDone:
             if(sameUser): 
                 user_id = my_query.user_id
 
-                db.session.query(Assignment).filter_by(assignment_id=current_task_id).update(dict(progress=1.0, user_id=user_id))
+                task_assignment = db.session.query(Assignment).filter_by(assignment_id=current_task_id).first()
+                task_assignment.progress = 1.0
+                task_assignment.user_id = user_id
+                task_assignment.updated_on = datetime.now()
                 db.session.commit()
                 return helper.get_command_help("task_done")
             else: 
