@@ -56,6 +56,77 @@ class DailyStandupReport:
                 text=f"Daily Standup Report schedule started - scheduled for {report_time}"
             )
 
+    def get_standup_message(self, users):
+        final_message = ""
+
+        print(f"|{users}|")
+
+        # Compile a report for each user
+        for user in users:
+            print(f"user: |{user}|")
+            # print all info about the user
+            print(f"user.slack_user_id: |{user.slack_user_id}|")
+            print(f"user.user_id: |{user.user_id}|")
+
+            final_message += f"*Daily Standup Report for <@{user.slack_user_id}>*" + "\n\n"
+
+            final_message += "*Recently completed tasks:*" + "\n"
+
+            recently_completed = ViewMyTasks(user.slack_user_id).get_completed_tasks()
+            tasks_added = False
+            for block in recently_completed.get("blocks", []):
+                text = block.get("text", {}).get("text")
+                if text:
+                    final_message += text + "\n"
+                    tasks_added = True
+            if not tasks_added:
+                final_message += "None\n"
+
+            final_message += "\n"
+
+            print("attempting to get upcoming tasks")
+            due_soon = ViewMyTasks(user.slack_user_id).get_upcoming_tasks()
+            print("got upcoming tasks")
+
+            final_message += "*Tasks due soon:*" + "\n"
+
+            upcoming_tasks = ViewMyTasks(user.slack_user_id).get_upcoming_tasks()
+            tasks_added = False
+            for block in upcoming_tasks.get("blocks", []):
+                text = block.get("text", {}).get("text")
+                if text:
+                    final_message += text + "\n"
+                    tasks_added = True
+            if not tasks_added:
+                final_message += "None\n"
+
+            final_message += "\n"
+
+            print("attempting to get past due tasks")
+            past_due = ViewMyTasks(user.slack_user_id).get_past_due_tasks()
+            print("got past due tasks")
+
+            # final_message += f"|{past_due}|"
+
+            final_message += "*Tasks past due:*" + "\n"
+
+            tasks_added = False
+            for block in past_due.get("blocks", []):
+                text = block.get("text", {}).get("text")
+                if text:
+                    final_message += text + "\n"
+                    tasks_added = True
+            if not tasks_added:
+                final_message += "None\n"
+
+            final_message += "\n\n\n"
+
+            print("end loop iteration")
+
+        print("returning: ", final_message)
+
+        return final_message
+
     def send_daily_report(self):
         """
         Compiles and sends the daily standup report to the Slack channel.
@@ -64,48 +135,7 @@ class DailyStandupReport:
         with self.app.app_context():
             users = User.query.all()
 
-            final_message = ""
-
-            # Compile a report for each user
-            for user in users:
-                final_message += f"*Daily Standup Report for <@{user.slack_user_id}>*" + "\n\n"
-
-                final_message += "*Recently completed tasks:*" + "\n"
-
-                recently_completed = ViewMyTasks(user.slack_user_id).get_completed_tasks()
-                if recently_completed.get("blocks", []):
-                    for block in recently_completed["blocks"]:
-                        final_message += block["text"]["text"] + "\n"
-                else:
-                    final_message += "None" + "\n"
-
-                final_message += "\n"
-
-                due_soon = ViewMyTasks(user.slack_user_id).get_upcoming_tasks()
-
-                final_message += "*Tasks due soon:*" + "\n"
-
-                if due_soon.get("blocks", []):
-                    for block in due_soon["blocks"]:
-                        final_message += block["text"]["text"] + "\n"
-                else:
-                    final_message += "None" + "\n"
-
-                final_message += "\n"
-
-                past_due = ViewMyTasks(user.slack_user_id).get_past_due_tasks()
-
-                # final_message += f"|{past_due}|"
-
-                final_message += "*Tasks past due:*" + "\n"
-
-                if past_due.get("blocks", []):
-                    for block in past_due["blocks"]:
-                        final_message += block["text"]["text"] + "\n"
-                else:
-                    final_message += "None" + "\n"
-
-                final_message += "\n\n\n"
+            final_message = self.get_standup_message(users)
 
             self.post_to_slack({"text": {"text": final_message}})
 
