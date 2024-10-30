@@ -1,30 +1,34 @@
 # Slackpoint 2.0
 
 <img src = "./assets/Logo.png" width="370" height="200"/> 
-  
+
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
-[![DOI](https://zenodo.org/badge/570734706.svg)](https://zenodo.org/badge/latestdoi/570734706)
+[![DOI](https://zenodo.org/badge/865016138.svg)](https://doi.org/10.5281/zenodo.13926072)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/slackpoint/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
-[![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/commits/main)
-[![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
+[![Language: Python](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
+[![GitHub top language](https://img.shields.io/github/languages/top/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://docs.python.org/3/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/commits/main)
 
-[![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
-![GitHub forks](https://img.shields.io/github/forks/kartikson1/slackpoint?style=social)
-[![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/graphs/contributors)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
+[![GitHub issues](https://img.shields.io/github/issues/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/pulls)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/pulls?q=is%3Apr+is%3Aclosed)
+![GitHub forks](https://img.shields.io/github/forks/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint?style=social)
+[![GitHub contributors](https://img.shields.io/github/contributors/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/graphs/contributors)
+
+Code coverage: [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
+Syntax checker and code formatter: [![code checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/code_formatter.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/code_formatter.yml)
+Style checker: [![Python Style Checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/style-checker.yml)
+Run unit tests: [![Run Tests](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/run-tests.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/tree/main/tests)
 
 Click on the image below to view the demo video of the project
 
-[![Demo Vidoe of the project](https://img.youtube.com/vi/AG6aSE3xFzE/0.jpg)](https://www.youtube.com/watch?v=AG6aSE3xFzE)
+[![Demo Vidoe of the project](hxxps://img.youtube.com/vi/AG6aSE3xFzE/0.jpg)](https://www.youtube.com/watch?v=AG6aSE3xFzE)
 
 Gamify your slack tasks! 💻
 
-A lot of teams use Slack to get things done. However when you have ton of things to do with no short term rewards in sight, it gets difficult to check off those tasks. That's where SlackPoint comes to the rescue! SlackPoint aims to make work more fun and get people motivated to finish their tasks by gamifying Slack!
+A lot of teams use Slack to get things done. However when you have ton of things to do with no short term rewards in sight, it gets difficult to check off those tasks. That's where Slackpoint comes to the rescue! Slackpoint aims to make work more fun and get people motivated to finish their tasks by gamifying Slack!
 
 ## Built with
 
@@ -37,9 +41,9 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 ## Scalability
 
-- Deployment of the server from ngrok to the cloud ☁️ - via Heroku. We no longer need re-routing of localhost to ngrok since our server has been deployed on the cloud (https://slackpoint-server.herokuapp.com/).
+- Deployment of the server from ngrok to the cloud ☁️ - via Heroku. 
 
-- Deployment of the database from local to the cloud ☁️ - on Heroku Postgres which uses AWS EC2 instances at the backend to scale up and down dewpending on the amount of data.
+- Deployment of the database from local to the cloud ☁️ - on Heroku Postgres which uses AWS EC2 instances at the backend to scale up and down depending on the amount of data.
 
   <br/>
   <img src = './assets/HerokuDB.png' width='650' height='450'/>
@@ -48,7 +52,7 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 ### Chat Channel
 
-<code><a href="https://app.slack.com/client/T04D1KLCU2Y/C04CZ600AHY" target="_blank"><img height="30" width="100" src="https://user-images.githubusercontent.com/111834635/194175304-834d5663-b6bb-4e38-981d-98bc1bf028b8.png"></a></code>
+<code>https://discord.com</code>
 
 
 ## Features
@@ -61,6 +65,8 @@ Here is a list of features added during phase 2 of this project:
 - Notifications: The person who the task is assigned to gets notified when this happens. Notifications have also been added for a variety of edge cases (for instance, if a user tries to mark a task not assigned to them as completed)
 - Update tasks: A major functionality that allows updating tasks has been added. A wide array of edge cases have been handled here (such as a person who has not created a task cannot update it, etc).
 - View tasks pending today: Users can view the list of tasks pending today.
+- Set reminders for upcoming tasks: Get reminded for upcoming tasks!
+- Daily standup notifications: See quickly who is doing what work as well as recently completed work and upcoming deadlines for each member of the team.
 
 ## Project documentation
 
@@ -70,106 +76,11 @@ The `docs` folder incorporates all necessary documents and documentation in our 
 
 Code formatter: black and flake8
 
-Tech stack: Flask, PostgreSQL
-
 ## 📖 Getting started:
 
-- ### Prerequisite:
-  - Download [Python3.x](https://www.python.org/downloads/).
-  - Download [Flask](https://flask.palletsprojects.com/en/2.2.x/installation/).
-  - Download [PostgreSQL](https://www.postgresql.org/download/)
-  - Download [Pgadmin](https://www.pgadmin.org/download/)
+See [INSTALL.md](INSTALL.md)
 
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/kartikson1/slackpoint.git
-```
-
-Go to the project directory
-
-```bash
-  cd Slackpoint
-```
-
-Create a virtual environment:
-
-```bash
-  python3 -m venv test_env
-```
-
-Activate the virtual environment:
-Linux/MacOS:
-
-```bash
-  source test_env/bin/activate
-```
-
-Windows:
-
-```bash
-  ./test_env/Scripts/activate
-```
-
-Install dependencies
-
-```bash
-  pip install -r requirements.txt
-```
-
-Log on to api.slack.com and create your own slack bot.
-
-On ngrok shell run 'ngrok http 5000' to get the public IP address in your local machine.
-
-Add all the /commands in the bot configuration and paste the url from ngrok shell to requesting url section in the bot configuration.
-
-Finally, change the URL in interactivity and shortcuts, URL: <BaseURL>/slack/interactive-endpoint.
-
-Start the server
-
-```bash
-  flask run
-```
-
-     - Site will be hosted at:
-       `http://127.0.0.1:5000/`
-
-Before creating the database,
-
-(1) Create a database in PgAdmin with any name convention.
-
-(2) Change the local path of PostgreSQL in .env file (DATABASE_URL= 'postgresql://postgres:(password)@localhost/(database name from PgAdmin')
-
-(3) Provide the Slack sigining secret and Slack bot token from the bot you created.
-
-To create tables in the database,
-
-```bash
-First run the command 'flask shell'
-Next command to create the database - 'db.create_all()'
-```
-
-### Project Dependencies
-
-- flask
-- slackclient
-- python-dotenv
-- slackeventsapi
-- flask-sqlalchemy
-- psycopg2
-- pytest
-- pytest-mock
-- black
-- pylint
-- coverage
-- pytest-cov
-
-
-# Slackpoint 1.0
-
-List of miracles that slackpoint can perform✨:
+## List of miracles that Slackpoint can perform✨:
 
 - Create a new task
 - Mark task as done
@@ -177,7 +88,7 @@ List of miracles that slackpoint can perform✨:
 - View completed tasks
 - Ask for help
 
-lets go over these one by one...
+Let's go over these one by one...
 
 #### **1. Create new task:**
 
@@ -239,3 +150,26 @@ Newbie at using slackpoint? You could use some help...
 Command: `/help [no parameters]`
 
 ![Help GIF](https://i.imgur.com/RNykp6p.gif)
+
+
+#### **7. Request Help:**
+
+Request for help from teammates on your task
+
+Command: `/requesthelp {id} {teammate} [other teammates...]`
+
+
+#### **8. Daily Standup:**
+
+Get information about each teammates' upcoming, previous, and current tasks assigned to them
+
+Command: `/requesthelp {id} {teammate} [other teammates...]`
+
+
+#### **7. Set reminders:**
+
+Set reminders for your upcoming tasks so you don't forget about them
+
+Command: `/reminder`
+
+
