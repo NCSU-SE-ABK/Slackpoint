@@ -67,7 +67,8 @@ Here is a list of features added during phase 3 of this project:
 ## Project documentation
 
 The `docs` folder incorporates all necessary documents and documentation in our project.
-Visit `docs/_build/html/autoapi/index.html`
+
+Visit `docs/_build/html/autoapi/index.html` for the html version of our documentation
 
 ## Tools used
 
@@ -160,7 +161,9 @@ Command: `/requesthelp {id} {teammate} [other teammates...]`
 
 Get information about each teammates' upcoming, previous, and current tasks assigned to them
 
-Command: `/requesthelp {id} {teammate} [other teammates...]`
+Command: `[none]`
+
+Automatically sent to a specific channel at a configurable time.
 
 
 #### **7. Set reminders:**
