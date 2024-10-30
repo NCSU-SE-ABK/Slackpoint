@@ -17,7 +17,8 @@
 ![GitHub forks](https://img.shields.io/github/forks/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/graphs/contributors)
 
-Code coverage: [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
+Code coverage (develop): [![codecov](https://codecov.io/gh/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/branch/develop/graph/badge.svg?token=A82OVFZBYL)](https://codecov.io/gh/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)
+Code coverage (main): [![codecov](https://codecov.io/gh/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/graph/badge.svg?token=A82OVFZBYL)](https://codecov.io/gh/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint)
 Syntax checker and code formatter: [![code checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/code_formatter.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/code_formatter.yml)
 Style checker: [![Python Style Checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/style-checker.yml)
 Run unit tests: [![Run Tests](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/run-tests.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/tree/main/tests)
