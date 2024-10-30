@@ -2,7 +2,6 @@ from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
 import json
-import psycopg2
 import datetime
 
 from commands.help import Help
