@@ -23,6 +23,11 @@ jobs:
         run: |
           pip install -r requirements.txt
           echo requirements installed
+      - name: Replace secrets in test file
+        run: |
+          sed -i 's/ACTIONS_SLACK_BOT_TOKEN/${{ secrets.ACTIONS_SLACK_BOT_TOKEN }}/g' tests/conftest.py
+          sed -i 's/ACTIONS_SLACK_SIGNING_SECRET/${{ secrets.ACTIONS_SLACK_SIGNING_SECRET }}/g' tests/conftest.py
+          sed -i 's/ACTIONS_VERIFICATION_TOKEN/${{ secrets.ACTIONS_VERIFICATION_TOKEN }}/g' tests/conftest.py
       - name: Run the tests
         run: |
           pytest --cov=./ --cov-report=xml
