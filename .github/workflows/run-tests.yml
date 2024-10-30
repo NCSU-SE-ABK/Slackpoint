@@ -33,13 +33,20 @@ jobs:
           sed -i '/psycopg2/d' requirements.txt
           pip install -r requirements.txt
 
-      # Step 4: Run the tests with pytest
+      # Step 4: Set up ACTIONS_SLACK_BOT_TOKEN in your file
+      - name: Replace secrets in test file
+        run: |
+          sed -i 's/ACTIONS_SLACK_BOT_TOKEN/${{ secrets.ACTIONS_SLACK_BOT_TOKEN }}/g' tests/conftest.py
+          sed -i 's/ACTIONS_SLACK_SIGNING_SECRET/${{ secrets.ACTIONS_SLACK_SIGNING_SECRET }}/g' tests/conftest.py
+          sed -i 's/ACTIONS_VERIFICATION_TOKEN/${{ secrets.ACTIONS_VERIFICATION_TOKEN }}/g' tests/conftest.py
+
+      # Step 5: Run the tests with pytest
       - name: Run tests
         run: |
           pytest > pytest_output.txt
           cat pytest_output.txt
 
-      # Step 5: Post pytest results as a comment on the pull request
+      # Step 6: Post pytest results as a comment on the pull request
       - name: Comment pytest results on PR
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2.9.0

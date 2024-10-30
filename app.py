@@ -2,7 +2,6 @@ from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
 import json
-import psycopg2
 import datetime
 
 from commands.help import Help
@@ -18,9 +17,12 @@ from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
 from commands.requesthelp import RequestHelp
+from commands.dailystandupreport import DailyStandupReport
 
 import ssl
 import certifi
+
+from models import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
@@ -308,6 +310,11 @@ def request_help():
 
     return jsonify(payload)
 
+print("Starting standup report schedule")
+with app.app_context():
+    slack_client.conversations_join(channel='C07T6TACHJA')
+    daily_report = DailyStandupReport(app, "C07T6TACHJA")
+    daily_report.schedule_daily_report(report_time="15:59")
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
