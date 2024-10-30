@@ -5,7 +5,17 @@ from models import *
 
 class CreateTask:
     """
-    This class handles the Create Task functionality.
+    This class handles task creation functionality, including user assignment and
+    Slack-compatible response generation to confirm task creation.
+
+    **Why**: Motivation for use cases where automated task creation and assignment are needed,
+    especially in environments leveraging Slack for task management, making it easier to
+    create, assign, and confirm tasks within a collaborative workspace.
+
+    **How**: Common usage examples:
+    1. `CreateTask.create_task_input_blocks()`: Prepares the Slack-compatible input UI for task details.
+    2. `CreateTask.create_task(desc, points, deadline, assignee, created_by)`: Creates a task with
+       specified attributes and stores it in the database.
     """
 
     base_create_task_block_format = {
@@ -20,31 +30,38 @@ class CreateTask:
 
     def __init__(self, users=[]):
         """
-        Constructor to initialize payload object
+        Initializes the CreateTask object with optional users for assignment.
 
-        :param:
-        :type:
-        :raise:
+        :param users: List of users available for task assignment.
+        :type users: list of dict, each with 'name' and 'user_id' keys.
         :return: None
-        :rtype: None
 
+        **Why**: Use this constructor to initialize the payload and user list for assignment options.
+        **How**: Example usage -
+        ```
+        users = [{"name": "John Doe", "user_id": "U12345"}]
+        task_creator = CreateTask(users)
+        ```
         """
         self.payload = {
-            "response_type": "ephemeral", 
+            "response_type": "ephemeral",
             "blocks": []
         }
         self.users = users
 
     def create_task_input_blocks(self):
         """
-        Create blocks list containing input fields for description, deadline, points of a task, along with a button to create the task
+        Creates a list of Slack-compatible input blocks for task creation.
 
-        :param:
-        :type:
-        :raise:
-        :return: Blocks list
+        :return: A list of blocks, each representing an input field or button.
         :rtype: list
 
+        **Why**: This function provides Slack's interactive message structure, allowing users to input
+        task details like description, deadline, points, and assignees in a standardized format.
+        **How**: Example usage -
+        ```
+        blocks = task_creator.create_task_input_blocks()
+        ```
         """
         block_description = {
             "type": "input",
@@ -111,16 +128,16 @@ class CreateTask:
             "label": {"type": "plain_text", "text": "Assignees", "emoji": True},
         }
 
-        for user in self.users: 
+        for user in self.users:
             placeholder =  {"text": {"type": "plain_text", "emoji": False}}
             placeholder["text"]["text"] = user["name"]
             placeholder["value"] = user["user_id"]
             block_users["element"]["options"].append(placeholder)
-        
+
         block_actions_button = {
             "type": "button",
             "text": {
-                "type": "plain_text", 
+                "type": "plain_text",
                 "text": "Create task"
             },
             "action_id": "create_action_button",
@@ -138,7 +155,7 @@ class CreateTask:
 
     def create_task(self, desc, points, deadline, assignee, created_by):
         """
-        Creates a task in database and returns payload with success message along with the newly created Task ID
+        Creates a task in the database and prepares a success message with task ID.
 
         :param desc: Description of task
         :type desc: str
@@ -146,10 +163,19 @@ class CreateTask:
         :type points: int
         :param deadline: Deadline of task
         :type deadline: Date
-        :raise:
-        :return: Blocks list of response payload
-        :rtype: list
+        :param assignee: User ID of the assignee
+        :type assignee: str
+        :param created_by: User ID of the creator
+        :type created_by: str
+        :return: Response blocks and Task ID
+        :rtype: tuple(list, int)
 
+        **Why**: Provides an efficient way to manage task records in the database, while generating a
+        Slack-friendly confirmation message for the task creator.
+        **How**: Example usage -
+        ```
+        response, task_id = task_creator.create_task("New feature", 3, "2023-12-01", "U67890", "U12345")
+        ```
         """
         # DB call to add task, returns id
         task = Task()
@@ -158,7 +184,7 @@ class CreateTask:
         task.deadline = deadline
 
         exists = db.session.query(db.exists().where(User.slack_user_id == created_by)).scalar()
-        if not exists: 
+        if not exists:
             user = User()
             user.slack_user_id = created_by
             db.session.add(user)
@@ -175,11 +201,8 @@ class CreateTask:
         # task id
         id = task.task_id
 
-        # check if user already exists in the user table
-        # if he/she doesn't exist, then add to the user table
-        # using the primary key id from the user table, assign user_id in the next block
         exists = db.session.query(db.exists().where(User.slack_user_id == assignee)).scalar()
-        if not exists: 
+        if not exists:
             user = User()
             user.slack_user_id = assignee
             db.session.add(user)
@@ -190,7 +213,7 @@ class CreateTask:
         # add the task in assignment, depending on whether assignee is None or not
         assignment = Assignment()
         assignment.assignment_id = id
-        if(assignee is not None): 
+        if assignee is not None:
             assignee_user_id = User.query.filter_by(slack_user_id=assignee).all()
             assignment.user_id = assignee_user_id[0].user_id
         assignment.progress = 0

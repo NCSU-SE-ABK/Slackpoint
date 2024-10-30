@@ -1,11 +1,16 @@
 from copy import deepcopy
-
 from models import Task, Assignment
-
 
 class ViewPoints:
     """
-    This class is used to view a list of tasks on the slack bot as per their progress.
+    This class retrieves and displays tasks filtered by their completion progress, formatted for Slack.
+
+    **Why**: Useful for users who want to view tasks based on their completion status, providing a clear view of
+    tasks in progress or those that are completed.
+
+    **How**: Common usage examples:
+    1. `ViewPoints(progress=0.0).get_list()`: Retrieve a list of tasks that are incomplete.
+    2. `ViewPoints(progress=1.0).get_list()`: Retrieve a list of tasks that are completed.
     """
 
     base_point_block_format = {
@@ -18,31 +23,36 @@ class ViewPoints:
 
     def __init__(self, progress: float = 0.0):
         """
-        Initialise ViewPoints Class. Set progress for filtering tasks.
+        Initializes the ViewPoints class with a specified progress filter for tasks.
 
-        :param progress: Optional Filter on tasks according to their progress.
+        :param progress: Filter to retrieve tasks based on their completion progress.
         :type progress: float
-        :raise:
-        :return: ViewPoints object
-        :rtype: ViewPoints object
 
+        **Why**: Allows users to filter tasks by their status, e.g., viewing only completed or incomplete tasks.
+        **How**: Example usage -
+        ```
+        view_points = ViewPoints(progress=0.0)
+        ```
         """
         self.progress = progress
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def get_list(self):
         """
-        Return a list of tasks formatted in a slack message payload.
+        Retrieves tasks with the specified progress status, formatted for Slack.
 
-        :param None:
-        :type None:
-        :raise None:
-        :return: Slack message payload with list of tasks.
+        :return: Slack message payload containing tasks with the specified progress status.
         :rtype: dict
 
+        **Why**: Provides users with a filtered list of tasks, either completed or in progress, helping them
+        stay organized and track their workload effectively.
+        **How**: Example usage -
+        ```
+        task_list = view_points.get_list()
+        ```
         """
         tasks = []
-        # db query to get all tasks that have progress = progress
+        # Database query to get tasks with the specified progress status
         tasks_with_progress = (
             Task.query.join(Assignment)
             .add_columns(
@@ -56,7 +66,8 @@ class ViewPoints:
             .all()
         )
         tasks.extend(tasks_with_progress)
-        # parse them
+
+        # Format tasks for Slack display
         for task in tasks:
             point = deepcopy(self.base_point_block_format)
             point["text"]["text"] = point["text"]["text"].format(
@@ -66,6 +77,8 @@ class ViewPoints:
                 deadline=task.deadline,
             )
             self.payload["blocks"].append(point)
+
+        # Handle case when no tasks match the filter
         if not self.payload["blocks"]:
             self.payload["blocks"].append(
                 {

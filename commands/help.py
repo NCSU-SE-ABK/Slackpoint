@@ -3,7 +3,14 @@ from copy import deepcopy
 
 class Help:
     """
-    This class handles the Help functionality.
+    This class provides help functionality by offering detailed descriptions for each command.
+
+    **Why**: Ideal for users unfamiliar with commands, allowing them to quickly access help details on
+    all available commands in the application, streamlining the learning curve and improving usability.
+
+    **How**: Common usage examples:
+    1. `Help.help_all()`: Generate help payload with descriptions of all commands.
+    2. `Help.help(command_name)`: Generate a help description payload for a specific command.
     """
 
     commands_dictionary = {}
@@ -15,14 +22,14 @@ class Help:
 
     def __init__(self):
         """
-        Constructor to initialize command dictionary and payload object
+        Initializes the Help object with a dictionary of commands and their descriptions.
 
-        :param:
-        :type:
-        :raise:
-        :return: None
-        :rtype: None
-
+        **Why**: Constructs a dictionary of available commands with examples and descriptions,
+        making it easy to generate help content on demand.
+        **How**: Example usage -
+        ```
+        help_obj = Help()
+        ```
         """
         self.commands_dictionary["createtask"] = [
             "*Create Task*",
@@ -57,14 +64,17 @@ class Help:
 
     def help_all(self):
         """
-        Creates a payload with the help details for all commands
+        Generates a payload with help details for all commands.
 
-        :param:
-        :type:
-        :raise:
-        :return: Payload object containing helper details of all commands
+        :return: A payload object containing helper details for all commands.
         :rtype: dict[str, Any]
 
+        **Why**: Provides an easily accessible, full list of command descriptions for users needing an overview
+        or guidance on available functionalities.
+        **How**: Example usage -
+        ```
+        all_help = help_obj.help_all()
+        ```
         """
         response_payload = deepcopy(self.payload)
         for name in self.commands_dictionary.keys():
@@ -74,14 +84,19 @@ class Help:
 
     def help(self, command_name):
         """
-        Creates a payload blocks for particular command
+        Generates a help description payload for a specific command.
 
-        :param command_name: Command name
+        :param command_name: Name of the command to retrieve help for.
         :type command_name: str
-        :raise:
-        :return: Blocks list containing details of a particular command provided in parameter
+        :return: A list of blocks containing details of the specified command.
         :rtype: list
 
+        **Why**: Allows users to access help for a specific command without needing the full list, making it easier
+        to find targeted information.
+        **How**: Example usage -
+        ```
+        specific_help = help_obj.help("createtask")
+        ```
         """
         blocks = []
         command_name_block = deepcopy(self.command_help)
