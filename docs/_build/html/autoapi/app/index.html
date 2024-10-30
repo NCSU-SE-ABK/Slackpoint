@@ -40,19 +40,22 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#app.app" title="app.app"><code class="xref py py-obj docutils literal notranslate"><span class="pre">app</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.reminders" title="app.reminders"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reminders</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#app.ssl_context" title="app.ssl_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssl_context</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.app" title="app.app"><code class="xref py py-obj docutils literal notranslate"><span class="pre">app</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#app.slack_client" title="app.slack_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_client</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.ssl_context" title="app.ssl_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssl_context</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#app.slack_events_adapter" title="app.slack_events_adapter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_events_adapter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.slack_client" title="app.slack_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_client</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#app.daily_report" title="app.daily_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_report</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.slack_events_adapter" title="app.slack_events_adapter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_events_adapter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.daily_report" title="app.daily_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daily_report</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -83,23 +86,43 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#app.taskdone" title="app.taskdone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">taskdone</span></code></a>()</p></td>
 <td><p>Endpoint to mark a task as completed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#app.create" title="app.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.reminder" title="app.reminder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reminder</span></code></a>()</p></td>
+<td><p>Endpoint to set a reminder for a user, prompting them to enter details like date, time, message, and</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.create" title="app.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>()</p></td>
 <td><p>Endpoint to create a new task. Triggers an ephemeral message for user input.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#app.update" title="app.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.update" title="app.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>()</p></td>
 <td><p>Endpoint to update an existing task, triggering a pre-filled form for user edits.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#app.help" title="app.help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.help" title="app.help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code></a>()</p></td>
 <td><p>Helper endpoint to view all commands and their usage.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#app.leaderboard" title="app.leaderboard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaderboard</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.leaderboard" title="app.leaderboard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaderboard</span></code></a>()</p></td>
 <td><p>Endpoint to view the leaderboard for top users.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.request_help" title="app.request_help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_help</span></code></a>()</p></td>
+<td><p>Endpoint to request help on a task, notifying specified teammates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.send_reminder" title="app.send_reminder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_reminder</span></code></a>(channel_id, message, task_id)</p></td>
+<td><p>Function to send a reminder message to a specified Slack channel.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#app.get_channel_id" title="app.get_channel_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_channel_id</span></code></a>(channel_name)</p></td>
+<td><p>Function to get the ID of a Slack channel given its name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#app.reminder_worker" title="app.reminder_worker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reminder_worker</span></code></a>()</p></td>
+<td><p>Background worker function to check and send reminders at the scheduled time.</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="app.reminders">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">reminders</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../_modules/app.html#reminders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.reminders" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="app.app">
 <span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">app</span></span><a class="reference internal" href="../../_modules/app.html#app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.app" title="Link to this definition">¶</a></dt>
@@ -237,6 +260,27 @@ tasks due today, or all uncompleted tasks.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="app.reminder">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">reminder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#reminder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.reminder" title="Link to this definition">¶</a></dt>
+<dd><p>Endpoint to set a reminder for a user, prompting them to enter details like date, time, message, and
+select a task. Sends an interactive Slack message with input fields for the reminder setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON response with the status of the reminder setup.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Enables users to schedule task-related reminders directly from Slack, improving task management
+and helping users stay on top of deadlines.</p>
+<p><strong>How</strong>:
+- The user initiates the reminder command, and the bot fetches pending tasks for the user.
+- A Slack message is sent, prompting the user to select a date, time, task, and message for the reminder.
+- Example command: <cite>/reminder</cite></p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="app.create">
 <span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.create" title="Link to this definition">¶</a></dt>
 <dd><p>Endpoint to create a new task. Triggers an ephemeral message for user input.</p>
@@ -296,10 +340,100 @@ tasks due today, or all uncompleted tasks.</p>
 <p><strong>Why</strong>: Encourages user engagement by showcasing top-performing users.</p>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="app.request_help">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">request_help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#request_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.request_help" title="Link to this definition">¶</a></dt>
+<dd><p>Endpoint to request help on a task, notifying specified teammates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>JSON response with confirmation or error message.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Allows users to request assistance on tasks directly from Slack, helping facilitate team
+collaboration by notifying selected teammates.</p>
+<p><strong>How</strong>:
+- Send a Slack command in the format <cite>/requesthelp {task_id} {&#64;teammate1} [&#64;teammate2] …</cite></p>
+<blockquote>
+<div><p>where <cite>task_id</cite> is the ID of the task and <cite>&#64;teammate</cite> mentions the teammates to notify.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>The endpoint will:
+1. Validate the task and the user’s ownership.
+2. Notify the specified teammates if the task exists and is still in progress.</p></li>
+</ul>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="app.daily_report">
 <span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">daily_report</span></span><a class="reference internal" href="../../_modules/app.html#daily_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.daily_report" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.send_reminder">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">send_reminder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#send_reminder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.send_reminder" title="Link to this definition">¶</a></dt>
+<dd><p>Function to send a reminder message to a specified Slack channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel_id</strong> (<em>str</em>) – The ID of the Slack channel where the reminder will be sent.</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – The reminder message to be sent.</p></li>
+<li><p><strong>task_id</strong> (<em>str</em>) – The ID of the task associated with the reminder.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>SlackApiError if there is an error sending the message.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.get_channel_id">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">get_channel_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#get_channel_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.get_channel_id" title="Link to this definition">¶</a></dt>
+<dd><p>Function to get the ID of a Slack channel given its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel_name</strong> (<em>str</em>) – The name of the Slack channel.</p>
+</dd>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
+<dd class="field-even"><p>SlackApiError if there is an error fetching the channels.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ID of the Slack channel if found, otherwise None.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.reminder_worker">
+<span class="sig-prename descclassname"><span class="pre">app.</span></span><span class="sig-name descname"><span class="pre">reminder_worker</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/app.html#reminder_worker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.reminder_worker" title="Link to this definition">¶</a></dt>
+<dd><p>Background worker function to check and send reminders at the scheduled time.</p>
+<p>This function runs in an infinite loop, checking the current time against the
+scheduled reminder times. If a reminder’s time is due, it sends the reminder
+message to the specified Slack channel and removes the reminder from the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raise<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>

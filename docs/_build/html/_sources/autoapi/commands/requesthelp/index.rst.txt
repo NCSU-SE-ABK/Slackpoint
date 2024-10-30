@@ -1,0 +1,78 @@
+commands.requesthelp
+====================
+
+.. py:module:: commands.requesthelp
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.requesthelp.RequestHelp
+
+
+Module Contents
+---------------
+
+.. py:class:: RequestHelp(app, data, teammates=[])
+
+   This class handles the "Request Help" functionality, allowing users to request assistance from teammates
+   for a specific task.
+
+   **Why**: Provides a streamlined way for users to notify teammates when they need assistance on a task,
+   helping foster collaboration and efficient task management.
+
+   **How**: Common usage examples:
+   1. `RequestHelp.request_help()`: Validate task status and send help requests to specified teammates.
+   2. `RequestHelp.validate_task_and_user(task_id, user_id)`: Check if a task is assigned to the user and
+      still incomplete.
+
+
+   .. py:attribute:: base_request_help_block_format
+
+
+   .. py:attribute:: app
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: teammates
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: validate_task_and_user(task_id, user_id)
+
+      Validates if the specified task exists, is assigned to the user, and is incomplete.
+
+      :param task_id: Task ID to validate.
+      :type task_id: int
+      :param user_id: Slack user ID of the requester.
+      :type user_id: str
+      :return: Tuple indicating if the task is valid and an error message if not.
+      :rtype: tuple(bool, str)
+
+      **Why**: Ensures the help request is valid by checking if the task exists, is assigned to the requesting
+      user, and is still open.
+      **How**: Example usage -
+      ```
+      is_valid, error_message = request_help.validate_task_and_user(12, "U12345")
+      ```
+
+
+
+   .. py:method:: process_help_command(command_parts)
+
+
+   .. py:method:: request_help()
+
+      Processes the help request by validating the task and notifying teammates.
+
+      :return: Payload with success message or error message.
+      :rtype: dict
+
+
+
