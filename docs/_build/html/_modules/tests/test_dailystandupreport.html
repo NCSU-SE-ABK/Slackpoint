@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tests.test_dailystandupreport &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_dailystandupreport</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">patch</span>
+
+<span class="kn">from</span> <span class="nn">commands.dailystandupreport</span> <span class="kn">import</span> <span class="n">DailyStandupReport</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Assignment</span>
+
+<span class="c1"># Fixture to create a list of mock User instances</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_users">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.mock_users">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_users</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fixture to create a list of mock User instances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user1</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">user1</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123456&quot;</span>
+    <span class="n">user2</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">user2</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U654321&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">]</span></div>
+
+
+<span class="c1"># Fixture to provide an instance of DailyStandupReport for testing</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="daily_report">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.daily_report">[docs]</a>
+<span class="k">def</span> <span class="nf">daily_report</span><span class="p">(</span><span class="n">app_instance</span><span class="p">,</span> <span class="n">mock_scheduler</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fixture to provide an instance of DailyStandupReport for testing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">DailyStandupReport</span><span class="p">(</span><span class="n">app_instance</span><span class="p">,</span> <span class="s2">&quot;C07T6TACHJA&quot;</span><span class="p">)</span>  <span class="c1"># Replace with your test channel ID</span></div>
+
+
+<div class="viewcode-block" id="test_daily_report_exists">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_daily_report_exists">[docs]</a>
+<span class="k">def</span> <span class="nf">test_daily_report_exists</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">daily_report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_multiple_users_all_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_multiple_users_all_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_multiple_users_all_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with multiple users, each having all task categories populated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create mocks for each user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2.1&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2.2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Return a default mock if needed</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1.2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1.2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1.2</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 2.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 2.2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2.2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2.2</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_multiple_users_some_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_multiple_users_some_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_multiple_users_some_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with multiple users, some task categories populated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create mocks for each user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>  <span class="c1"># No upcoming tasks</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>  <span class="c1"># No completed tasks</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>  <span class="c1"># No past due tasks</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_multiple_users_no_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_multiple_users_no_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_multiple_users_no_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with multiple users, none having any tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create mocks for each user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_single_user_all_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_single_user_all_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_single_user_all_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with a single user, all task categories populated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a single mock user</span>
+    <span class="n">mock_user</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">mock_user</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123456&quot;</span>
+    <span class="n">mock_users</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_user</span><span class="p">]</span>
+
+    <span class="c1"># Mock ViewMyTasks methods</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+    <span class="n">view_my_tasks_instance</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task A&quot;</span><span class="p">}},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task B&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_mock</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">view_my_tasks_instance</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task A</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task B</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task A</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task A</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_single_user_some_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_single_user_some_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_single_user_some_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with a single user, some task categories populated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a single mock user</span>
+    <span class="n">mock_user</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">mock_user</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123456&quot;</span>
+    <span class="n">mock_users</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_user</span><span class="p">]</span>
+
+    <span class="c1"># Mock ViewMyTasks methods</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+    <span class="n">view_my_tasks_instance</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>  <span class="c1"># No completed tasks</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>  <span class="c1"># No past due tasks</span>
+    <span class="n">view_my_tasks_mock</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">view_my_tasks_instance</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task A</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_single_user_no_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_single_user_no_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_single_user_no_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with a single user, no tasks in any category.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a single mock user</span>
+    <span class="n">mock_user</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">mock_user</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123456&quot;</span>
+    <span class="n">mock_users</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_user</span><span class="p">]</span>
+
+    <span class="c1"># Mock ViewMyTasks methods</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+    <span class="n">view_my_tasks_instance</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_instance</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">view_my_tasks_mock</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">view_my_tasks_instance</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_no_users">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_no_users">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_no_users</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with no users provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mock_users</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message is empty</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_multiple_tasks_each_category">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_multiple_tasks_each_category">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_multiple_tasks_each_category</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having multiple tasks in each category.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1.1&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1.2&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1.3&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1.1&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1.2&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1.1&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2.1&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2.1&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2.2&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1.2</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1.3</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1.2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1.1</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 2.1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2.1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2.2</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_special_characters_in_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_special_characters_in_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_special_characters_in_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with special characters and markdown in task descriptions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;*Completed Task 1* with **bold** and _italic_ text.&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1 with [link](http://example.com)&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1 with `code` snippet.&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2 with emojis 🎉🚀&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2 with special characters: @#$%^&amp;*()&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2 with non-ASCII characters: 測試&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Completed Task 1* with **bold** and _italic_ text.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1 with [link](http://example.com)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1 with `code` snippet.</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 2 with emojis 🎉🚀</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2 with special characters: @#$%^&amp;*()</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2 with non-ASCII characters: 測試</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_empty_blocks_key">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_empty_blocks_key">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_empty_blocks_key</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message when &#39;blocks&#39; key is missing in task categories.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user: &#39;blocks&#39; key missing</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Mock for second user: &#39;blocks&#39; key missing</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_malformed_task_data">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_malformed_task_data">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_malformed_task_data</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with malformed task data (missing &#39;text&#39; key).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create mocks for each user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1&quot;</span><span class="p">}}]</span>  <span class="c1"># Incorrect key</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2&quot;</span><span class="p">}}]</span>  <span class="c1"># Incorrect structure</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message (assuming missing &#39;text&#39; results in &#39;None&#39;)</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>  <span class="c1"># Malformed data treated as no tasks</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 1</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>  <span class="c1"># Malformed data treated as no tasks</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 2</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_large_number_of_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_large_number_of_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_large_number_of_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having a large number of tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Generate a large number of tasks for first user</span>
+    <span class="n">completed_tasks_user1</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Completed Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)]</span>
+    <span class="n">upcoming_tasks_user1</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Upcoming Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">)]</span>
+    <span class="n">past_due_tasks_user1</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Past Due Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">)]</span>
+
+    <span class="c1"># Generate a large number of tasks for second user</span>
+    <span class="n">completed_tasks_user2</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Completed Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">76</span><span class="p">)]</span>
+    <span class="n">upcoming_tasks_user2</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Upcoming Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">31</span><span class="p">)]</span>
+    <span class="n">past_due_tasks_user2</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Past Due Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">completed_tasks_user1</span><span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">upcoming_tasks_user1</span><span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">past_due_tasks_user1</span><span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">completed_tasks_user2</span><span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">upcoming_tasks_user2</span><span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">past_due_tasks_user2</span><span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Construct expected_message dynamically due to large number of tasks</span>
+    <span class="n">completed_tasks_str_user1</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Completed Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">upcoming_tasks_str_user1</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Upcoming Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">past_due_tasks_str_user1</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Past Due Task 1.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">21</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+
+    <span class="n">completed_tasks_str_user2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Completed Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">76</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">upcoming_tasks_str_user2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Upcoming Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">31</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">past_due_tasks_str_user2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Past Due Task 2.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">completed_tasks_str_user1</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">upcoming_tasks_str_user1</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">past_due_tasks_str_user1</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">completed_tasks_str_user2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">upcoming_tasks_str_user2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">past_due_tasks_str_user2</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_identical_tasks">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_identical_tasks">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_identical_tasks</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having identical tasks across categories.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="n">identical_task</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Task 1&quot;</span><span class="p">}}</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Task 1</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_similar_but_distinct_slack_ids">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_similar_but_distinct_slack_ids">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_similar_but_distinct_slack_ids</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having similar but distinct Slack user IDs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Modify mock_users to have similar but distinct IDs</span>
+    <span class="n">mock_users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123456&quot;</span>
+    <span class="n">mock_users</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;U123457&quot;</span>
+
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task A&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task B&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task B&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task B&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123457&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task A</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task A</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task A</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123457&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task B</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task B</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task B</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_same_tasks_different_users">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_same_tasks_different_users">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_same_tasks_different_users</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with different users having the same tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">identical_task</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Same Task&quot;</span><span class="p">}}</span>
+
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">identical_task</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Same Task</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_users_without_slack_id">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_users_without_slack_id">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_users_without_slack_id</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users missing &#39;slack_user_id&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create mock users with &#39;slack_user_id&#39; set to None</span>
+    <span class="n">mock_user1</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">mock_user1</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">mock_user2</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">mock_user2</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">mock_users</span> <span class="o">=</span> <span class="p">[</span><span class="n">mock_user1</span><span class="p">,</span> <span class="n">mock_user2</span><span class="p">]</span>
+
+    <span class="c1"># Create mocks for each user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1&quot;</span><span class="p">}}]}</span>
+
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2&quot;</span><span class="p">}}]}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message (assuming &#39;None&#39; is displayed for missing slack_user_id)</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@None&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@None&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_users_with_none_slack_id">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_users_with_none_slack_id">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_users_with_none_slack_id</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having &#39;slack_user_id&#39; as None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set slack_user_id to None for both users</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">mock_users</span><span class="p">:</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 1&quot;</span><span class="p">}}]}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2&quot;</span><span class="p">}}]}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 2&quot;</span><span class="p">}}]}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message (assuming &#39;None&#39; is displayed for missing slack_user_id)</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@None&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@None&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_unicode_characters">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_unicode_characters">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_unicode_characters</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with unicode characters in task descriptions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 🚀&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 😊&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task 😱&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 🎉&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 🛠️&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Past Due Task ⚠️&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 🚀</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 😊</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task 😱</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 🎉</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 🛠️</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Past Due Task ⚠️</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+
+<div class="viewcode-block" id="test_get_standup_message_mixed_valid_and_invalid_task_data">
+<a class="viewcode-back" href="../../autoapi/tests/test_dailystandupreport/index.html#tests.test_dailystandupreport.test_get_standup_message_mixed_valid_and_invalid_task_data">[docs]</a>
+<span class="k">def</span> <span class="nf">test_get_standup_message_mixed_valid_and_invalid_task_data</span><span class="p">(</span><span class="n">daily_report</span><span class="p">,</span> <span class="n">mock_users</span><span class="p">,</span> <span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test get_standup_message with users having mixed valid and invalid task data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Mock ViewMyTasks methods for each user</span>
+    <span class="n">view_my_tasks_mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Mock for first user: valid and invalid tasks</span>
+    <span class="n">view_my_tasks_instance1</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 1&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;invalid_key&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid Task&quot;</span><span class="p">}},</span>  <span class="c1"># Invalid block</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Completed Task 2&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 1&quot;</span><span class="p">}},</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Upcoming Task 2&quot;</span><span class="p">}}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance1</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>  <span class="c1"># No past due tasks</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Mock for second user: all invalid tasks</span>
+    <span class="n">view_my_tasks_instance2</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_completed_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;invalid_key&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid Task&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_upcoming_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;invalid_key&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid Task&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+    <span class="n">view_my_tasks_instance2</span><span class="o">.</span><span class="n">get_past_due_tasks</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;invalid_key&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid Task&quot;</span><span class="p">}}]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Define a side_effect function to return the correct mock based on user_slack_id</span>
+    <span class="k">def</span> <span class="nf">view_my_tasks_side_effect</span><span class="p">(</span><span class="n">user_slack_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U123456&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance1</span>
+        <span class="k">elif</span> <span class="n">user_slack_id</span> <span class="o">==</span> <span class="s1">&#39;U654321&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">view_my_tasks_instance2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MagicMock</span><span class="p">()</span>  <span class="c1"># Default mock</span>
+
+    <span class="c1"># Patch the ViewMyTasks to use the side_effect function</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s1">&#39;commands.dailystandupreport.ViewMyTasks&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">view_my_tasks_side_effect</span><span class="p">)</span>
+
+    <span class="c1"># Define expected message (invalid tasks treated as &#39;None&#39; or skipped)</span>
+    <span class="n">expected_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U123456&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Completed Task 2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;Upcoming Task 2</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Daily Standup Report for &lt;@U654321&gt;*</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Recently completed tasks:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks due soon:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;*Tasks past due:*</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;None</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call get_standup_message</span>
+    <span class="n">final_message</span> <span class="o">=</span> <span class="n">daily_report</span><span class="o">.</span><span class="n">get_standup_message</span><span class="p">(</span><span class="n">mock_users</span><span class="p">)</span>
+
+    <span class="c1"># Assert the final_message matches the expected_message</span>
+    <span class="k">assert</span> <span class="n">final_message</span> <span class="o">==</span> <span class="n">expected_message</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

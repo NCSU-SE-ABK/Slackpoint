@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tests.mockmodels &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.mockmodels</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">Assignment</span><span class="p">,</span> <span class="n">User</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_get_sqlalchemy">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_get_sqlalchemy">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_get_sqlalchemy</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked object for test case</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mock</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span>
+        <span class="s2">&quot;flask_sqlalchemy.model._QueryProperty.__get__&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mock</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_my_model">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_my_model">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_my_model</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param:</span>
+<span class="sd">    :type:</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked Task object</span>
+<span class="sd">    :rtype: Task</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is Task 1&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="s2">&quot;2022-08-24&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_pending_task_1">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_pending_task_1">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_pending_task_1</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param:</span>
+<span class="sd">    :type:</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked Task object</span>
+<span class="sd">    :rtype: Task</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is Task 1&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="s2">&quot;2022-10-24&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_pending_task_2">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_pending_task_2">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_pending_task_2</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param:</span>
+<span class="sd">    :type:</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked Task object</span>
+<span class="sd">    :rtype: Task</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is Task 2&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="s2">&quot;2022-10-26&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_completed_task_3">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_completed_task_3">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_completed_task_3</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param:</span>
+<span class="sd">    :type:</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked Task object</span>
+<span class="sd">    :rtype: Task</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is Task 3&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="s2">&quot;2022-08-24&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_completed_task_4">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_completed_task_4">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_completed_task_4</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param:</span>
+<span class="sd">    :type:</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked Task object</span>
+<span class="sd">    :rtype: Task</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is Task 4&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="s2">&quot;2022-08-26&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="c1"># ===== Test marked for later release ======</span>
+
+<span class="c1"># @pytest.fixture</span>
+<span class="c1"># def mock_done_task_1():</span>
+<span class="c1">#     my_model = Assignment(</span>
+<span class="c1">#         user_id=1,</span>
+<span class="c1">#         assignment_id=1,</span>
+<span class="c1">#         progress=1.0,</span>
+<span class="c1">#         assignment_created_on=&quot;2022-10-05&quot;</span>
+<span class="c1">#     )</span>
+<span class="c1">#     return my_model</span>
+
+<span class="c1"># @pytest.fixture</span>
+<span class="c1"># def mock_done_task_2():</span>
+<span class="c1">#     my_model = Assignment(</span>
+<span class="c1">#         user_id=1,</span>
+<span class="c1">#         assignment_id=1,</span>
+<span class="c1">#         progress=0.0,</span>
+<span class="c1">#         assignment_created_on=&quot;2022-10-05&quot;</span>
+<span class="c1">#     )</span>
+<span class="c1">#     return my_model</span>
+<span class="c1"># =============================================</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_1">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_1">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_1</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;ritwik&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">33</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_2">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_2">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_2</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;rishikesh&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_3">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_3">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_3</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;neha&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_4">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_4">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_4</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;vansh&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_5">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_5">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_5</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;mithil&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<div class="viewcode-block" id="mock_leaderboard_position_6">
+<a class="viewcode-back" href="../../autoapi/tests/mockmodels/index.html#tests.mockmodels.mock_leaderboard_position_6">[docs]</a>
+<span class="k">def</span> <span class="nf">mock_leaderboard_position_6</span><span class="p">(</span><span class="n">mocker</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get mocked Task object</span>
+
+<span class="sd">    :param mocker: Mocker object</span>
+<span class="sd">    :type mocker: Any</span>
+<span class="sd">    :raise:</span>
+<span class="sd">    :return: Mocked object</span>
+<span class="sd">    :rtype: Any</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">my_model</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">Mock</span><span class="p">()</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="s2">&quot;dani&quot;</span>
+    <span class="n">my_model</span><span class="o">.</span><span class="n">total_points</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">my_model</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

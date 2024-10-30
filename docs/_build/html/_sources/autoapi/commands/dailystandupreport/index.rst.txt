@@ -1,0 +1,104 @@
+commands.dailystandupreport
+===========================
+
+.. py:module:: commands.dailystandupreport
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.dailystandupreport.DailyStandupReport
+
+
+Module Contents
+---------------
+
+.. py:class:: DailyStandupReport(app, channel_id)
+
+   This class schedules and sends daily standup reports of tasks via Slack.
+
+   **Why**: Useful for teams who want an automated daily update on tasks, making it easy to track progress,
+   manage upcoming deadlines, and keep the team aligned on outstanding tasks directly within Slack.
+
+   **How**: Common usage examples:
+   1. `DailyStandupReport.schedule_daily_report(report_time="09:00")`: Set up a daily schedule to automatically send reports.
+   2. `DailyStandupReport.send_daily_report()`: Manually trigger sending the daily report.
+   3. `DailyStandupReport.get_standup_message(users)`: Generate a message summarizing tasks for each user.
+
+
+   .. py:attribute:: block_format
+
+
+   .. py:attribute:: scheduler
+
+
+   .. py:attribute:: app
+
+
+   .. py:attribute:: channel_id
+
+
+   .. py:method:: schedule_daily_report(report_time='09:00')
+
+      Schedules the daily standup report to be sent at the specified time each day.
+
+      :param report_time: Time in 'HH:MM' format when the report should be sent.
+      :type report_time: str
+      :return: None
+
+      **Why**: Automates the daily reporting process by setting a schedule for sending reports, reducing the need for manual reminders.
+      **How**: Example usage -
+      ```
+      standup_reporter.schedule_daily_report(report_time="08:30")
+      ```
+
+
+
+   .. py:method:: get_standup_message(users)
+
+      Compiles a daily standup message with each user's task status.
+
+      :param users: List of users to include in the report.
+      :type users: list of User objects
+      :return: A formatted string representing the standup report.
+      :rtype: str
+
+      **Why**: Provides a consolidated message of each user’s task status, covering recently completed, upcoming, and past-due tasks.
+      **How**: Example usage -
+      ```
+      message = standup_reporter.get_standup_message(users)
+      ```
+
+
+
+   .. py:method:: send_daily_report()
+
+      Compiles and sends the daily standup report to the designated Slack channel.
+
+      **Why**: This method directly executes the report generation and sending process, ideal for manual or scheduled execution.
+      **How**: Example usage -
+      ```
+      standup_reporter.send_daily_report()
+      ```
+
+
+
+   .. py:method:: post_to_slack(report_payload)
+
+      Sends the standup report to a specified Slack channel.
+
+      :param report_payload: The payload of the report in Slack-compatible format.
+      :type report_payload: dict
+      :return: None
+
+      **Why**: Allows the report to be delivered directly within a Slack channel, ensuring visibility and accessibility for the team.
+      **How**: Example usage -
+      ```
+      report_payload = {"text": {"text": "Sample report"}}
+      standup_reporter.post_to_slack(report_payload)
+      ```
+
+
+

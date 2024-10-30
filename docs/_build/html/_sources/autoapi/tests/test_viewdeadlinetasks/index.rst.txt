@@ -1,0 +1,33 @@
+tests.test_viewdeadlinetasks
+============================
+
+.. py:module:: tests.test_viewdeadlinetasks
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.test_viewdeadlinetasks.test_view_deadline_tasks
+
+
+Module Contents
+---------------
+
+.. py:function:: test_view_deadline_tasks(mock_pending_task_1, mock_pending_task_2, mock_get_sqlalchemy)
+
+   Test the view pending command
+
+   :param mock_pending_task_1: Mocked Task object 1
+   :type mock_pending_task_1: Task
+   :param mock_pending_task_2: Mocked Task object 2
+   :type mock_pending_task_2: Task
+   :param mock_get_sqlalchemy: Mocked SQL Alchemy object
+   :type mock_get_sqlalchemy: Any
+   :raise:
+   :return: Assert if test case executed successfully
+   :rtype: bool
+
+
+

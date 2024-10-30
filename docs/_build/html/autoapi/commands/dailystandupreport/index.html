@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>commands.dailystandupreport &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="commands.help" href="../help/index.html" />
+    <link rel="prev" title="commands.createtask" href="../createtask/index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-commands.dailystandupreport">
+<span id="commands-dailystandupreport"></span><h1>commands.dailystandupreport<a class="headerlink" href="#module-commands.dailystandupreport" title="Link to this heading">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#commands.dailystandupreport.DailyStandupReport" title="commands.dailystandupreport.DailyStandupReport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DailyStandupReport</span></code></a></p></td>
+<td><p>This class schedules and sends daily standup reports of tasks via Slack.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">commands.dailystandupreport.</span></span><span class="sig-name descname"><span class="pre">DailyStandupReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport" title="Link to this definition">¶</a></dt>
+<dd><p>This class schedules and sends daily standup reports of tasks via Slack.</p>
+<p><strong>Why</strong>: Useful for teams who want an automated daily update on tasks, making it easy to track progress,
+manage upcoming deadlines, and keep the team aligned on outstanding tasks directly within Slack.</p>
+<p><strong>How</strong>: Common usage examples:
+1. <cite>DailyStandupReport.schedule_daily_report(report_time=”09:00”)</cite>: Set up a daily schedule to automatically send reports.
+2. <cite>DailyStandupReport.send_daily_report()</cite>: Manually trigger sending the daily report.
+3. <cite>DailyStandupReport.get_standup_message(users)</cite>: Generate a message summarizing tasks for each user.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.block_format">
+<span class="sig-name descname"><span class="pre">block_format</span></span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.block_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.block_format" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.scheduler">
+<span class="sig-name descname"><span class="pre">scheduler</span></span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.scheduler" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.app">
+<span class="sig-name descname"><span class="pre">app</span></span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.app" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.channel_id">
+<span class="sig-name descname"><span class="pre">channel_id</span></span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.channel_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.channel_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.schedule_daily_report">
+<span class="sig-name descname"><span class="pre">schedule_daily_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'09:00'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.schedule_daily_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.schedule_daily_report" title="Link to this definition">¶</a></dt>
+<dd><p>Schedules the daily standup report to be sent at the specified time each day.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>report_time</strong> (<em>str</em>) – Time in ‘HH:MM’ format when the report should be sent.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Automates the daily reporting process by setting a schedule for sending reports, reducing the need for manual reminders.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">standup_reporter.schedule_daily_report(report_time=&quot;08:30&quot;)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.get_standup_message">
+<span class="sig-name descname"><span class="pre">get_standup_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">users</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.get_standup_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.get_standup_message" title="Link to this definition">¶</a></dt>
+<dd><p>Compiles a daily standup message with each user’s task status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>users</strong> (<em>list</em><em> of </em><em>User objects</em>) – List of users to include in the report.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A formatted string representing the standup report.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Provides a consolidated message of each user’s task status, covering recently completed, upcoming, and past-due tasks.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">message</span> <span class="pre">=</span> <span class="pre">standup_reporter.get_standup_message(users)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.send_daily_report">
+<span class="sig-name descname"><span class="pre">send_daily_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.send_daily_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.send_daily_report" title="Link to this definition">¶</a></dt>
+<dd><p>Compiles and sends the daily standup report to the designated Slack channel.</p>
+<p><strong>Why</strong>: This method directly executes the report generation and sending process, ideal for manual or scheduled execution.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">standup_reporter.send_daily_report()</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.dailystandupreport.DailyStandupReport.post_to_slack">
+<span class="sig-name descname"><span class="pre">post_to_slack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_payload</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/dailystandupreport.html#DailyStandupReport.post_to_slack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.dailystandupreport.DailyStandupReport.post_to_slack" title="Link to this definition">¶</a></dt>
+<dd><p>Sends the standup report to a specified Slack channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>report_payload</strong> (<em>dict</em>) – The payload of the report in Slack-compatible format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Allows the report to be delivered directly within a Slack channel, ensuring visibility and accessibility for the team.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">report_payload</span> <span class="pre">=</span> <span class="pre">{&quot;text&quot;:</span> <span class="pre">{&quot;text&quot;:</span> <span class="pre">&quot;Sample</span> <span class="pre">report&quot;}}</span>
+<span class="pre">standup_reporter.post_to_slack(report_payload)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../app/index.html">app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../conf/index.html">conf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../setup/index.html">setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tests/index.html">tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../models/index.html">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers/index.html">helpers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">configuration</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Reference</a><ul>
+  <li><a href="../index.html">commands</a><ul>
+      <li>Previous: <a href="../createtask/index.html" title="previous chapter">commands.createtask</a></li>
+      <li>Next: <a href="../help/index.html" title="next chapter">commands.help</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/autoapi/commands/dailystandupreport/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,68 @@
+commands.taskdone
+=================
+
+.. py:module:: commands.taskdone
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.taskdone.TaskDone
+
+
+Module Contents
+---------------
+
+.. py:class:: TaskDone(data)
+
+   This class manages task completion, including validation and updating task status.
+
+   **Why**: Useful for ensuring tasks are marked as completed by authorized users, maintaining task
+   progression integrity in a collaborative environment, and handling user-specific task updates.
+
+   **How**: Common usage examples:
+   1. `TaskDone.get_or_create(uid)`: Retrieve or create a user based on Slack ID.
+   2. `TaskDone.update_points()`: Complete a task and update points if the user has authorization.
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: get_or_create(uid)
+
+      Fetches a user instance by Slack ID or creates a new one if it doesn’t exist.
+
+      :param uid: Slack User ID to retrieve or create.
+      :type uid: str
+      :return: User instance fetched or created from the database.
+      :rtype: User
+
+      **Why**: Ensures that a user exists in the database, allowing for task assignments and updates
+      to be correctly associated with a Slack user.
+      **How**: Example usage -
+      ```
+      user = task_done.get_or_create("U12345")
+      ```
+
+
+
+   .. py:method:: update_points()
+
+      Marks a task as complete, validating that the task exists and that the requesting user is authorized.
+
+      :return: Success message if task completion is successful; error message if validation fails.
+      :rtype: str
+
+      **Why**: Provides controlled task completion, only allowing assigned users to mark tasks as completed.
+      **How**: Example usage -
+      ```
+      result = task_done.update_points()
+      ```
+
+
+

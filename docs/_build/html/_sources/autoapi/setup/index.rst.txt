@@ -1,0 +1,19 @@
+setup
+=====
+
+.. py:module:: setup
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   setup.read
+
+
+Module Contents
+---------------
+
+.. py:function:: read(filename)
+

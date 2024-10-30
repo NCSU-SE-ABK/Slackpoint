@@ -1,0 +1,167 @@
+app
+===
+
+.. py:module:: app
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   app.app
+   app.ssl_context
+   app.slack_client
+   app.slack_events_adapter
+   app.daily_report
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   app.getUsers
+   app.findName
+   app.interactive_endpoint
+   app.basic
+   app.vpending
+   app.vcompleted
+   app.taskdone
+   app.create
+   app.update
+   app.help
+   app.leaderboard
+
+
+Module Contents
+---------------
+
+.. py:data:: app
+
+.. py:data:: ssl_context
+
+.. py:data:: slack_client
+
+.. py:data:: slack_events_adapter
+
+.. py:function:: getUsers(channel_id)
+
+   Retrieves a list of users from a specific Slack channel.
+
+   :param channel_id: ID of the Slack channel.
+   :type channel_id: str
+   :return: List of users in the channel.
+   :rtype: list[dict]
+
+   **Why**: Essential for retrieving all members to assign or manage tasks within a specific channel.
+   **How**: Usage within task-related endpoints to gather or assign channel users.
+
+
+.. py:function:: findName(slack_id, channel_id)
+
+   Finds a user's name in a Slack channel by their Slack ID.
+
+   :param slack_id: Slack ID of the user.
+   :type slack_id: str
+   :param channel_id: ID of the Slack channel.
+   :type channel_id: str
+   :return: Name of the user.
+   :rtype: str
+
+   **Why**: Used to retrieve the actual name of a user for task assignments or updates, enhancing response clarity.
+
+
+.. py:function:: interactive_endpoint()
+
+   Endpoint to handle interactive Slack events like button clicks, such as for creating or updating tasks.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Allows the bot to handle interactive elements and input fields, providing a more dynamic user experience.
+
+
+.. py:function:: basic()
+
+   Health check endpoint.
+
+   :return: 'Hello World' - the official health check response text.
+   :rtype: str
+
+   **Why**: Ensures the server is running and accessible.
+
+
+.. py:function:: vpending()
+
+   Endpoint to view the pending tasks based on the requester's filters.
+
+   :return: Response object with payload containing pending tasks.
+   :rtype: Response
+
+   **Why**: Provides users with an organized view of pending tasks, allowing them to check tasks assigned to them,
+   tasks due today, or all uncompleted tasks.
+
+
+.. py:function:: vcompleted()
+
+   Endpoint to view completed tasks.
+
+   :return: Response object with payload containing completed tasks.
+   :rtype: Response
+
+   **Why**: Allows users to view completed tasks for tracking and reporting purposes.
+
+
+.. py:function:: taskdone()
+
+   Endpoint to mark a task as completed.
+
+   :return: Response object with payload containing task completion message.
+   :rtype: Response
+
+   **Why**: Enables users to update task status, marking it as completed.
+
+
+.. py:function:: create()
+
+   Endpoint to create a new task. Triggers an ephemeral message for user input.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Provides an interactive way for users to create tasks, with a structured form for details.
+
+
+.. py:function:: update()
+
+   Endpoint to update an existing task, triggering a pre-filled form for user edits.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Allows users to easily modify tasks, using a form pre-populated with existing task details.
+
+
+.. py:function:: help()
+
+   Helper endpoint to view all commands and their usage.
+
+   :return: Response object with payload containing command descriptions.
+   :rtype: Response
+
+   **Why**: Provides guidance to users on available commands and how to use them.
+
+
+.. py:function:: leaderboard()
+
+   Endpoint to view the leaderboard for top users.
+
+   :return: Response object with payload containing leaderboard details.
+   :rtype: Response
+
+   **Why**: Encourages user engagement by showcasing top-performing users.
+
+
+.. py:data:: daily_report
+
