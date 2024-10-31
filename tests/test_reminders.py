@@ -50,6 +50,12 @@ class TestAppFunctions(unittest.TestCase):
         send_reminder('C123456', 'Test reminder', '')
         mock_post_message.assert_called_once()
 
+    @patch('app.slack_client.chat_postMessage')
+    def test_send_reminder_with_none_task_id(self, mock_post_message):
+        """Test send_reminder with None as the task ID."""
+        send_reminder('C123456', 'Test reminder', None)
+        mock_post_message.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
