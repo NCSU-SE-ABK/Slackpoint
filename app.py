@@ -474,11 +474,11 @@ def request_help():
 
     return jsonify(payload)
 
-# print("Starting standup report schedule")
-# with app.app_context():
-#     slack_client.conversations_join(channel='C07T6TACHJA')
-#     daily_report = DailyStandupReport(app, "C07T6TACHJA")
-#     daily_report.schedule_daily_report(report_time="15:59")
+print("Starting standup report schedule")
+with app.app_context():
+    slack_client.conversations_join(channel='C07T6TACHJA')
+    daily_report = DailyStandupReport(app, "C07T6TACHJA")
+    daily_report.schedule_daily_report(report_time="15:59")
 
 
 # Function to send the reminder message
