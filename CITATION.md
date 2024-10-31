@@ -1,1 +1,1 @@
-Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). slackpoint Version (1.0.0). Retrieved October 8, 2022, from https://doi.org/10.5281/zenodo.7402494
+Sykes, J., Wise, M., Vilkomir, K., et al. (2024, October 31). Slackpoint Version (3.0.0). Retrieved [PUT TODAYS DATE], from https://doi.org/10.5281/zenodo.13926072

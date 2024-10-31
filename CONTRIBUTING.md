@@ -1,26 +1,11 @@
 How can I contribute to this awesome initiative?
 
+Follow the instructions in our INSTALL.md to setup your environment.
 
+Create an Issue to get approval on a new feature.
 
-### Setup Guide for contributors
+Make your own branch and make a pull request with your changes.
 
-#### (1) Clone the se22 repository and enter into it
-```
-git clone https://github.com/kartikson1/slackpoint.git
-cd slackpoint
-```
+Ensure the GitHub Actions run and pass. This will run unit tests and check the formatting of your code.
 
-#### (2) Create then activate a virtual environment
-```
-# On Windows, the commands may be slightly different. For more details, see
-# https://docs.python.org/3/library/venv.html#creating-virtual-environments
-python3 -m venv venv
-source venv/bin/activate
-```
-
-#### (3) Install the test requirements and the project
-```
-$ python3 install -r requirements.txt
-```
-
-### Folder structure and File naming Conventions TBD
+Submit the PR and await approval!
