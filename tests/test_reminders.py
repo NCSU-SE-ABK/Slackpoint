@@ -130,6 +130,3 @@ class TestAppFunctions(unittest.TestCase):
         """Test send_reminder with a message containing JSON content."""
         send_reminder('C123456', '{"reminder": "Test reminder"}', 'T123')
         mock_post_message.assert_called_once()
-
-if __name__ == '__main__':
-    unittest.main()
