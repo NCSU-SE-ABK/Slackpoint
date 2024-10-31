@@ -287,7 +287,8 @@ def reminder():
     channel_id = request.form.get("channel_id")
     user_id = request.form.get("user_id")
     print("User ID", user_id)
-
+    if user_id is None:
+        return jsonify({"status": "error", "message": "No pending tasks available"}), 200
     # Fetch pending tasks for the user
     vt = ViewMyTasks(user_id)
     pending_tasks = vt.get_list()["blocks"]
