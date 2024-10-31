@@ -38,6 +38,12 @@ class TestAppFunctions(unittest.TestCase):
         send_reminder('C123456', 'Test @reminder!', 'T123')
         mock_post_message.assert_called_once()
 
+    @patch('app.slack_client.chat_postMessage')
+    def test_send_reminder_with_unicode_characters(self, mock_post_message):
+        """Test send_reminder with a message containing unicode characters."""
+        send_reminder('C123456', 'Test reminder 😊', 'T123')
+        mock_post_message.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
