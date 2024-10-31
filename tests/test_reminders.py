@@ -25,5 +25,13 @@ class TestAppFunctions(unittest.TestCase):
         send_reminder('C123456', '', 'T123')
         mock_post_message.assert_called_once()
 
+    @patch('app.slack_client.chat_postMessage')
+    def test_send_reminder_with_long_message(self, mock_post_message):
+        """Test send_reminder with a very long message."""
+        long_message = 'A' * 1000
+        send_reminder('C123456', long_message, 'T123')
+        mock_post_message.assert_called_once()
+
+
 if __name__ == '__main__':
     unittest.main()
