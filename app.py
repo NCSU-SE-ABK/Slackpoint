@@ -279,7 +279,8 @@ def reminder():
     channel_id = request.form.get("channel_id")
     user_id = request.form.get("user_id")
     print("User ID", user_id)
-
+    if user_id is None:
+        return jsonify({"status": "error", "message": "No pending tasks available"}), 200
     # Fetch pending tasks for the user
     vt = ViewMyTasks(user_id)
     pending_tasks = vt.get_list()["blocks"]
@@ -473,11 +474,11 @@ def request_help():
 
     return jsonify(payload)
 
-print("Starting standup report schedule")
-with app.app_context():
-    slack_client.conversations_join(channel='C07T6TACHJA')
-    daily_report = DailyStandupReport(app, "C07T6TACHJA")
-    daily_report.schedule_daily_report(report_time="15:59")
+# print("Starting standup report schedule")
+# with app.app_context():
+#     slack_client.conversations_join(channel='C07T6TACHJA')
+#     daily_report = DailyStandupReport(app, "C07T6TACHJA")
+#     daily_report.schedule_daily_report(report_time="15:59")
 
 
 # Function to send the reminder message
