@@ -1,0 +1,72 @@
+commands.help
+=============
+
+.. py:module:: commands.help
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.help.Help
+
+
+Module Contents
+---------------
+
+.. py:class:: Help
+
+   This class provides help functionality by offering detailed descriptions for each command.
+
+   **Why**: Ideal for users unfamiliar with commands, allowing them to quickly access help details on
+   all available commands in the application, streamlining the learning curve and improving usability.
+
+   **How**: Common usage examples:
+   1. `Help.help_all()`: Generate help payload with descriptions of all commands.
+   2. `Help.help(command_name)`: Generate a help description payload for a specific command.
+
+
+   .. py:attribute:: commands_dictionary
+
+
+   .. py:attribute:: command_help
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: help_all()
+
+      Generates a payload with help details for all commands.
+
+      :return: A payload object containing helper details for all commands.
+      :rtype: dict[str, Any]
+
+      **Why**: Provides an easily accessible, full list of command descriptions for users needing an overview
+      or guidance on available functionalities.
+      **How**: Example usage -
+      ```
+      all_help = help_obj.help_all()
+      ```
+
+
+
+   .. py:method:: help(command_name)
+
+      Generates a help description payload for a specific command.
+
+      :param command_name: Name of the command to retrieve help for.
+      :type command_name: str
+      :return: A list of blocks containing details of the specified command.
+      :rtype: list
+
+      **Why**: Allows users to access help for a specific command without needing the full list, making it easier
+      to find targeted information.
+      **How**: Example usage -
+      ```
+      specific_help = help_obj.help("createtask")
+      ```
+
+
+

@@ -1,0 +1,168 @@
+models
+======
+
+.. py:module:: models
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   models.db
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   models.Task
+   models.Assignment
+   models.User
+
+
+Module Contents
+---------------
+
+.. py:data:: db
+
+.. py:class:: Task
+
+   Bases: :py:obj:`db`
+
+
+   This class represents the Task entity in the database, storing details about tasks such as description,
+   points, deadline, and timestamps for creation and updates.
+
+   **Why**: Useful for tracking individual tasks, allowing applications to store, retrieve, and manage task
+   details effectively.
+
+   **How**: Common usage examples:
+   1. `Task.query.all()`: Retrieve all tasks.
+   2. `Task.query.filter_by(task_id=1).first()`: Retrieve a specific task by ID.
+
+
+   .. py:attribute:: __tablename__
+      :value: 'task'
+
+
+
+   .. py:attribute:: task_id
+
+      Unique identifier for each task.
+
+
+   .. py:attribute:: description
+
+      Text description of the task.
+
+
+   .. py:attribute:: points
+
+      Points assigned to the task for tracking effort or priority.
+
+
+   .. py:attribute:: deadline
+
+      Deadline date for task completion.
+
+
+   .. py:attribute:: created_on
+
+      Timestamp for when the task was created.
+
+
+   .. py:attribute:: updated_on
+
+      Timestamp for when the task was last updated.
+
+
+   .. py:attribute:: created_by
+
+      ID of the user who created the task, linking to the User entity.
+
+
+   .. py:attribute:: __table_args__
+
+
+.. py:class:: Assignment
+
+   Bases: :py:obj:`db`
+
+
+   This class represents the Assignment entity in the database, storing task assignments and tracking
+   progress for each task assigned to users.
+
+   **Why**: Facilitates assignment management by linking tasks to users and tracking their progress,
+   enabling task delegation and monitoring.
+
+   **How**: Common usage examples:
+   1. `Assignment.query.filter_by(user_id=1).all()`: Retrieve all assignments for a user.
+   2. `Assignment.query.filter_by(assignment_id=1).first()`: Retrieve a specific assignment by task ID.
+
+
+   .. py:attribute:: __tablename__
+      :value: 'assignment'
+
+
+
+   .. py:attribute:: user_id
+
+      Foreign key linking to the User table, representing the user assigned to the task.
+
+
+   .. py:attribute:: assignment_id
+
+      Primary key linking to the Task table, representing the assigned task.
+
+
+   .. py:attribute:: progress
+
+      Progress of the assignment, where `1.0` represents completion.
+
+
+   .. py:attribute:: assignment_created_on
+
+      Timestamp for when the assignment was created.
+
+
+   .. py:attribute:: assignment_updated_on
+
+      Timestamp for when the assignment was last updated.
+
+
+.. py:class:: User
+
+   Bases: :py:obj:`db`
+
+
+   This class represents the User entity in the database, storing user information such as unique Slack
+   user IDs.
+
+   **Why**: Essential for linking tasks and assignments to specific users, enabling personalized tracking
+   and Slack integration.
+
+   **How**: Common usage examples:
+   1. `User.query.filter_by(slack_user_id="U12345").first()`: Retrieve a user by Slack ID.
+   2. `User.query.all()`: Retrieve all users.
+
+
+   .. py:attribute:: __tablename__
+      :value: 'user'
+
+
+
+   .. py:attribute:: user_id
+
+      Unique identifier for each user.
+
+
+   .. py:attribute:: slack_user_id
+
+      Unique Slack ID for the user, enabling Slack-specific interactions.
+
+
+   .. py:attribute:: __table_args__
+
+

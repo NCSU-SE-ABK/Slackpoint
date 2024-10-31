@@ -1,0 +1,251 @@
+app
+===
+
+.. py:module:: app
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   app.reminders
+   app.app
+   app.ssl_context
+   app.slack_client
+   app.slack_events_adapter
+   app.daily_report
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   app.getUsers
+   app.findName
+   app.interactive_endpoint
+   app.basic
+   app.vpending
+   app.vcompleted
+   app.taskdone
+   app.reminder
+   app.create
+   app.update
+   app.help
+   app.leaderboard
+   app.request_help
+   app.send_reminder
+   app.get_channel_id
+   app.reminder_worker
+
+
+Module Contents
+---------------
+
+.. py:data:: reminders
+   :value: []
+
+
+.. py:data:: app
+
+.. py:data:: ssl_context
+
+.. py:data:: slack_client
+
+.. py:data:: slack_events_adapter
+
+.. py:function:: getUsers(channel_id)
+
+   Retrieves a list of users from a specific Slack channel.
+
+   :param channel_id: ID of the Slack channel.
+   :type channel_id: str
+   :return: List of users in the channel.
+   :rtype: list[dict]
+
+   **Why**: Essential for retrieving all members to assign or manage tasks within a specific channel.
+   **How**: Usage within task-related endpoints to gather or assign channel users.
+
+
+.. py:function:: findName(slack_id, channel_id)
+
+   Finds a user's name in a Slack channel by their Slack ID.
+
+   :param slack_id: Slack ID of the user.
+   :type slack_id: str
+   :param channel_id: ID of the Slack channel.
+   :type channel_id: str
+   :return: Name of the user.
+   :rtype: str
+
+   **Why**: Used to retrieve the actual name of a user for task assignments or updates, enhancing response clarity.
+
+
+.. py:function:: interactive_endpoint()
+
+   Endpoint to handle interactive Slack events like button clicks, such as for creating or updating tasks.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Allows the bot to handle interactive elements and input fields, providing a more dynamic user experience.
+
+
+.. py:function:: basic()
+
+   Health check endpoint.
+
+   :return: 'Hello World' - the official health check response text.
+   :rtype: str
+
+   **Why**: Ensures the server is running and accessible.
+
+
+.. py:function:: vpending()
+
+   Endpoint to view the pending tasks based on the requester's filters.
+
+   :return: Response object with payload containing pending tasks.
+   :rtype: Response
+
+   **Why**: Provides users with an organized view of pending tasks, allowing them to check tasks assigned to them,
+   tasks due today, or all uncompleted tasks.
+
+
+.. py:function:: vcompleted()
+
+   Endpoint to view completed tasks.
+
+   :return: Response object with payload containing completed tasks.
+   :rtype: Response
+
+   **Why**: Allows users to view completed tasks for tracking and reporting purposes.
+
+
+.. py:function:: taskdone()
+
+   Endpoint to mark a task as completed.
+
+   :return: Response object with payload containing task completion message.
+   :rtype: Response
+
+   **Why**: Enables users to update task status, marking it as completed.
+
+
+.. py:function:: reminder()
+
+   Endpoint to set a reminder for a user, prompting them to enter details like date, time, message, and
+   select a task. Sends an interactive Slack message with input fields for the reminder setup.
+
+   :return: JSON response with the status of the reminder setup.
+   :rtype: Response
+
+   **Why**: Enables users to schedule task-related reminders directly from Slack, improving task management
+   and helping users stay on top of deadlines.
+
+   **How**:
+   - The user initiates the reminder command, and the bot fetches pending tasks for the user.
+   - A Slack message is sent, prompting the user to select a date, time, task, and message for the reminder.
+   - Example command: `/reminder`
+
+
+.. py:function:: create()
+
+   Endpoint to create a new task. Triggers an ephemeral message for user input.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Provides an interactive way for users to create tasks, with a structured form for details.
+
+
+.. py:function:: update()
+
+   Endpoint to update an existing task, triggering a pre-filled form for user edits.
+
+   :return: Response object with 200 HTTP status.
+   :rtype: Response
+
+   **Why**: Allows users to easily modify tasks, using a form pre-populated with existing task details.
+
+
+.. py:function:: help()
+
+   Helper endpoint to view all commands and their usage.
+
+   :return: Response object with payload containing command descriptions.
+   :rtype: Response
+
+   **Why**: Provides guidance to users on available commands and how to use them.
+
+
+.. py:function:: leaderboard()
+
+   Endpoint to view the leaderboard for top users.
+
+   :return: Response object with payload containing leaderboard details.
+   :rtype: Response
+
+   **Why**: Encourages user engagement by showcasing top-performing users.
+
+
+.. py:function:: request_help()
+
+   Endpoint to request help on a task, notifying specified teammates.
+
+   :return: JSON response with confirmation or error message.
+   :rtype: Response
+
+   **Why**: Allows users to request assistance on tasks directly from Slack, helping facilitate team
+   collaboration by notifying selected teammates.
+
+   **How**:
+   - Send a Slack command in the format `/requesthelp {task_id} {@teammate1} [@teammate2] ...`
+     where `task_id` is the ID of the task and `@teammate` mentions the teammates to notify.
+   - The endpoint will:
+     1. Validate the task and the user’s ownership.
+     2. Notify the specified teammates if the task exists and is still in progress.
+
+
+.. py:data:: daily_report
+
+.. py:function:: send_reminder(channel_id, message, task_id)
+
+   Function to send a reminder message to a specified Slack channel.
+
+   :param channel_id: The ID of the Slack channel where the reminder will be sent.
+   :type channel_id: str
+   :param message: The reminder message to be sent.
+   :type message: str
+   :param task_id: The ID of the task associated with the reminder.
+   :type task_id: str
+   :raise: SlackApiError if there is an error sending the message.
+   :return: None
+
+
+.. py:function:: get_channel_id(channel_name)
+
+   Function to get the ID of a Slack channel given its name.
+
+   :param channel_name: The name of the Slack channel.
+   :type channel_name: str
+   :raise: SlackApiError if there is an error fetching the channels.
+   :return: The ID of the Slack channel if found, otherwise None.
+   :rtype: str or None
+
+
+.. py:function:: reminder_worker()
+
+   Background worker function to check and send reminders at the scheduled time.
+
+   This function runs in an infinite loop, checking the current time against the
+   scheduled reminder times. If a reminder's time is due, it sends the reminder
+   message to the specified Slack channel and removes the reminder from the list.
+
+   :param: None
+   :type: None
+   :raise: None
+   :return: None
+
+

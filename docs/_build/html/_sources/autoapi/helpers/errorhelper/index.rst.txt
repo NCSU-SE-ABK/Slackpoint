@@ -1,0 +1,75 @@
+helpers.errorhelper
+===================
+
+.. py:module:: helpers.errorhelper
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   helpers.errorhelper.ErrorHelper
+
+
+Module Contents
+---------------
+
+.. py:class:: ErrorHelper
+
+   This class provides standardized error handling and command help messaging for Slack bot interactions.
+
+   **Why**: Simplifies error reporting by formatting consistent and informative error messages, which include
+   helpful command usage information to guide users.
+
+   **How**: Common usage examples:
+   1. `ErrorHelper.get_error_payload_blocks(command)`: Retrieve error blocks with help information for a specific command.
+   2. `ErrorHelper.get_command_help(command)`: Retrieve a customized error message for a specific command.
+
+
+   .. py:attribute:: error_payload
+
+
+   .. py:attribute:: error_block_1
+
+
+   .. py:attribute:: command_help
+
+
+   .. py:method:: get_error_payload_blocks(command)
+
+      Retrieves error message blocks with help information for a specified command.
+
+      :param command: Command name to provide help for.
+      :type command: str
+      :return: List of formatted error blocks for Slack display.
+      :rtype: list[dict[str, Any]]
+
+      **Why**: Combines a generic error message with command-specific help, giving users clarity on how
+      to correct their input.
+      **How**: Example usage -
+      ```
+      error_blocks = error_helper.get_error_payload_blocks("create")
+      ```
+
+
+
+   .. py:method:: get_command_help(command, args=[])
+
+      Retrieves an error message with usage instructions or details for a specific command.
+
+      :param command: Command name for which help or an error message is needed.
+      :type command: str
+      :param args: Optional arguments for customizing certain messages.
+      :type args: list
+      :return: Formatted error or help message for the specified command.
+      :rtype: str
+
+      **Why**: Provides specific feedback and guidance for users on errors or command usage.
+      **How**: Example usage -
+      ```
+      help_message = error_helper.get_command_help("task_done")
+      ```
+
+
+

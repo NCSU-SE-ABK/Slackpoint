@@ -1,10 +1,15 @@
 from copy import deepcopy
-
 from models import *
 
 class ViewDeadlineTasks:
     """
-    This class is used to view a list of tasks on the slack bot as per the user they have been assigned to
+    This class retrieves and displays tasks due today in a Slack-compatible format.
+
+    **Why**: Useful for users to see tasks with deadlines on the current day, aiding in prioritizing tasks
+    and managing time effectively.
+
+    **How**: Common usage examples:
+    1. `ViewDeadlineTasks.get_list()`: Retrieve a list of tasks due today in a formatted Slack message payload.
     """
 
     base_point_block_format = {
@@ -17,31 +22,34 @@ class ViewDeadlineTasks:
 
     def __init__(self):
         """
-        Initialise ViewTasks Class. Set progress for filtering tasks.
+        Initializes the ViewDeadlineTasks class and sets up the response payload template.
 
-        :param progress: Optional Filter on tasks according to their progress.
-        :type progress: float
-        :raise:
-        :return: ViewPoints object
-        :rtype: ViewPoints object
-
+        **Why**: Prepares the payload structure for displaying task lists, ensuring compatibility with
+        Slack’s message format.
+        **How**: Example usage -
+        ```
+        deadline_tasks = ViewDeadlineTasks()
+        ```
         """
         self.payload = {"response_type": "ephemeral", "blocks": []}
-    
+
     def get_list(self):
         """
-        Return a list of tasks formatted in a slack message payload.
+        Retrieves a list of tasks due today, formatted for display in Slack.
 
-        :param None:
-        :type None:
-        :raise None:
-        :return: Slack message payload with list of tasks.
+        :return: Slack message payload containing tasks due today.
         :rtype: dict
 
+        **Why**: Provides an easy-to-access list of urgent tasks, helping users stay informed about upcoming
+        deadlines and ensuring timely task completion.
+        **How**: Example usage -
+        ```
+        tasks_due_today = deadline_tasks.get_list()
+        ```
         """
         tasks = []
-        # db query to get all tasks that have progress < 1
-        
+
+        # Database query to retrieve tasks due today with progress < 1 (not completed)
         tasks_with_deadline = (
             Task.query.join(Assignment)
             .add_columns(
@@ -58,7 +66,7 @@ class ViewDeadlineTasks:
         )
         tasks.extend(tasks_with_deadline)
 
-        # parse them
+        # Parse tasks and format them for Slack
         for task in tasks:
             point = deepcopy(self.base_point_block_format)
             point["text"]["text"] = point["text"]["text"].format(
@@ -79,4 +87,3 @@ class ViewDeadlineTasks:
                 }
             )
         return self.payload
-

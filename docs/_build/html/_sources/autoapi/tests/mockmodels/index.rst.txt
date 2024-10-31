@@ -1,0 +1,172 @@
+tests.mockmodels
+================
+
+.. py:module:: tests.mockmodels
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.mockmodels.mock_get_sqlalchemy
+   tests.mockmodels.mock_my_model
+   tests.mockmodels.mock_pending_task_1
+   tests.mockmodels.mock_pending_task_2
+   tests.mockmodels.mock_completed_task_3
+   tests.mockmodels.mock_completed_task_4
+   tests.mockmodels.mock_leaderboard_position_1
+   tests.mockmodels.mock_leaderboard_position_2
+   tests.mockmodels.mock_leaderboard_position_3
+   tests.mockmodels.mock_leaderboard_position_4
+   tests.mockmodels.mock_leaderboard_position_5
+   tests.mockmodels.mock_leaderboard_position_6
+
+
+Module Contents
+---------------
+
+.. py:function:: mock_get_sqlalchemy(mocker)
+
+   Get mocked object for test case
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_my_model()
+
+   Get mocked Task object
+
+   :param:
+   :type:
+   :raise:
+   :return: Mocked Task object
+   :rtype: Task
+
+
+
+.. py:function:: mock_pending_task_1()
+
+   Get mocked Task object
+
+   :param:
+   :type:
+   :raise:
+   :return: Mocked Task object
+   :rtype: Task
+
+
+
+.. py:function:: mock_pending_task_2()
+
+   Get mocked Task object
+
+   :param:
+   :type:
+   :raise:
+   :return: Mocked Task object
+   :rtype: Task
+
+
+
+.. py:function:: mock_completed_task_3()
+
+   Get mocked Task object
+
+   :param:
+   :type:
+   :raise:
+   :return: Mocked Task object
+   :rtype: Task
+
+
+
+.. py:function:: mock_completed_task_4()
+
+   Get mocked Task object
+
+   :param:
+   :type:
+   :raise:
+   :return: Mocked Task object
+   :rtype: Task
+
+
+
+.. py:function:: mock_leaderboard_position_1(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_leaderboard_position_2(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_leaderboard_position_3(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_leaderboard_position_4(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_leaderboard_position_5(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+
+.. py:function:: mock_leaderboard_position_6(mocker)
+
+   Get mocked Task object
+
+   :param mocker: Mocker object
+   :type mocker: Any
+   :raise:
+   :return: Mocked object
+   :rtype: Any
+
+
+

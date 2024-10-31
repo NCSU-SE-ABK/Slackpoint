@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>models &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="helpers" href="../helpers/index.html" />
+    <link rel="prev" title="tests.test_viewpending" href="../tests/test_viewpending/index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-models">
+<span id="models"></span><h1>models<a class="headerlink" href="#module-models" title="Link to this heading">¶</a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#models.db" title="models.db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#models.Task" title="models.Task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code></a></p></td>
+<td><p>This class represents the Task entity in the database, storing details about tasks such as description,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#models.Assignment" title="models.Assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Assignment</span></code></a></p></td>
+<td><p>This class represents the Assignment entity in the database, storing task assignments and tracking</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#models.User" title="models.User"><code class="xref py py-obj docutils literal notranslate"><span class="pre">User</span></code></a></p></td>
+<td><p>This class represents the User entity in the database, storing user information such as unique Slack</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="models.db">
+<span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">db</span></span><a class="reference internal" href="../../_modules/models.html#db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.db" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Task">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Task</span></span><a class="reference internal" href="../../_modules/models.html#Task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#models.db" title="models.db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></a></p>
+<p>This class represents the Task entity in the database, storing details about tasks such as description,
+points, deadline, and timestamps for creation and updates.</p>
+<p><strong>Why</strong>: Useful for tracking individual tasks, allowing applications to store, retrieve, and manage task
+details effectively.</p>
+<p><strong>How</strong>: Common usage examples:
+1. <cite>Task.query.all()</cite>: Retrieve all tasks.
+2. <cite>Task.query.filter_by(task_id=1).first()</cite>: Retrieve a specific task by ID.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.__tablename__">
+<span class="sig-name descname"><span class="pre">__tablename__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'task'</span></em><a class="reference internal" href="../../_modules/models.html#Task.__tablename__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.__tablename__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.task_id">
+<span class="sig-name descname"><span class="pre">task_id</span></span><a class="reference internal" href="../../_modules/models.html#Task.task_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.task_id" title="Link to this definition">¶</a></dt>
+<dd><p>Unique identifier for each task.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="reference internal" href="../../_modules/models.html#Task.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.description" title="Link to this definition">¶</a></dt>
+<dd><p>Text description of the task.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.points">
+<span class="sig-name descname"><span class="pre">points</span></span><a class="reference internal" href="../../_modules/models.html#Task.points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.points" title="Link to this definition">¶</a></dt>
+<dd><p>Points assigned to the task for tracking effort or priority.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.deadline">
+<span class="sig-name descname"><span class="pre">deadline</span></span><a class="reference internal" href="../../_modules/models.html#Task.deadline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.deadline" title="Link to this definition">¶</a></dt>
+<dd><p>Deadline date for task completion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.created_on">
+<span class="sig-name descname"><span class="pre">created_on</span></span><a class="reference internal" href="../../_modules/models.html#Task.created_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.created_on" title="Link to this definition">¶</a></dt>
+<dd><p>Timestamp for when the task was created.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.updated_on">
+<span class="sig-name descname"><span class="pre">updated_on</span></span><a class="reference internal" href="../../_modules/models.html#Task.updated_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.updated_on" title="Link to this definition">¶</a></dt>
+<dd><p>Timestamp for when the task was last updated.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.created_by">
+<span class="sig-name descname"><span class="pre">created_by</span></span><a class="reference internal" href="../../_modules/models.html#Task.created_by"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.created_by" title="Link to this definition">¶</a></dt>
+<dd><p>ID of the user who created the task, linking to the User entity.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Task.__table_args__">
+<span class="sig-name descname"><span class="pre">__table_args__</span></span><a class="reference internal" href="../../_modules/models.html#Task.__table_args__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Task.__table_args__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.Assignment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">Assignment</span></span><a class="reference internal" href="../../_modules/models.html#Assignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#models.db" title="models.db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></a></p>
+<p>This class represents the Assignment entity in the database, storing task assignments and tracking
+progress for each task assigned to users.</p>
+<p><strong>Why</strong>: Facilitates assignment management by linking tasks to users and tracking their progress,
+enabling task delegation and monitoring.</p>
+<p><strong>How</strong>: Common usage examples:
+1. <cite>Assignment.query.filter_by(user_id=1).all()</cite>: Retrieve all assignments for a user.
+2. <cite>Assignment.query.filter_by(assignment_id=1).first()</cite>: Retrieve a specific assignment by task ID.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.__tablename__">
+<span class="sig-name descname"><span class="pre">__tablename__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'assignment'</span></em><a class="reference internal" href="../../_modules/models.html#Assignment.__tablename__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.__tablename__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="reference internal" href="../../_modules/models.html#Assignment.user_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.user_id" title="Link to this definition">¶</a></dt>
+<dd><p>Foreign key linking to the User table, representing the user assigned to the task.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.assignment_id">
+<span class="sig-name descname"><span class="pre">assignment_id</span></span><a class="reference internal" href="../../_modules/models.html#Assignment.assignment_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.assignment_id" title="Link to this definition">¶</a></dt>
+<dd><p>Primary key linking to the Task table, representing the assigned task.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.progress">
+<span class="sig-name descname"><span class="pre">progress</span></span><a class="reference internal" href="../../_modules/models.html#Assignment.progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.progress" title="Link to this definition">¶</a></dt>
+<dd><p>Progress of the assignment, where <cite>1.0</cite> represents completion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.assignment_created_on">
+<span class="sig-name descname"><span class="pre">assignment_created_on</span></span><a class="reference internal" href="../../_modules/models.html#Assignment.assignment_created_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.assignment_created_on" title="Link to this definition">¶</a></dt>
+<dd><p>Timestamp for when the assignment was created.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.Assignment.assignment_updated_on">
+<span class="sig-name descname"><span class="pre">assignment_updated_on</span></span><a class="reference internal" href="../../_modules/models.html#Assignment.assignment_updated_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.Assignment.assignment_updated_on" title="Link to this definition">¶</a></dt>
+<dd><p>Timestamp for when the assignment was last updated.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="models.User">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.</span></span><span class="sig-name descname"><span class="pre">User</span></span><a class="reference internal" href="../../_modules/models.html#User"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.User" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#models.db" title="models.db"><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></a></p>
+<p>This class represents the User entity in the database, storing user information such as unique Slack
+user IDs.</p>
+<p><strong>Why</strong>: Essential for linking tasks and assignments to specific users, enabling personalized tracking
+and Slack integration.</p>
+<p><strong>How</strong>: Common usage examples:
+1. <cite>User.query.filter_by(slack_user_id=”U12345”).first()</cite>: Retrieve a user by Slack ID.
+2. <cite>User.query.all()</cite>: Retrieve all users.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.User.__tablename__">
+<span class="sig-name descname"><span class="pre">__tablename__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'user'</span></em><a class="reference internal" href="../../_modules/models.html#User.__tablename__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.User.__tablename__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.User.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="reference internal" href="../../_modules/models.html#User.user_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.User.user_id" title="Link to this definition">¶</a></dt>
+<dd><p>Unique identifier for each user.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.User.slack_user_id">
+<span class="sig-name descname"><span class="pre">slack_user_id</span></span><a class="reference internal" href="../../_modules/models.html#User.slack_user_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.User.slack_user_id" title="Link to this definition">¶</a></dt>
+<dd><p>Unique Slack ID for the user, enabling Slack-specific interactions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="models.User.__table_args__">
+<span class="sig-name descname"><span class="pre">__table_args__</span></span><a class="reference internal" href="../../_modules/models.html#User.__table_args__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.User.__table_args__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../app/index.html">app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../conf/index.html">conf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../setup/index.html">setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tests/index.html">tests</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../helpers/index.html">helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration/index.html">configuration</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">API Reference</a><ul>
+      <li>Previous: <a href="../tests/test_viewpending/index.html" title="previous chapter">tests.test_viewpending</a></li>
+      <li>Next: <a href="../helpers/index.html" title="next chapter">helpers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/autoapi/models/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

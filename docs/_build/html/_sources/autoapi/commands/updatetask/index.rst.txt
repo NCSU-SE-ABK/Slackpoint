@@ -1,0 +1,108 @@
+commands.updatetask
+===================
+
+.. py:module:: commands.updatetask
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.updatetask.UpdateTask
+
+
+Module Contents
+---------------
+
+.. py:class:: UpdateTask(user_id='', data=[], users=[])
+
+   This class handles task updates, allowing users to modify existing tasks and reassign task details.
+
+   **Why**: Essential for task management, enabling users to update task properties, including description,
+   deadline, points, and assigned users, to ensure accurate and current task tracking.
+
+   **How**: Common usage examples:
+   1. `UpdateTask.checkTaskID()`: Verify if the specified task ID exists in the database.
+   2. `UpdateTask.create_task_input_blocks()`: Generate Slack-compatible blocks for user input fields prefilled
+      with current task data for updating.
+   3. `UpdateTask.update_task(id, desc, points, deadline, assignee)`: Update task properties in the database.
+
+
+   .. py:attribute:: base_create_task_block_format
+
+
+   .. py:attribute:: greetings
+      :value: ['Awesome', 'Great', 'Congratulations', 'Well done', "Let's go"]
+
+
+
+   .. py:attribute:: payload
+
+
+   .. py:attribute:: user_id
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: users
+
+
+   .. py:method:: checkTaskID()
+
+      Validates if a given task ID exists in the database.
+
+      :return: Boolean indicating whether the task ID exists.
+      :rtype: bool
+
+      **Why**: Ensures that users can only attempt to update tasks that actually exist.
+      **How**: Example usage -
+      ```
+      is_valid = task_update.checkTaskID()
+      ```
+
+
+
+   .. py:method:: create_task_input_blocks()
+
+      Creates Slack-compatible input blocks prefilled with current task details for easy updating.
+
+      :return: List of blocks for task input fields, including description, deadline, points, and assignees.
+      :rtype: list
+
+      **Why**: Provides users with prefilled input fields, making it easy to update tasks without manually
+      re-entering existing data.
+      **How**: Example usage -
+      ```
+      input_blocks = task_update.create_task_input_blocks()
+      ```
+
+
+
+   .. py:method:: update_task(id, desc, points, deadline, assignee)
+
+      Updates task properties in the database and returns a success message payload.
+
+      :param id: Task ID to be updated.
+      :type id: int
+      :param desc: Updated description of the task.
+      :type desc: str
+      :param points: Updated points for the task.
+      :type points: int
+      :param deadline: Updated deadline for the task.
+      :type deadline: str
+      :param assignee: Slack ID of the user assigned to the task.
+      :type assignee: str
+      :return: Payload blocks with success message if update is successful.
+      :rtype: list
+
+      **Why**: Updates ensure task data is current and assigned to the appropriate user, facilitating effective
+      task tracking.
+      **How**: Example usage -
+      ```
+      response_payload = task_update.update_task(12, "New Description", 3, "2023-12-31", "U67890")
+      ```
+
+
+

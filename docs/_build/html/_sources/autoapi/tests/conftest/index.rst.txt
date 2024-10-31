@@ -1,0 +1,76 @@
+tests.conftest
+==============
+
+.. py:module:: tests.conftest
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.conftest.app_instance
+   tests.conftest.client
+   tests.conftest.mock_slack_client
+   tests.conftest.mock_scheduler
+   tests.conftest.daily_report
+   tests.conftest.mock_user
+   tests.conftest.mock_users
+   tests.conftest.mock_completed_tasks
+   tests.conftest.mock_upcoming_tasks
+   tests.conftest.mock_past_due_tasks
+
+
+Module Contents
+---------------
+
+.. py:function:: app_instance()
+
+   Create and configure a new app instance for each test session.
+
+
+.. py:function:: client(app_instance)
+
+   A test client for the app.
+
+
+.. py:function:: mock_slack_client(mocker)
+
+   Mock the Slack client from the app module.
+
+
+.. py:function:: mock_scheduler(mocker)
+
+   Mock the BackgroundScheduler used in DailyStandupReport.
+
+
+.. py:function:: daily_report(app_instance, mock_scheduler)
+
+   Provide an instance of DailyStandupReport for testing.
+
+
+.. py:function:: mock_user(mocker)
+
+   Create a mock User instance.
+
+
+.. py:function:: mock_users(mocker, mock_user)
+
+   Return a list of mock users.
+
+
+.. py:function:: mock_completed_tasks(mocker)
+
+   Create a list of mock completed Task instances.
+
+
+.. py:function:: mock_upcoming_tasks(mocker)
+
+   Create a list of mock upcoming Task instances.
+
+
+.. py:function:: mock_past_due_tasks(mocker)
+
+   Create a list of mock past due Task instances.
+
+

@@ -1,12 +1,17 @@
 from copy import deepcopy
-
 from models import *
 from sqlalchemy import desc, func
 
 
 class Leaderboard:
     """
-    This class handles the Create Leaderboard functionality.
+    This class generates a leaderboard, displaying the top point scorers based on completed tasks.
+
+    **Why**: Useful for tracking task completion in a gamified environment, allowing users to see where they stand
+    compared to others and encouraging active participation in completing tasks.
+
+    **How**: Common usage examples:
+    1. `Leaderboard.view_leaderboard(top_k=5)`: Retrieve the top 5 users based on points.
     """
 
     base_leaderboard_block_format = {
@@ -16,27 +21,31 @@ class Leaderboard:
 
     def __init__(self):
         """
-        Constructor to initialize payload object
+        Initializes the Leaderboard object with a payload template for response formatting.
 
-        :param:
-        :type:
-        :raise:
-        :return: None
-        :rtype: None
-
+        **Why**: Sets up a structured payload format compatible with Slack, enabling easy message display.
+        **How**: Example usage -
+        ```
+        leaderboard = Leaderboard()
+        ```
         """
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def view_leaderboard(self, top_k: int = 5) -> dict:
         """
-        Generates leaderboard according to the highest points scorers, returns top five contenders from DB
+        Retrieves and formats the leaderboard with the top K users by points from completed tasks.
 
-        :param top_k: Provision to generate top k contenders in leaderboard, default value: 5
+        :param top_k: Number of top users to display on the leaderboard, default is 5.
         :type top_k: int
-        :raise:
-        :return: Payload object containing details about the top 5 contenders of SlackPoint
+        :return: Payload containing leaderboard information for the top K users.
         :rtype: dict[str, Any]
 
+        **Why**: Displays high-performing users in a structured format, motivating users to stay engaged by
+        highlighting achievements and fostering a sense of competition.
+        **How**: Example usage -
+        ```
+        top_users = leaderboard.view_leaderboard(top_k=10)
+        ```
         """
         top_5_leaderboard = (
             Assignment.query.join(Task)
@@ -51,7 +60,7 @@ class Leaderboard:
             .order_by(desc("total_points"))[:top_k]
         )
 
-        # parse them
+        # Parse leaderboard data
         count = 0
         for user in top_5_leaderboard:
             count += 1

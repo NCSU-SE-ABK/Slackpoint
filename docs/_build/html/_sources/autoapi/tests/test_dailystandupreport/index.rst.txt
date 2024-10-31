@@ -1,0 +1,145 @@
+tests.test_dailystandupreport
+=============================
+
+.. py:module:: tests.test_dailystandupreport
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.test_dailystandupreport.mock_users
+   tests.test_dailystandupreport.daily_report
+   tests.test_dailystandupreport.test_daily_report_exists
+   tests.test_dailystandupreport.test_get_standup_message_multiple_users_all_tasks
+   tests.test_dailystandupreport.test_get_standup_message_multiple_users_some_tasks
+   tests.test_dailystandupreport.test_get_standup_message_multiple_users_no_tasks
+   tests.test_dailystandupreport.test_get_standup_message_single_user_all_tasks
+   tests.test_dailystandupreport.test_get_standup_message_single_user_some_tasks
+   tests.test_dailystandupreport.test_get_standup_message_single_user_no_tasks
+   tests.test_dailystandupreport.test_get_standup_message_no_users
+   tests.test_dailystandupreport.test_get_standup_message_multiple_tasks_each_category
+   tests.test_dailystandupreport.test_get_standup_message_special_characters_in_tasks
+   tests.test_dailystandupreport.test_get_standup_message_empty_blocks_key
+   tests.test_dailystandupreport.test_get_standup_message_malformed_task_data
+   tests.test_dailystandupreport.test_get_standup_message_large_number_of_tasks
+   tests.test_dailystandupreport.test_get_standup_message_identical_tasks
+   tests.test_dailystandupreport.test_get_standup_message_similar_but_distinct_slack_ids
+   tests.test_dailystandupreport.test_get_standup_message_same_tasks_different_users
+   tests.test_dailystandupreport.test_get_standup_message_users_without_slack_id
+   tests.test_dailystandupreport.test_get_standup_message_users_with_none_slack_id
+   tests.test_dailystandupreport.test_get_standup_message_unicode_characters
+   tests.test_dailystandupreport.test_get_standup_message_mixed_valid_and_invalid_task_data
+
+
+Module Contents
+---------------
+
+.. py:function:: mock_users(mocker)
+
+   Fixture to create a list of mock User instances.
+
+
+.. py:function:: daily_report(app_instance, mock_scheduler)
+
+   Fixture to provide an instance of DailyStandupReport for testing.
+
+
+.. py:function:: test_daily_report_exists(daily_report, mock_users, mocker)
+
+.. py:function:: test_get_standup_message_multiple_users_all_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with multiple users, each having all task categories populated.
+
+
+.. py:function:: test_get_standup_message_multiple_users_some_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with multiple users, some task categories populated.
+
+
+.. py:function:: test_get_standup_message_multiple_users_no_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with multiple users, none having any tasks.
+
+
+.. py:function:: test_get_standup_message_single_user_all_tasks(daily_report, mocker)
+
+   Test get_standup_message with a single user, all task categories populated.
+
+
+.. py:function:: test_get_standup_message_single_user_some_tasks(daily_report, mocker)
+
+   Test get_standup_message with a single user, some task categories populated.
+
+
+.. py:function:: test_get_standup_message_single_user_no_tasks(daily_report, mocker)
+
+   Test get_standup_message with a single user, no tasks in any category.
+
+
+.. py:function:: test_get_standup_message_no_users(daily_report, mocker)
+
+   Test get_standup_message with no users provided.
+
+
+.. py:function:: test_get_standup_message_multiple_tasks_each_category(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having multiple tasks in each category.
+
+
+.. py:function:: test_get_standup_message_special_characters_in_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with special characters and markdown in task descriptions.
+
+
+.. py:function:: test_get_standup_message_empty_blocks_key(daily_report, mock_users, mocker)
+
+   Test get_standup_message when 'blocks' key is missing in task categories.
+
+
+.. py:function:: test_get_standup_message_malformed_task_data(daily_report, mock_users, mocker)
+
+   Test get_standup_message with malformed task data (missing 'text' key).
+
+
+.. py:function:: test_get_standup_message_large_number_of_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having a large number of tasks.
+
+
+.. py:function:: test_get_standup_message_identical_tasks(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having identical tasks across categories.
+
+
+.. py:function:: test_get_standup_message_similar_but_distinct_slack_ids(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having similar but distinct Slack user IDs.
+
+
+.. py:function:: test_get_standup_message_same_tasks_different_users(daily_report, mock_users, mocker)
+
+   Test get_standup_message with different users having the same tasks.
+
+
+.. py:function:: test_get_standup_message_users_without_slack_id(daily_report, mocker)
+
+   Test get_standup_message with users missing 'slack_user_id'.
+
+
+.. py:function:: test_get_standup_message_users_with_none_slack_id(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having 'slack_user_id' as None.
+
+
+.. py:function:: test_get_standup_message_unicode_characters(daily_report, mock_users, mocker)
+
+   Test get_standup_message with unicode characters in task descriptions.
+
+
+.. py:function:: test_get_standup_message_mixed_valid_and_invalid_task_data(daily_report, mock_users, mocker)
+
+   Test get_standup_message with users having mixed valid and invalid task data.
+
+

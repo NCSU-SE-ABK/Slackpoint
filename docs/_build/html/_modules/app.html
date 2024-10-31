@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>app &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for app</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">commands.taskdone</span> <span class="kn">import</span> <span class="n">TaskDone</span>
+<span class="kn">from</span> <span class="nn">commands.leaderboard</span> <span class="kn">import</span> <span class="n">Leaderboard</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">make_response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">slack.errors</span> <span class="kn">import</span> <span class="n">SlackApiError</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">commands.help</span> <span class="kn">import</span> <span class="n">Help</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">slack</span> <span class="kn">import</span> <span class="n">WebClient</span>
+<span class="kn">from</span> <span class="nn">slackeventsapi</span> <span class="kn">import</span> <span class="n">SlackEventAdapter</span>
+
+<span class="kn">from</span> <span class="nn">commands.viewpoints</span> <span class="kn">import</span> <span class="n">ViewPoints</span>
+<span class="kn">from</span> <span class="nn">configuration.env_config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">commands.createtask</span> <span class="kn">import</span> <span class="n">CreateTask</span>
+<span class="kn">from</span> <span class="nn">helpers.errorhelper</span> <span class="kn">import</span> <span class="n">ErrorHelper</span>
+<span class="kn">from</span> <span class="nn">commands.updatetask</span> <span class="kn">import</span> <span class="n">UpdateTask</span>
+<span class="kn">from</span> <span class="nn">commands.viewmytasks</span> <span class="kn">import</span> <span class="n">ViewMyTasks</span>
+<span class="kn">from</span> <span class="nn">commands.viewdeadlinetasks</span> <span class="kn">import</span> <span class="n">ViewDeadlineTasks</span>
+<span class="kn">from</span> <span class="nn">commands.requesthelp</span> <span class="kn">import</span> <span class="n">RequestHelp</span>
+<span class="kn">from</span> <span class="nn">commands.dailystandupreport</span> <span class="kn">import</span> <span class="n">DailyStandupReport</span>
+
+<span class="kn">import</span> <span class="nn">ssl</span>
+<span class="kn">import</span> <span class="nn">certifi</span>
+
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># List to store reminders</span>
+<div class="viewcode-block" id="reminders">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.reminders">[docs]</a>
+<span class="n">reminders</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="app">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.app">[docs]</a>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+<span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;SQLALCHEMY_DATABASE_URI&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">SQLALCHEMY_DATABASE_URI</span>
+<span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+
+<span class="c1"># Initialize Slack client</span>
+<div class="viewcode-block" id="ssl_context">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.ssl_context">[docs]</a>
+<span class="n">ssl_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">(</span><span class="n">cafile</span><span class="o">=</span><span class="n">certifi</span><span class="o">.</span><span class="n">where</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="slack_client">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.slack_client">[docs]</a>
+<span class="n">slack_client</span> <span class="o">=</span> <span class="n">WebClient</span><span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">SLACK_BOT_TOKEN</span><span class="p">,</span> <span class="n">ssl</span><span class="o">=</span><span class="n">ssl_context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="slack_events_adapter">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.slack_events_adapter">[docs]</a>
+<span class="n">slack_events_adapter</span> <span class="o">=</span> <span class="n">SlackEventAdapter</span><span class="p">(</span>
+    <span class="n">Config</span><span class="o">.</span><span class="n">SLACK_SIGNING_SECRET</span><span class="p">,</span> <span class="s2">&quot;/slack/events&quot;</span><span class="p">,</span> <span class="n">app</span>
+<span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getUsers">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.getUsers">[docs]</a>
+<span class="k">def</span> <span class="nf">getUsers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves a list of users from a specific Slack channel.</span>
+
+<span class="sd">    :param channel_id: ID of the Slack channel.</span>
+<span class="sd">    :type channel_id: str</span>
+<span class="sd">    :return: List of users in the channel.</span>
+<span class="sd">    :rtype: list[dict]</span>
+
+<span class="sd">    **Why**: Essential for retrieving all members to assign or manage tasks within a specific channel.</span>
+<span class="sd">    **How**: Usage within task-related endpoints to gather or assign channel users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">slack_client</span><span class="o">.</span><span class="n">conversations_members</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;members&#39;</span><span class="p">]:</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">slack_client</span><span class="o">.</span><span class="n">users_info</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">if</span> <span class="s1">&#39;real_name&#39;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> 
+            <span class="k">if</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;real_name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;bot&#39;</span><span class="p">):</span>
+                <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;real_name&#39;</span><span class="p">],</span> <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">users</span></div>
+
+
+<div class="viewcode-block" id="findName">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.findName">[docs]</a>
+<span class="k">def</span> <span class="nf">findName</span><span class="p">(</span><span class="n">slack_id</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds a user&#39;s name in a Slack channel by their Slack ID.</span>
+
+<span class="sd">    :param slack_id: Slack ID of the user.</span>
+<span class="sd">    :type slack_id: str</span>
+<span class="sd">    :param channel_id: ID of the Slack channel.</span>
+<span class="sd">    :type channel_id: str</span>
+<span class="sd">    :return: Name of the user.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Why**: Used to retrieve the actual name of a user for task assignments or updates, enhancing response clarity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">getUsers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">slack_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">element</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/slack/interactive-endpoint&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="interactive_endpoint">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.interactive_endpoint">[docs]</a>
+<span class="k">def</span> <span class="nf">interactive_endpoint</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to handle interactive Slack events like button clicks, such as for creating or updating tasks.</span>
+
+<span class="sd">    :return: Response object with 200 HTTP status.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Allows the bot to handle interactive elements and input fields, providing a more dynamic user experience.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;payload&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;block_actions&quot;</span><span class="p">:</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;action_id&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;create_action_button&quot;</span><span class="p">,</span> <span class="s2">&quot;update_action_button&quot;</span><span class="p">]:</span>
+                <span class="n">channel_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;container&quot;</span><span class="p">][</span><span class="s2">&quot;channel_id&quot;</span><span class="p">]</span>
+                <span class="n">user_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+                <span class="n">helper</span> <span class="o">=</span> <span class="n">ErrorHelper</span><span class="p">()</span>
+                <span class="n">ct</span> <span class="o">=</span> <span class="n">CreateTask</span><span class="p">()</span>
+                <span class="n">ut</span> <span class="o">=</span> <span class="n">UpdateTask</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+                <span class="n">state_values</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">]</span>
+                <span class="n">desc</span><span class="p">,</span> <span class="n">deadline</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">assignee</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">state_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="s2">&quot;create_action_description&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="n">desc</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_description&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="s2">&quot;create_action_deadline&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="n">deadline</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_deadline&quot;</span><span class="p">][</span><span class="s2">&quot;selected_date&quot;</span><span class="p">]</span>
+                    <span class="k">elif</span> <span class="s2">&quot;create_action_points&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_points&quot;</span><span class="p">][</span><span class="s2">&quot;selected_option&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">points</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_points&quot;</span><span class="p">][</span><span class="s2">&quot;selected_option&quot;</span><span class="p">][</span>
+                                <span class="s2">&quot;value&quot;</span>
+                            <span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">points</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">elif</span> <span class="s2">&quot;create_action_assignees&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_assignees&quot;</span><span class="p">][</span><span class="s2">&quot;selected_option&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">assignee</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;create_action_assignees&quot;</span><span class="p">][</span><span class="s2">&quot;selected_option&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">desc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">error_blocks</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">get_error_payload_blocks</span><span class="p">(</span><span class="s2">&quot;createtask&quot;</span><span class="p">)</span>
+                    <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">error_blocks</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;action_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;create_action_button&quot;</span><span class="p">):</span>
+                        <span class="n">blocks</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="n">deadline</span><span class="p">,</span> <span class="n">assignee</span><span class="o">=</span><span class="n">assignee</span><span class="p">,</span>
+                                                    <span class="n">created_by</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+                        <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span>
+                            <span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                        <span class="n">blocks</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">update_task</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="n">deadline</span><span class="p">,</span> <span class="n">assignee</span><span class="o">=</span><span class="n">assignee</span><span class="p">)</span>
+                        <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span>
+                            <span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">assignee</span><span class="p">):</span>
+                        <span class="n">assignerName</span> <span class="o">=</span> <span class="n">findName</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">)</span>
+
+                        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Task #&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; has been assigned to you by &quot;</span> <span class="o">+</span> <span class="n">assignerName</span>
+                        <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span>
+                            <span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">assignee</span><span class="p">,</span>
+                            <span class="n">blocks</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}}]</span>
+                        <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">actions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;action_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;submit_reminder&quot;</span><span class="p">:</span>
+                <span class="n">selected_date</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="s2">&quot;reminder_date&quot;</span><span class="p">][</span><span class="s2">&quot;select_date&quot;</span><span class="p">][</span><span class="s2">&quot;selected_date&quot;</span><span class="p">]</span>
+                <span class="n">selected_time</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="s2">&quot;reminder_time&quot;</span><span class="p">][</span><span class="s2">&quot;select_time&quot;</span><span class="p">][</span><span class="s2">&quot;selected_time&quot;</span><span class="p">]</span>
+                <span class="n">reminder_message</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="s2">&quot;reminder_message&quot;</span><span class="p">][</span><span class="s2">&quot;message_input&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                <span class="n">selected_task</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;state&quot;</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">][</span><span class="s2">&quot;reminder_task&quot;</span><span class="p">][</span><span class="s2">&quot;select_task&quot;</span><span class="p">][</span><span class="s2">&quot;selected_option&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                <span class="n">channel_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;channel&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+
+                <span class="n">reminder_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">selected_date</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">selected_time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">)</span>
+
+                <span class="n">reminders</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="n">channel_id</span><span class="p">,</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">reminder_message</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">reminder_datetime</span><span class="p">,</span>
+                    <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="n">selected_task</span>
+                <span class="p">})</span>
+
+                <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;replace_original&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;✅ Reminder Scheduled!&quot;</span><span class="p">}</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;*Message:* </span><span class="si">{</span><span class="n">reminder_message</span><span class="si">}</span><span class="se">\n</span><span class="s2">*Scheduled For:* </span><span class="si">{</span><span class="n">reminder_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%d</span><span class="s1"> at %I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">*Task ID:* </span><span class="si">{</span><span class="n">selected_task</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;divider&quot;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;context&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="p">{</span>
+                                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;:bell: You&#39;ll receive a reminder in the specified channel at the scheduled time.&quot;</span>
+                                <span class="p">}</span>
+                            <span class="p">]</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">make_response</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="basic">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.basic">[docs]</a>
+<span class="k">def</span> <span class="nf">basic</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Health check endpoint.</span>
+
+<span class="sd">    :return: &#39;Hello World&#39; - the official health check response text.</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    **Why**: Ensures the server is running and accessible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello World&quot;</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/viewpending&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="vpending">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.vpending">[docs]</a>
+<span class="k">def</span> <span class="nf">vpending</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to view the pending tasks based on the requester&#39;s filters.</span>
+
+<span class="sd">    :return: Response object with payload containing pending tasks.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Provides users with an organized view of pending tasks, allowing them to check tasks assigned to them,</span>
+<span class="sd">    tasks due today, or all uncompleted tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;me&quot;</span><span class="p">:</span>
+        <span class="n">vt</span> <span class="o">=</span> <span class="n">ViewMyTasks</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">get_list</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;today&quot;</span><span class="p">:</span>
+        <span class="n">vdt</span> <span class="o">=</span> <span class="n">ViewDeadlineTasks</span><span class="p">()</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">vdt</span><span class="o">.</span><span class="n">get_list</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">vp</span> <span class="o">=</span> <span class="n">ViewPoints</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">get_list</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/viewcompleted&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="vcompleted">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.vcompleted">[docs]</a>
+<span class="k">def</span> <span class="nf">vcompleted</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to view completed tasks.</span>
+
+<span class="sd">    :return: Response object with payload containing completed tasks.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Allows users to view completed tasks for tracking and reporting purposes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">vp</span> <span class="o">=</span> <span class="n">ViewPoints</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">vp</span><span class="o">.</span><span class="n">get_list</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/taskdone&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="taskdone">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.taskdone">[docs]</a>
+<span class="k">def</span> <span class="nf">taskdone</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to mark a task as completed.</span>
+
+<span class="sd">    :return: Response object with payload containing task completion message.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Enables users to update task status, marking it as completed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">td</span> <span class="o">=</span> <span class="n">TaskDone</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">td</span><span class="o">.</span><span class="n">update_points</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/reminder&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="reminder">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.reminder">[docs]</a>
+<span class="k">def</span> <span class="nf">reminder</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to set a reminder for a user, prompting them to enter details like date, time, message, and</span>
+<span class="sd">    select a task. Sends an interactive Slack message with input fields for the reminder setup.</span>
+
+<span class="sd">    :return: JSON response with the status of the reminder setup.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Enables users to schedule task-related reminders directly from Slack, improving task management</span>
+<span class="sd">    and helping users stay on top of deadlines.</span>
+
+<span class="sd">    **How**:</span>
+<span class="sd">    - The user initiates the reminder command, and the bot fetches pending tasks for the user.</span>
+<span class="sd">    - A Slack message is sent, prompting the user to select a date, time, task, and message for the reminder.</span>
+<span class="sd">    - Example command: `/reminder`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User ID&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+
+    <span class="c1"># Fetch pending tasks for the user</span>
+    <span class="n">vt</span> <span class="o">=</span> <span class="n">ViewMyTasks</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">pending_tasks</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">get_list</span><span class="p">()[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pending tasks&quot;</span><span class="p">,</span> <span class="n">pending_tasks</span><span class="p">)</span>
+
+    <span class="c1"># Format task options for the interactive message</span>
+    <span class="n">task_options</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">task</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]},</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">task</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">pending_tasks</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Handle case when no pending tasks are available</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">task_options</span><span class="p">:</span>
+        <span class="n">task_options</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;No pending tasks available&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;no_task&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+
+    <span class="c1"># Send interactive message to capture reminder details</span>
+    <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postMessage</span><span class="p">(</span>
+        <span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span>
+        <span class="n">blocks</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Please select the date, time, message, and task for your reminder.&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;divider&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="s2">&quot;reminder_date&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;datepicker&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;select_date&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a date&quot;</span><span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Date&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="s2">&quot;reminder_time&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;timepicker&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;select_time&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a time&quot;</span><span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Time&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="s2">&quot;reminder_message&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text_input&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;message_input&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Enter reminder message&quot;</span><span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Message&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;block_id&quot;</span><span class="p">:</span> <span class="s2">&quot;reminder_task&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;static_select&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;select_task&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a task&quot;</span><span class="p">},</span>
+                    <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">task_options</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;actions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;button&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Set Reminder&quot;</span><span class="p">},</span>
+                        <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;submit_reminder&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Schedule a reminder&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">}),</span> <span class="mi">200</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/create&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="create">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.create">[docs]</a>
+<span class="k">def</span> <span class="nf">create</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to create a new task. Triggers an ephemeral message for user input.</span>
+
+<span class="sd">    :return: Response object with 200 HTTP status.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Provides an interactive way for users to create tasks, with a structured form for details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+
+    <span class="n">ct</span> <span class="o">=</span> <span class="n">CreateTask</span><span class="p">(</span><span class="n">getUsers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">))</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">create_task_input_blocks</span><span class="p">()</span>
+    <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(),</span> <span class="mi">200</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/updatetask&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="update">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.update">[docs]</a>
+<span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to update an existing task, triggering a pre-filled form for user edits.</span>
+
+<span class="sd">    :return: Response object with 200 HTTP status.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Allows users to easily modify tasks, using a form pre-populated with existing task details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+    <span class="n">ut</span> <span class="o">=</span> <span class="n">UpdateTask</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">getUsers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">))</span>
+    <span class="n">taskExists</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">checkTaskID</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">taskExists</span><span class="p">:</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">create_task_input_blocks</span><span class="p">()</span>
+        <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postEphemeral</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(),</span> <span class="mi">200</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/help&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="help">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.help">[docs]</a>
+<span class="k">def</span> <span class="nf">help</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper endpoint to view all commands and their usage.</span>
+
+<span class="sd">    :return: Response object with payload containing command descriptions.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Provides guidance to users on available commands and how to use them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Help</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">help_all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/leaderboard&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="leaderboard">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.leaderboard">[docs]</a>
+<span class="k">def</span> <span class="nf">leaderboard</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to view the leaderboard for top users.</span>
+
+<span class="sd">    :return: Response object with payload containing leaderboard details.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Encourages user engagement by showcasing top-performing users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">Leaderboard</span><span class="p">()</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">view_leaderboard</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/requesthelp&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<div class="viewcode-block" id="request_help">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.request_help">[docs]</a>
+<span class="k">def</span> <span class="nf">request_help</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Endpoint to request help on a task, notifying specified teammates.</span>
+
+<span class="sd">    :return: JSON response with confirmation or error message.</span>
+<span class="sd">    :rtype: Response</span>
+
+<span class="sd">    **Why**: Allows users to request assistance on tasks directly from Slack, helping facilitate team</span>
+<span class="sd">    collaboration by notifying selected teammates.</span>
+
+<span class="sd">    **How**:</span>
+<span class="sd">    - Send a Slack command in the format `/requesthelp {task_id} {@teammate1} [@teammate2] ...`</span>
+<span class="sd">      where `task_id` is the ID of the task and `@teammate` mentions the teammates to notify.</span>
+<span class="sd">    - The endpoint will:</span>
+<span class="sd">      1. Validate the task and the user’s ownership.</span>
+<span class="sd">      2. Notify the specified teammates if the task exists and is still in progress.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span>
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Retrieve list of teammates in the channel with Slack IDs and names</span>
+    <span class="n">teammates</span> <span class="o">=</span> <span class="n">getUsers</span><span class="p">(</span><span class="n">channel_id</span><span class="p">)</span>
+
+    <span class="c1"># Create an instance of RequestHelp and process the help request</span>
+    <span class="n">rh</span> <span class="o">=</span> <span class="n">RequestHelp</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">teammates</span><span class="o">=</span><span class="n">teammates</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">rh</span><span class="o">.</span><span class="n">request_help</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting standup report schedule&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>
+    <span class="c1"># update the channel ID with the channel ID you want to post the daily standup report to</span>
+    <span class="n">slack_client</span><span class="o">.</span><span class="n">conversations_join</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="s1">&#39;C07T6TACHJA&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="daily_report">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.daily_report">[docs]</a>
+    <span class="n">daily_report</span> <span class="o">=</span> <span class="n">DailyStandupReport</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="s2">&quot;C07T6TACHJA&quot;</span><span class="p">)</span></div>
+
+    <span class="n">daily_report</span><span class="o">.</span><span class="n">schedule_daily_report</span><span class="p">(</span><span class="n">report_time</span><span class="o">=</span><span class="s2">&quot;15:59&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># Function to send the reminder message</span>
+<div class="viewcode-block" id="send_reminder">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.send_reminder">[docs]</a>
+<span class="k">def</span> <span class="nf">send_reminder</span><span class="p">(</span><span class="n">channel_id</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to send a reminder message to a specified Slack channel.</span>
+
+<span class="sd">    :param channel_id: The ID of the Slack channel where the reminder will be sent.</span>
+<span class="sd">    :type channel_id: str</span>
+<span class="sd">    :param message: The reminder message to be sent.</span>
+<span class="sd">    :type message: str</span>
+<span class="sd">    :param task_id: The ID of the task associated with the reminder.</span>
+<span class="sd">    :type task_id: str</span>
+<span class="sd">    :raise: SlackApiError if there is an error sending the message.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">slack_client</span><span class="o">.</span><span class="n">chat_postMessage</span><span class="p">(</span>
+            <span class="n">channel</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span>
+            <span class="n">blocks</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;⏰ Reminder Notification&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;*🔔 Reminder:* </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">*Task ID:* </span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;divider&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;context&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;:bell: This is your scheduled reminder. Stay on top of your tasks!&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Message sent to </span><span class="si">{</span><span class="n">channel_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SlackApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error sending reminder: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_channel_id">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.get_channel_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_channel_id</span><span class="p">(</span><span class="n">channel_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get the ID of a Slack channel given its name.</span>
+
+<span class="sd">    :param channel_name: The name of the Slack channel.</span>
+<span class="sd">    :type channel_name: str</span>
+<span class="sd">    :raise: SlackApiError if there is an error fetching the channels.</span>
+<span class="sd">    :return: The ID of the Slack channel if found, otherwise None.</span>
+<span class="sd">    :rtype: str or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">slack_client</span><span class="o">.</span><span class="n">conversations_list</span><span class="p">()</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">channel</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">channel_name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>  <span class="c1"># Remove &#39;#&#39; if present</span>
+                <span class="k">return</span> <span class="n">channel</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">SlackApiError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error fetching channels: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># Background thread to check and send reminders</span>
+<div class="viewcode-block" id="reminder_worker">
+<a class="viewcode-back" href="../autoapi/app/index.html#app.reminder_worker">[docs]</a>
+<span class="k">def</span> <span class="nf">reminder_worker</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Background worker function to check and send reminders at the scheduled time.</span>
+
+<span class="sd">    This function runs in an infinite loop, checking the current time against the</span>
+<span class="sd">    scheduled reminder times. If a reminder&#39;s time is due, it sends the reminder</span>
+<span class="sd">    message to the specified Slack channel and removes the reminder from the list.</span>
+
+<span class="sd">    :param: None</span>
+<span class="sd">    :type: None</span>
+<span class="sd">    :raise: None</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">reminder</span> <span class="ow">in</span> <span class="n">reminders</span><span class="p">[:]:</span>
+            <span class="k">if</span> <span class="n">reminder</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="p">:</span>
+                <span class="n">send_reminder</span><span class="p">(</span><span class="n">reminder</span><span class="p">[</span><span class="s2">&quot;channel&quot;</span><span class="p">],</span> <span class="n">reminder</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">],</span> <span class="n">reminder</span><span class="p">[</span><span class="s2">&quot;task_id&quot;</span><span class="p">])</span>
+                <span class="n">reminders</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">reminder</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># Start the background worker</span>
+<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">reminder_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting the server 1&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

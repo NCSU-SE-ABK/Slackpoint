@@ -4,9 +4,18 @@ from models import *
 from helpers.errorhelper import ErrorHelper
 import datetime
 
-class UpdateTask: 
+class UpdateTask:
     """ 
-    This class handles the Update Task functionality. 
+    This class handles task updates, allowing users to modify existing tasks and reassign task details.
+
+    **Why**: Essential for task management, enabling users to update task properties, including description,
+    deadline, points, and assigned users, to ensure accurate and current task tracking.
+
+    **How**: Common usage examples:
+    1. `UpdateTask.checkTaskID()`: Verify if the specified task ID exists in the database.
+    2. `UpdateTask.create_task_input_blocks()`: Generate Slack-compatible blocks for user input fields prefilled
+       with current task data for updating.
+    3. `UpdateTask.update_task(id, desc, points, deadline, assignee)`: Update task properties in the database.
     """
 
     base_create_task_block_format = {
@@ -21,63 +30,82 @@ class UpdateTask:
 
     def __init__(self, user_id="", data=[], users=[]):
         """
-        Constructor to initialize payload object
+        Initializes the UpdateTask object with user and task data, setting up the response payload.
 
-        :param:
-        :type:
-        :raise:
-        :return: None
-        :rtype: None
+        :param user_id: Slack User ID of the user requesting the update.
+        :type user_id: str
+        :param data: Dictionary containing task-related data, such as task ID.
+        :type data: dict
+        :param users: List of users available for assignment.
+        :type users: list of dicts
 
+        **Why**: Preparation of user and task data allows easy access to details required for validation and
+        task updating actions.
+        **How**: Example usage -
+        ```
+        task_update = UpdateTask("U12345", {"text": "12"}, [{"name": "John Doe", "user_id": "U67890"}])
+        ```
         """
         self.payload = {
-            "response_type": "ephemeral", 
+            "response_type": "ephemeral",
             "blocks": []
         }
         self.user_id = db.session.query(User).filter_by(slack_user_id=user_id).all()[0].user_id
         self.data = data
         self.users = users
 
-    def checkTaskID(self): 
+    def checkTaskID(self):
+        """
+        Validates if a given task ID exists in the database.
+
+        :return: Boolean indicating whether the task ID exists.
+        :rtype: bool
+
+        **Why**: Ensures that users can only attempt to update tasks that actually exist.
+        **How**: Example usage -
+        ```
+        is_valid = task_update.checkTaskID()
+        ```
+        """
         helper = ErrorHelper()
         self.current_task_id = int(self.data.get('text'))
 
-        # check if task id exists
+        # Check if task ID exists
         exists = db.session.query(db.exists().where(Task.task_id == self.current_task_id)).scalar()
-
-        if exists: 
+        if exists:
             return True
-
-        else: 
+        else:
             helper.get_command_help("no_task_id")
+
     def create_task_input_blocks(self):
         """
-        Create blocks list containing input fields for description, deadline, points of a task, along with a button to update the task
-        Ensure that the fields are prepoulated with the values that already exist in the database
+        Creates Slack-compatible input blocks prefilled with current task details for easy updating.
 
-        :param:
-        :type:
-        :raise:
-        :return: Blocks list
+        :return: List of blocks for task input fields, including description, deadline, points, and assignees.
         :rtype: list
 
+        **Why**: Provides users with prefilled input fields, making it easy to update tasks without manually
+        re-entering existing data.
+        **How**: Example usage -
+        ```
+        input_blocks = task_update.create_task_input_blocks()
+        ```
         """
-
         task = db.session.query(Task).filter_by(task_id=self.current_task_id).all()[0]
         description = str(task.description)
         deadline = str(task.deadline.strftime("%Y-%m-%d"))
         points = str(task.points)
 
         user_id = db.session.query(Assignment).filter_by(assignment_id=self.current_task_id).all()
-        if(user_id): 
+        if user_id:
             slack_user_id = db.session.query(User).filter_by(user_id=user_id[0].user_id).all()[0].slack_user_id
 
         block_task_id = {
-            "type": "header", 
+            "type": "header",
             "text": {
-                "type": "plain_text", 
-                "text": "Task " + str(self.current_task_id) + ": ", 
-            }, 
+                "type": "plain_text",
+                "text": "Task " + str(self.current_task_id) + ": ",
+            },
         }
 
         block_description = {
@@ -151,20 +179,20 @@ class UpdateTask:
 
         selectedUser = {}
 
-        for user in self.users: 
-            placeholder =  {"text": {"type": "plain_text", "emoji": False}}
+        for user in self.users:
+            placeholder = {"text": {"type": "plain_text", "emoji": False}}
             placeholder["text"]["text"] = user["name"]
             placeholder["value"] = user["user_id"]
-            if(user["user_id"] == slack_user_id): 
+            if user["user_id"] == slack_user_id:
                 selectedUser = placeholder
             block_users["element"]["options"].append(placeholder)
 
         block_users["element"]["initial_option"] = selectedUser
-        
+
         block_actions_button = {
             "type": "button",
             "text": {
-                "type": "plain_text", 
+                "type": "plain_text",
                 "text": "Update task"
             },
             "action_id": "update_action_button",
@@ -173,59 +201,64 @@ class UpdateTask:
         block_actions = {"type": "actions", "elements": []}
         block_actions["elements"].append(block_actions_button)
 
-        blocks = []
-        blocks.append(block_task_id)
-        blocks.append(block_description)
-        blocks.append(block_deadline)
-        blocks.append(block_points)
-        blocks.append(block_users)
-        blocks.append(block_actions)
+        blocks = [
+            block_task_id,
+            block_description,
+            block_deadline,
+            block_points,
+            block_users,
+            block_actions
+        ]
         return blocks
-
-
 
     def update_task(self, id, desc, points, deadline, assignee):
         """
-        Update a task in database and returns payload with success message.
+        Updates task properties in the database and returns a success message payload.
 
-        :param desc: Description of task
+        :param id: Task ID to be updated.
+        :type id: int
+        :param desc: Updated description of the task.
         :type desc: str
-        :param points: Points of task
+        :param points: Updated points for the task.
         :type points: int
-        :param deadline: Deadline of task
-        :type deadline: Date
-        :raise:
-        :return: Blocks list of response payload
+        :param deadline: Updated deadline for the task.
+        :type deadline: str
+        :param assignee: Slack ID of the user assigned to the task.
+        :type assignee: str
+        :return: Payload blocks with success message if update is successful.
         :rtype: list
 
+        **Why**: Updates ensure task data is current and assigned to the appropriate user, facilitating effective
+        task tracking.
+        **How**: Example usage -
+        ```
+        response_payload = task_update.update_task(12, "New Description", 3, "2023-12-31", "U67890")
+        ```
         """
         response = deepcopy(self.base_create_task_block_format)
 
         creatorUserId = Task.query.filter_by(task_id=id).all()[0].created_by
         sameUser = (creatorUserId == self.user_id)
-        if(not sameUser): 
+        if not sameUser:
             response["text"]["text"] = "You are not allowed to make changes to this task."
-
         else:
-
-            # check if the new user exists in the User table
+            # Ensure assignee exists in User table
             exists = db.session.query(db.exists().where(User.slack_user_id == assignee)).scalar()
-            if not exists: 
+            if not exists:
                 user = User()
                 user.slack_user_id = assignee
                 db.session.add(user)
                 db.session.commit()
-                db.session.refresh(user)    
-            
-            # PK associated with the user added 
-            user_id = User.query.filter_by(slack_user_id=assignee).all()[0].user_id
-            #user_id = db.session.query(db.exists().where(User.slack_user_id == assignee)).all()[0]
+                db.session.refresh(user)
 
-            # DB call to update task
-            db.session.query(Task).filter_by(task_id=id).update(dict(description=desc, points=points, deadline=deadline))  
+                # Get user ID from User table
+            user_id = User.query.filter_by(slack_user_id=assignee).all()[0].user_id
+
+            # Update task in Task table
+            db.session.query(Task).filter_by(task_id=id).update(dict(description=desc, points=points, deadline=deadline))
             db.session.commit()
 
-            # DB call to update assignment
+            # Update assignment in Assignment table
             db.session.query(Assignment).filter_by(assignment_id=id).update(dict(user_id=user_id))
             db.session.commit()
 

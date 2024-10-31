@@ -4,7 +4,16 @@ from helpers.errorhelper import ErrorHelper
 
 class RequestHelp:
     """
-    This class handles the Request Help functionality.
+    This class handles the "Request Help" functionality, allowing users to request assistance from teammates
+    for a specific task.
+
+    **Why**: Provides a streamlined way for users to notify teammates when they need assistance on a task,
+    helping foster collaboration and efficient task management.
+
+    **How**: Common usage examples:
+    1. `RequestHelp.request_help()`: Validate task status and send help requests to specified teammates.
+    2. `RequestHelp.validate_task_and_user(task_id, user_id)`: Check if a task is assigned to the user and
+       still incomplete.
     """
 
     base_request_help_block_format = {
@@ -17,14 +26,21 @@ class RequestHelp:
 
     def __init__(self, app, data, teammates=[]):
         """
-        Constructor to initialize the payload and teammates.
+        Initializes the RequestHelp instance with the Flask app context, request data, and list of teammates.
 
-        :param app: Flask app instance for context
+        :param app: Flask app instance for context.
         :type app: Flask
-        :param data: Data for the request (including task ID and user info)
+        :param data: Data for the help request, including task ID and user details.
         :type data: dict
-        :param teammates: List of teammates to notify
-        :type teammates: list of dicts containing Slack user IDs and names
+        :param teammates: List of teammates to notify, with Slack user IDs and names.
+        :type teammates: list[dict]
+
+        **Why**: Sets up the request details and teammate list, enabling easy access to data for processing
+        the help request.
+        **How**: Example usage -
+        ```
+        request_help = RequestHelp(app, data={"text": "12 @teammate1"}, teammates=teammate_list)
+        ```
         """
         self.app = app
         self.data = data
@@ -33,14 +49,21 @@ class RequestHelp:
 
     def validate_task_and_user(self, task_id, user_id):
         """
-        Validates if the task exists, is assigned to the user, and is incomplete.
+        Validates if the specified task exists, is assigned to the user, and is incomplete.
 
-        :param task_id: Task ID to validate
+        :param task_id: Task ID to validate.
         :type task_id: int
-        :param user_id: Slack user ID of the requester
+        :param user_id: Slack user ID of the requester.
         :type user_id: str
-        :return: Tuple (valid, error message if invalid)
+        :return: Tuple indicating if the task is valid and an error message if not.
         :rtype: tuple(bool, str)
+
+        **Why**: Ensures the help request is valid by checking if the task exists, is assigned to the requesting
+        user, and is still open.
+        **How**: Example usage -
+        ```
+        is_valid, error_message = request_help.validate_task_and_user(12, "U12345")
+        ```
         """
         with self.app.app_context():
             helper = ErrorHelper()
@@ -111,7 +134,6 @@ class RequestHelp:
 
                 if dm_response["ok"]:
                     dm_channel = dm_response["channel"]["id"]
-                    # Send the notification message to the DM channel
                     slack_client.chat_postMessage(
                         channel=dm_channel,
                         text=notification_text

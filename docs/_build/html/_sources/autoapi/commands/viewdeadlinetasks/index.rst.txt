@@ -1,0 +1,50 @@
+commands.viewdeadlinetasks
+==========================
+
+.. py:module:: commands.viewdeadlinetasks
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.viewdeadlinetasks.ViewDeadlineTasks
+
+
+Module Contents
+---------------
+
+.. py:class:: ViewDeadlineTasks
+
+   This class retrieves and displays tasks due today in a Slack-compatible format.
+
+   **Why**: Useful for users to see tasks with deadlines on the current day, aiding in prioritizing tasks
+   and managing time effectively.
+
+   **How**: Common usage examples:
+   1. `ViewDeadlineTasks.get_list()`: Retrieve a list of tasks due today in a formatted Slack message payload.
+
+
+   .. py:attribute:: base_point_block_format
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: get_list()
+
+      Retrieves a list of tasks due today, formatted for display in Slack.
+
+      :return: Slack message payload containing tasks due today.
+      :rtype: dict
+
+      **Why**: Provides an easy-to-access list of urgent tasks, helping users stay informed about upcoming
+      deadlines and ensuring timely task completion.
+      **How**: Example usage -
+      ```
+      tasks_due_today = deadline_tasks.get_list()
+      ```
+
+
+

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>commands.updatetask &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="commands.viewdeadlinetasks" href="../viewdeadlinetasks/index.html" />
+    <link rel="prev" title="commands.taskdone" href="../taskdone/index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-commands.updatetask">
+<span id="commands-updatetask"></span><h1>commands.updatetask<a class="headerlink" href="#module-commands.updatetask" title="Link to this heading">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#commands.updatetask.UpdateTask" title="commands.updatetask.UpdateTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UpdateTask</span></code></a></p></td>
+<td><p>This class handles task updates, allowing users to modify existing tasks and reassign task details.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">commands.updatetask.</span></span><span class="sig-name descname"><span class="pre">UpdateTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask" title="Link to this definition">¶</a></dt>
+<dd><p>This class handles task updates, allowing users to modify existing tasks and reassign task details.</p>
+<p><strong>Why</strong>: Essential for task management, enabling users to update task properties, including description,
+deadline, points, and assigned users, to ensure accurate and current task tracking.</p>
+<p><strong>How</strong>: Common usage examples:
+1. <cite>UpdateTask.checkTaskID()</cite>: Verify if the specified task ID exists in the database.
+2. <cite>UpdateTask.create_task_input_blocks()</cite>: Generate Slack-compatible blocks for user input fields prefilled</p>
+<blockquote>
+<div><p>with current task data for updating.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p><cite>UpdateTask.update_task(id, desc, points, deadline, assignee)</cite>: Update task properties in the database.</p></li>
+</ol>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.base_create_task_block_format">
+<span class="sig-name descname"><span class="pre">base_create_task_block_format</span></span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.base_create_task_block_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.base_create_task_block_format" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.greetings">
+<span class="sig-name descname"><span class="pre">greetings</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Awesome',</span> <span class="pre">'Great',</span> <span class="pre">'Congratulations',</span> <span class="pre">'Well</span> <span class="pre">done',</span> <span class="pre">&quot;Let's</span> <span class="pre">go&quot;]</span></em><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.greetings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.greetings" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.payload">
+<span class="sig-name descname"><span class="pre">payload</span></span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.payload" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.user_id">
+<span class="sig-name descname"><span class="pre">user_id</span></span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.user_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.user_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.users">
+<span class="sig-name descname"><span class="pre">users</span></span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.users" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.checkTaskID">
+<span class="sig-name descname"><span class="pre">checkTaskID</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.checkTaskID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.checkTaskID" title="Link to this definition">¶</a></dt>
+<dd><p>Validates if a given task ID exists in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Boolean indicating whether the task ID exists.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Ensures that users can only attempt to update tasks that actually exist.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">is_valid</span> <span class="pre">=</span> <span class="pre">task_update.checkTaskID()</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.create_task_input_blocks">
+<span class="sig-name descname"><span class="pre">create_task_input_blocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.create_task_input_blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.create_task_input_blocks" title="Link to this definition">¶</a></dt>
+<dd><p>Creates Slack-compatible input blocks prefilled with current task details for easy updating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of blocks for task input fields, including description, deadline, points, and assignees.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Provides users with prefilled input fields, making it easy to update tasks without manually
+re-entering existing data.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">input_blocks</span> <span class="pre">=</span> <span class="pre">task_update.create_task_input_blocks()</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="commands.updatetask.UpdateTask.update_task">
+<span class="sig-name descname"><span class="pre">update_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignee</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/commands/updatetask.html#UpdateTask.update_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#commands.updatetask.UpdateTask.update_task" title="Link to this definition">¶</a></dt>
+<dd><p>Updates task properties in the database and returns a success message payload.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Task ID to be updated.</p></li>
+<li><p><strong>desc</strong> (<em>str</em>) – Updated description of the task.</p></li>
+<li><p><strong>points</strong> (<em>int</em>) – Updated points for the task.</p></li>
+<li><p><strong>deadline</strong> (<em>str</em>) – Updated deadline for the task.</p></li>
+<li><p><strong>assignee</strong> (<em>str</em>) – Slack ID of the user assigned to the task.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Payload blocks with success message if update is successful.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p><strong>Why</strong>: Updates ensure task data is current and assigned to the appropriate user, facilitating effective
+task tracking.
+<strong>How</strong>: Example usage -
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">response_payload</span> <span class="pre">=</span> <span class="pre">task_update.update_task(12,</span> <span class="pre">&quot;New</span> <span class="pre">Description&quot;,</span> <span class="pre">3,</span> <span class="pre">&quot;2023-12-31&quot;,</span> <span class="pre">&quot;U67890&quot;)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../app/index.html">app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../conf/index.html">conf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../setup/index.html">setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tests/index.html">tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../models/index.html">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../helpers/index.html">helpers</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration/index.html">configuration</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Reference</a><ul>
+  <li><a href="../index.html">commands</a><ul>
+      <li>Previous: <a href="../taskdone/index.html" title="previous chapter">commands.taskdone</a></li>
+      <li>Next: <a href="../viewdeadlinetasks/index.html" title="next chapter">commands.viewdeadlinetasks</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/autoapi/commands/updatetask/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

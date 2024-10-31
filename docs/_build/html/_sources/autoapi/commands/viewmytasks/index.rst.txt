@@ -1,0 +1,105 @@
+commands.viewmytasks
+====================
+
+.. py:module:: commands.viewmytasks
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.viewmytasks.ViewMyTasks
+
+
+Module Contents
+---------------
+
+.. py:class:: ViewMyTasks(user_id)
+
+   This class retrieves and displays tasks assigned to a specific user, categorized by completion,
+   due dates, and pending status.
+
+   **Why**: Ideal for users wanting a personalized view of their tasks, making it easy to track task progress,
+   stay on top of deadlines, and manage workload effectively within Slack.
+
+   **How**: Common usage examples:
+   1. `ViewMyTasks.get_completed_tasks(delta=48)`: Retrieve tasks completed in the past 48 hours.
+   2. `ViewMyTasks.get_upcoming_tasks(delta=7)`: Retrieve tasks due in the next 7 days.
+   3. `ViewMyTasks.get_past_due_tasks()`: Retrieve overdue tasks.
+   4. `ViewMyTasks.get_list()`: Retrieve all current tasks with pending progress.
+
+
+   .. py:attribute:: base_point_block_format
+
+
+   .. py:attribute:: user_id
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: get_completed_tasks(delta=48)
+
+      Fetches tasks completed within a specified time frame (default: 48 hours).
+
+      :param delta: Time frame in hours for fetching recently completed tasks.
+      :type delta: int
+      :return: Slack message payload containing recently completed tasks.
+      :rtype: dict
+
+      **Why**: Allows users to track tasks completed recently, assisting in progress reporting.
+      **How**: Example usage -
+      ```
+      completed_tasks = my_tasks.get_completed_tasks(delta=24)
+      ```
+
+
+
+   .. py:method:: get_upcoming_tasks(delta=7)
+
+      Fetches tasks due within the next specified number of days (default: 7 days).
+
+      :param delta: Time frame in days for fetching upcoming tasks.
+      :type delta: int
+      :return: Slack message payload containing upcoming tasks.
+      :rtype: dict
+
+      **Why**: Helps users prioritize tasks due soon, providing visibility on deadlines approaching.
+      **How**: Example usage -
+      ```
+      upcoming_tasks = my_tasks.get_upcoming_tasks(delta=5)
+      ```
+
+
+
+   .. py:method:: get_past_due_tasks()
+
+      Fetches tasks that are overdue and have not been completed.
+
+      :return: Slack message payload containing past-due tasks.
+      :rtype: dict
+
+      **Why**: Alerts users to overdue tasks, helping them catch up and manage pending tasks.
+      **How**: Example usage -
+      ```
+      past_due_tasks = my_tasks.get_past_due_tasks()
+      ```
+
+
+
+   .. py:method:: get_list()
+
+      Retrieves a list of all tasks that are incomplete, formatted for Slack display.
+
+      :return: Slack message payload containing all pending tasks for the user.
+      :rtype: dict
+
+      **Why**: Provides an overview of all outstanding tasks, assisting in task management and prioritization.
+      **How**: Example usage -
+      ```
+      task_list = my_tasks.get_list()
+      ```
+
+
+

@@ -1,0 +1,54 @@
+commands.viewpoints
+===================
+
+.. py:module:: commands.viewpoints
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.viewpoints.ViewPoints
+
+
+Module Contents
+---------------
+
+.. py:class:: ViewPoints(progress: float = 0.0)
+
+   This class retrieves and displays tasks filtered by their completion progress, formatted for Slack.
+
+   **Why**: Useful for users who want to view tasks based on their completion status, providing a clear view of
+   tasks in progress or those that are completed.
+
+   **How**: Common usage examples:
+   1. `ViewPoints(progress=0.0).get_list()`: Retrieve a list of tasks that are incomplete.
+   2. `ViewPoints(progress=1.0).get_list()`: Retrieve a list of tasks that are completed.
+
+
+   .. py:attribute:: base_point_block_format
+
+
+   .. py:attribute:: progress
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: get_list()
+
+      Retrieves tasks with the specified progress status, formatted for Slack.
+
+      :return: Slack message payload containing tasks with the specified progress status.
+      :rtype: dict
+
+      **Why**: Provides users with a filtered list of tasks, either completed or in progress, helping them
+      stay organized and track their workload effectively.
+      **How**: Example usage -
+      ```
+      task_list = view_points.get_list()
+      ```
+
+
+

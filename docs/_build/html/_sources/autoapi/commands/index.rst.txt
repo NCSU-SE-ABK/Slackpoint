@@ -1,0 +1,24 @@
+commands
+========
+
+.. py:module:: commands
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/commands/createtask/index
+   /autoapi/commands/dailystandupreport/index
+   /autoapi/commands/help/index
+   /autoapi/commands/leaderboard/index
+   /autoapi/commands/requesthelp/index
+   /autoapi/commands/taskdone/index
+   /autoapi/commands/updatetask/index
+   /autoapi/commands/viewdeadlinetasks/index
+   /autoapi/commands/viewmytasks/index
+   /autoapi/commands/viewpoints/index
+
+

@@ -1,0 +1,136 @@
+tests.test_requesthelp
+======================
+
+.. py:module:: tests.test_requesthelp
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.test_requesthelp.test_process_help_command_multiple_valid_teammates
+   tests.test_requesthelp.test_process_help_command_single_valid_teammate
+   tests.test_requesthelp.test_process_help_command_no_teammates
+   tests.test_requesthelp.test_process_help_command_missing_task_id
+   tests.test_requesthelp.test_process_help_command_non_digit_task_id
+   tests.test_requesthelp.test_process_help_command_task_does_not_exist
+   tests.test_requesthelp.test_process_help_command_task_already_complete
+   tests.test_requesthelp.test_process_help_command_user_not_assigned
+   tests.test_requesthelp.test_process_help_command_teammate_username_not_found
+   tests.test_requesthelp.test_process_help_command_teammate_similar_but_distinct
+   tests.test_requesthelp.test_process_help_command_duplicate_teammate_usernames
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_missing_at
+   tests.test_requesthelp.test_process_help_command_extra_whitespace
+   tests.test_requesthelp.test_process_help_command_mixed_valid_invalid_teammates
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_different_cases
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_empty_strings
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_special_characters
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_none
+   tests.test_requesthelp.test_process_help_command_large_number_of_teammates
+   tests.test_requesthelp.test_process_help_command_teammate_usernames_with_at_symbols
+
+
+Module Contents
+---------------
+
+.. py:function:: test_process_help_command_multiple_valid_teammates(mocker)
+
+   Test process_help_command with a valid task ID and multiple valid teammate usernames.
+
+
+.. py:function:: test_process_help_command_single_valid_teammate(mocker)
+
+   Test process_help_command with a valid task ID and a single valid teammate username.
+
+
+.. py:function:: test_process_help_command_no_teammates(mocker)
+
+   Test process_help_command with a valid task ID but no teammates specified.
+
+
+.. py:function:: test_process_help_command_missing_task_id(mocker)
+
+   Test process_help_command with missing task ID in the command.
+
+
+.. py:function:: test_process_help_command_non_digit_task_id(mocker)
+
+   Test process_help_command with a non-digit task ID.
+
+
+.. py:function:: test_process_help_command_task_does_not_exist(mocker)
+
+   Test process_help_command where the task ID does not exist.
+
+
+.. py:function:: test_process_help_command_task_already_complete(mocker)
+
+   Test process_help_command where the task is already complete.
+
+
+.. py:function:: test_process_help_command_user_not_assigned(mocker)
+
+   Test process_help_command where the user is not assigned to the specified task.
+
+
+.. py:function:: test_process_help_command_teammate_username_not_found(mocker)
+
+   Test process_help_command where the specified teammate username is not found in the teammates list.
+
+
+.. py:function:: test_process_help_command_teammate_similar_but_distinct(mocker)
+
+   Test process_help_command where teammate usernames are similar but distinct.
+
+
+.. py:function:: test_process_help_command_duplicate_teammate_usernames(mocker)
+
+   Test process_help_command with duplicate teammate usernames in the command.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_missing_at(mocker)
+
+   Test process_help_command where teammate usernames do not start with '@'.
+
+
+.. py:function:: test_process_help_command_extra_whitespace(mocker)
+
+   Test process_help_command with extra whitespace in the command.
+
+
+.. py:function:: test_process_help_command_mixed_valid_invalid_teammates(mocker)
+
+   Test process_help_command with a mix of valid and invalid teammate usernames.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_different_cases(mocker)
+
+   Test process_help_command where teammate usernames have different cases.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_empty_strings(mocker)
+
+   Test process_help_command with teammate usernames as empty strings.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_special_characters(mocker)
+
+   Test process_help_command with teammate usernames containing special characters.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_none(mocker)
+
+   Test process_help_command with teammate usernames as None.
+
+
+.. py:function:: test_process_help_command_large_number_of_teammates(mocker)
+
+   Test process_help_command with a large number of teammate usernames.
+
+
+.. py:function:: test_process_help_command_teammate_usernames_with_at_symbols(mocker)
+
+   Test process_help_command where teammate usernames contain additional '@' symbols.
+
+

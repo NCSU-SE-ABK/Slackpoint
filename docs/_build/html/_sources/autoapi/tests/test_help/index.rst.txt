@@ -1,0 +1,29 @@
+tests.test_help
+===============
+
+.. py:module:: tests.test_help
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   tests.test_help.test_help
+
+
+Module Contents
+---------------
+
+.. py:function:: test_help()
+
+   Test the help command
+
+   :param:
+   :type:
+   :raise:
+   :return: Assert if test case executed successfully
+   :rtype: bool
+
+
+

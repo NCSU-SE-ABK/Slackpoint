@@ -1,0 +1,52 @@
+commands.leaderboard
+====================
+
+.. py:module:: commands.leaderboard
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   commands.leaderboard.Leaderboard
+
+
+Module Contents
+---------------
+
+.. py:class:: Leaderboard
+
+   This class generates a leaderboard, displaying the top point scorers based on completed tasks.
+
+   **Why**: Useful for tracking task completion in a gamified environment, allowing users to see where they stand
+   compared to others and encouraging active participation in completing tasks.
+
+   **How**: Common usage examples:
+   1. `Leaderboard.view_leaderboard(top_k=5)`: Retrieve the top 5 users based on points.
+
+
+   .. py:attribute:: base_leaderboard_block_format
+
+
+   .. py:attribute:: payload
+
+
+   .. py:method:: view_leaderboard(top_k: int = 5) -> dict
+
+      Retrieves and formats the leaderboard with the top K users by points from completed tasks.
+
+      :param top_k: Number of top users to display on the leaderboard, default is 5.
+      :type top_k: int
+      :return: Payload containing leaderboard information for the top K users.
+      :rtype: dict[str, Any]
+
+      **Why**: Displays high-performing users in a structured format, motivating users to stay engaged by
+      highlighting achievements and fostering a sense of competition.
+      **How**: Example usage -
+      ```
+      top_users = leaderboard.view_leaderboard(top_k=10)
+      ```
+
+
+

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>commands.updatetask &#8212; Slackpoints  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=686e5160" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for commands.updatetask</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">helpers.errorhelper</span> <span class="kn">import</span> <span class="n">ErrorHelper</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<div class="viewcode-block" id="UpdateTask">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask">[docs]</a>
+<span class="k">class</span> <span class="nc">UpdateTask</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    This class handles task updates, allowing users to modify existing tasks and reassign task details.</span>
+
+<span class="sd">    **Why**: Essential for task management, enabling users to update task properties, including description,</span>
+<span class="sd">    deadline, points, and assigned users, to ensure accurate and current task tracking.</span>
+
+<span class="sd">    **How**: Common usage examples:</span>
+<span class="sd">    1. `UpdateTask.checkTaskID()`: Verify if the specified task ID exists in the database.</span>
+<span class="sd">    2. `UpdateTask.create_task_input_blocks()`: Generate Slack-compatible blocks for user input fields prefilled</span>
+<span class="sd">       with current task data for updating.</span>
+<span class="sd">    3. `UpdateTask.update_task(id, desc, points, deadline, assignee)`: Update task properties in the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UpdateTask.base_create_task_block_format">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.base_create_task_block_format">[docs]</a>
+    <span class="n">base_create_task_block_format</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;</span><span class="si">{greeting}</span><span class="s2">! Your task SP-</span><span class="si">{id}</span><span class="s2"> was updated successfully.&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="UpdateTask.greetings">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.greetings">[docs]</a>
+    <span class="n">greetings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Awesome&quot;</span><span class="p">,</span> <span class="s2">&quot;Great&quot;</span><span class="p">,</span> <span class="s2">&quot;Congratulations&quot;</span><span class="p">,</span> <span class="s2">&quot;Well done&quot;</span><span class="p">,</span> <span class="s2">&quot;Let&#39;s go&quot;</span><span class="p">]</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[],</span> <span class="n">users</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the UpdateTask object with user and task data, setting up the response payload.</span>
+
+<span class="sd">        :param user_id: Slack User ID of the user requesting the update.</span>
+<span class="sd">        :type user_id: str</span>
+<span class="sd">        :param data: Dictionary containing task-related data, such as task ID.</span>
+<span class="sd">        :type data: dict</span>
+<span class="sd">        :param users: List of users available for assignment.</span>
+<span class="sd">        :type users: list of dicts</span>
+
+<span class="sd">        **Why**: Preparation of user and task data allows easy access to details required for validation and</span>
+<span class="sd">        task updating actions.</span>
+<span class="sd">        **How**: Example usage -</span>
+<span class="sd">        ```</span>
+<span class="sd">        task_update = UpdateTask(&quot;U12345&quot;, {&quot;text&quot;: &quot;12&quot;}, [{&quot;name&quot;: &quot;John Doe&quot;, &quot;user_id&quot;: &quot;U67890&quot;}])</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UpdateTask.payload">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.payload">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;response_type&quot;</span><span class="p">:</span> <span class="s2">&quot;ephemeral&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="UpdateTask.user_id">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.user_id">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">slack_user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">user_id</span></div>
+
+<div class="viewcode-block" id="UpdateTask.data">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.data">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="UpdateTask.users">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.users">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users</span> <span class="o">=</span> <span class="n">users</span></div>
+
+
+<div class="viewcode-block" id="UpdateTask.checkTaskID">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.checkTaskID">[docs]</a>
+    <span class="k">def</span> <span class="nf">checkTaskID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates if a given task ID exists in the database.</span>
+
+<span class="sd">        :return: Boolean indicating whether the task ID exists.</span>
+<span class="sd">        :rtype: bool</span>
+
+<span class="sd">        **Why**: Ensures that users can only attempt to update tasks that actually exist.</span>
+<span class="sd">        **How**: Example usage -</span>
+<span class="sd">        ```</span>
+<span class="sd">        is_valid = task_update.checkTaskID()</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">helper</span> <span class="o">=</span> <span class="n">ErrorHelper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Check if task ID exists</span>
+        <span class="n">exists</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">task_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span><span class="p">))</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">helper</span><span class="o">.</span><span class="n">get_command_help</span><span class="p">(</span><span class="s2">&quot;no_task_id&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UpdateTask.create_task_input_blocks">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.create_task_input_blocks">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_task_input_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates Slack-compatible input blocks prefilled with current task details for easy updating.</span>
+
+<span class="sd">        :return: List of blocks for task input fields, including description, deadline, points, and assignees.</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        **Why**: Provides users with prefilled input fields, making it easy to update tasks without manually</span>
+<span class="sd">        re-entering existing data.</span>
+<span class="sd">        **How**: Example usage -</span>
+<span class="sd">        ```</span>
+<span class="sd">        input_blocks = task_update.create_task_input_blocks()</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="n">deadline</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">deadline</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Assignment</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">assignment_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
+            <span class="n">slack_user_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">slack_user_id</span>
+
+        <span class="n">block_task_id</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Task &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="n">block_description</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text_input&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;create_action_description&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;initial_value&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Description&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">block_deadline</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;datepicker&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;initial_date&quot;</span><span class="p">:</span> <span class="n">deadline</span><span class="p">,</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a date&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;create_action_deadline&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deadline&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">block_points</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;static_select&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;initial_option&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;create_action_points&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Points&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">block_users</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;static_select&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Select&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;create_action_assignees&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Assignees&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="n">selectedUser</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
+            <span class="n">placeholder</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
+            <span class="n">placeholder</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">placeholder</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">slack_user_id</span><span class="p">:</span>
+                <span class="n">selectedUser</span> <span class="o">=</span> <span class="n">placeholder</span>
+            <span class="n">block_users</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">][</span><span class="s2">&quot;options&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+
+        <span class="n">block_users</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">][</span><span class="s2">&quot;initial_option&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selectedUser</span>
+
+        <span class="n">block_actions_button</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;button&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plain_text&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Update task&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;action_id&quot;</span><span class="p">:</span> <span class="s2">&quot;update_action_button&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task_id</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">block_actions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;actions&quot;</span><span class="p">,</span> <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">block_actions</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_actions_button</span><span class="p">)</span>
+
+        <span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">block_task_id</span><span class="p">,</span>
+            <span class="n">block_description</span><span class="p">,</span>
+            <span class="n">block_deadline</span><span class="p">,</span>
+            <span class="n">block_points</span><span class="p">,</span>
+            <span class="n">block_users</span><span class="p">,</span>
+            <span class="n">block_actions</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">blocks</span></div>
+
+
+<div class="viewcode-block" id="UpdateTask.update_task">
+<a class="viewcode-back" href="../../autoapi/commands/updatetask/index.html#commands.updatetask.UpdateTask.update_task">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">deadline</span><span class="p">,</span> <span class="n">assignee</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates task properties in the database and returns a success message payload.</span>
+
+<span class="sd">        :param id: Task ID to be updated.</span>
+<span class="sd">        :type id: int</span>
+<span class="sd">        :param desc: Updated description of the task.</span>
+<span class="sd">        :type desc: str</span>
+<span class="sd">        :param points: Updated points for the task.</span>
+<span class="sd">        :type points: int</span>
+<span class="sd">        :param deadline: Updated deadline for the task.</span>
+<span class="sd">        :type deadline: str</span>
+<span class="sd">        :param assignee: Slack ID of the user assigned to the task.</span>
+<span class="sd">        :type assignee: str</span>
+<span class="sd">        :return: Payload blocks with success message if update is successful.</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        **Why**: Updates ensure task data is current and assigned to the appropriate user, facilitating effective</span>
+<span class="sd">        task tracking.</span>
+<span class="sd">        **How**: Example usage -</span>
+<span class="sd">        ```</span>
+<span class="sd">        response_payload = task_update.update_task(12, &quot;New Description&quot;, 3, &quot;2023-12-31&quot;, &quot;U67890&quot;)</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_create_task_block_format</span><span class="p">)</span>
+
+        <span class="n">creatorUserId</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">created_by</span>
+        <span class="n">sameUser</span> <span class="o">=</span> <span class="p">(</span><span class="n">creatorUserId</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sameUser</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;You are not allowed to make changes to this task.&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Ensure assignee exists in User table</span>
+            <span class="n">exists</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">==</span> <span class="n">assignee</span><span class="p">))</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">:</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">slack_user_id</span> <span class="o">=</span> <span class="n">assignee</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+                <span class="c1"># Get user ID from User table</span>
+            <span class="n">user_id</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">slack_user_id</span><span class="o">=</span><span class="n">assignee</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">user_id</span>
+
+            <span class="c1"># Update task in Task table</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">desc</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="n">deadline</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="c1"># Update assignment in Assignment table</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Assignment</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">assignment_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">))</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">greeting</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">greetings</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Slackpoints</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CSC510 Group 6 Fall 2024.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.1.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
