@@ -54,11 +54,6 @@ A lot of teams use Slack to get things done. However when you have ton of things
   <br/>
 
 
-### Chat Channel
-
-<code>https://discord.com</code>
-
-
 ## Features
 
 Here is a list of features added during phase 3 of this project:
@@ -66,6 +61,9 @@ Here is a list of features added during phase 3 of this project:
 - Request help: Users can request help from any number of other users for a specific task.
 - Set reminders for upcoming tasks: Get reminded for upcoming tasks!
 - Daily standup notifications: See quickly who is doing what work as well as recently completed work and upcoming deadlines for each member of the team.
+
+### View the features in action:
+https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=sharing
 
 ## Project documentation
 
@@ -97,7 +95,6 @@ You can create a new task by simple using the `/create-task` command. We ask for
 
 Command: `/create`
 
-![Create Task GIF](https://i.imgur.com/lUtX23a.gif)
 
 This particular command will create a new task with the description as `Hey! This is my new task` having `100` points and a deadline of `15th October 2022`
 
@@ -110,7 +107,6 @@ Command: `/task-done [task ID]`
 Example:
 `/task-done 10214`
 
-![Task Done GIF](https://i.imgur.com/gOB6dVs.gif)
 
 This will mark the task having task ID `10214` as completed. Further, updates records to show that this task is completed by user who posted this command
 
@@ -120,7 +116,6 @@ This command will return the list of incomplete tasks. Relax! no parameters requ
 
 Command: `/viewpending [no parameters]`
 
-![View pending GIF](https://i.imgur.com/TAnNoSO.gif)
 
 Above command will display a list of pending tasks
 
@@ -130,7 +125,6 @@ Like the above command this will return a list of completed tasks. No parameters
 
 Command: `/viewcompleted [no parameter]`
 
-![View completed GIF](https://i.imgur.com/3SFQU2N.gif)
 
 Above command will display a list of completed tasks
 
@@ -140,7 +134,6 @@ Want to get competitive? Take a peek at the leaderboard and try to beat the winn
 
 Command: `/leaderboard [no parameters]`
 
-![Leaderboard GIF](https://i.imgur.com/LNfVFHX.gif)
 
 It displays the list of the top performers on the channel along with their points.
 
@@ -150,7 +143,6 @@ Newbie at using slackpoint? You could use some help...
 
 Command: `/help [no parameters]`
 
-![Help GIF](https://i.imgur.com/RNykp6p.gif)
 
 
 #### **7. Request Help:**
@@ -169,7 +161,7 @@ Command: `[none]`
 Automatically sent to a specific channel at a configurable time.
 
 
-#### **7. Set reminders:**
+#### **9. Set reminders:**
 
 Set reminders for your upcoming tasks so you don't forget about them
 
