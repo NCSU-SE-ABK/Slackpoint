@@ -33,6 +33,9 @@ https://github.com/user-attachments/assets/e49ba2e0-a8d1-4c1f-841e-982c40984e04
 Click on the link below to view the video of our new features for Slackpoint 3.0
 
 https://drive.google.com/file/d/1OU31ga5OA5_lIIkBelZQHMiCF4yW_JXB/view?usp=sharing
+https://github.com/user-attachments/assets/5d816b4f-0f25-4b83-920b-55b98ff5ed98
+
+
 
 Gamify your slack tasks! 💻
 
@@ -68,6 +71,8 @@ Here is a list of features added during phase 3 of this project:
 
 ### View the features in action:
 https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=sharing
+https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
+
 
 ## Project documentation
 
