@@ -23,9 +23,13 @@ Syntax checker and code formatter: [![code checker](https://github.com/CSC510-Te
 Style checker: [![Python Style Checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/style-checker.yml)
 Run unit tests: [![Run Tests](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/run-tests.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/tree/main/tests)
 
-Click on the image below to view the demo video of the project
+Click on the link below to view the video of why you should contribute to the project
 
-[![Demo Vidoe of the project](hxxps://img.youtube.com/vi/AG6aSE3xFzE/0.jpg)](https://www.youtube.com/watch?v=AG6aSE3xFzE)
+https://drive.google.com/file/d/1MPdmfJAbb_nGqiKyJrDB99I1aMbLmwxN/view?usp=sharing
+
+Click on the link below to view the video of our new features for Slackpoint 3.0
+
+https://discord.com/channels/@me/1275214864134049813/1301963567334953052
 
 Gamify your slack tasks! 💻
 
