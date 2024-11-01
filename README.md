@@ -3,7 +3,7 @@
 <img src = "./assets/Logo.png" width="370" height="200"/> 
 
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
-[![DOI](https://zenodo.org/badge/865016138.svg)](https://doi.org/10.5281/zenodo.13926072)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14026797.svg)](https://doi.org/10.5281/zenodo.14026797)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Language: Python](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
