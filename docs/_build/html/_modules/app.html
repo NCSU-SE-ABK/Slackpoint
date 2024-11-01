@@ -359,7 +359,8 @@
     <span class="n">channel_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;channel_id&quot;</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User ID&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;No pending tasks available&quot;</span><span class="p">}),</span> <span class="mi">200</span>
     <span class="c1"># Fetch pending tasks for the user</span>
     <span class="n">vt</span> <span class="o">=</span> <span class="n">ViewMyTasks</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
     <span class="n">pending_tasks</span> <span class="o">=</span> <span class="n">vt</span><span class="o">.</span><span class="n">get_list</span><span class="p">()[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span>

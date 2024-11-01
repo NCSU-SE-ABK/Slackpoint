@@ -16,6 +16,7 @@ Submodules
    /autoapi/tests/test_help/index
    /autoapi/tests/test_leaderboard/index
    /autoapi/tests/test_mockmodel/index
+   /autoapi/tests/test_reminders/index
    /autoapi/tests/test_requesthelp/index
    /autoapi/tests/test_taskdone/index
    /autoapi/tests/test_viewcompleted/index
