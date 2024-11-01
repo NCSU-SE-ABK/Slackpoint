@@ -175,4 +175,5 @@ Set reminders for your upcoming tasks so you don't forget about them
 
 Command: `/create-reminder`
 
-
+Citation for [Slackpoint 2.0](https://github.com/kartikson1/slackpoint/blob/main/CITATION.md):
+<br>Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). slackpoint Version (1.0.0). Retrieved November 1, 2024, from https://doi.org/10.5281/zenodo.7402494
