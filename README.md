@@ -69,7 +69,7 @@ https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=shari
 
 The `docs` folder incorporates all necessary documents and documentation in our project.
 
-Visit `docs/_build/html/autoapi/index.html` for the html version of our documentation
+Visit https://csc510-team-wise-vilkomir-sykes.github.io/Slackpoint-Docs/ for the html version of our documentation
 
 ## Tools used
 
