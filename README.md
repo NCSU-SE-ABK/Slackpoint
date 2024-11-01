@@ -1,4 +1,4 @@
-# Slackpoint 2.0
+# Slackpoint 3.0
 
 <img src = "./assets/Logo.png" width="370" height="200"/> 
 
