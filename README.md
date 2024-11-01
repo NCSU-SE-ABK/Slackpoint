@@ -28,7 +28,7 @@ https://drive.google.com/file/d/1MPdmfJAbb_nGqiKyJrDB99I1aMbLmwxN/view?usp=shari
 
 Click on the link below to view the video of our new features for Slackpoint 3.0
 
-https://discord.com/channels/@me/1275214864134049813/1301963567334953052
+https://drive.google.com/file/d/1OU31ga5OA5_lIIkBelZQHMiCF4yW_JXB/view?usp=sharing
 
 Gamify your slack tasks! 💻
 
