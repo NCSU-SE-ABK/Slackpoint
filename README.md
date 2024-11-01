@@ -27,6 +27,9 @@ Click on the link below to view the video of why you should contribute to the pr
 
 https://drive.google.com/file/d/1MPdmfJAbb_nGqiKyJrDB99I1aMbLmwxN/view?usp=sharing
 
+https://github.com/user-attachments/assets/e49ba2e0-a8d1-4c1f-841e-982c40984e04
+
+
 Click on the link below to view the video of our new features for Slackpoint 3.0
 
 https://drive.google.com/file/d/1OU31ga5OA5_lIIkBelZQHMiCF4yW_JXB/view?usp=sharing
