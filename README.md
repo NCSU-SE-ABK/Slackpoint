@@ -1,6 +1,9 @@
 # Slackpoint 3.0
 
-<img src = "./assets/Logo.png" width="370" height="200"/> 
+<div style="text-align: center;">
+  <img src="./assets/Logo.png" width="370" height="200"/>
+</div>
+
 
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14027325.svg)](https://doi.org/10.5281/zenodo.14027325)
@@ -23,24 +26,25 @@ Syntax checker and code formatter: [![code checker](https://github.com/CSC510-Te
 Style checker: [![Python Style Checker](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/blob/main/.github/workflows/style-checker.yml)
 Run unit tests: [![Run Tests](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/actions/workflows/run-tests.yml/badge.svg)](https://github.com/CSC510-Team-Wise-Vilkomir-Sykes/Slackpoint/tree/main/tests)
 
-Click on the link below to view the video of why you should contribute to the project
-
-https://drive.google.com/file/d/1MPdmfJAbb_nGqiKyJrDB99I1aMbLmwxN/view?usp=sharing
+### Why Contribute?
 
 https://github.com/user-attachments/assets/e49ba2e0-a8d1-4c1f-841e-982c40984e04
 
+Check out our [contribution video](https://drive.google.com/file/d/1MPdmfJAbb_nGqiKyJrDB99I1aMbLmwxN/view?usp=sharing) to see how you can help improve Slackpoint.
 
-Click on the link below to view the video of our new features for Slackpoint 3.0
 
-https://drive.google.com/file/d/1OU31ga5OA5_lIIkBelZQHMiCF4yW_JXB/view?usp=sharing
+### New Features in Action
 
 https://github.com/user-attachments/assets/5d816b4f-0f25-4b83-920b-55b98ff5ed98
 
+Watch our [new features video](https://drive.google.com/file/d/1OU31ga5OA5_lIIkBelZQHMiCF4yW_JXB/view?usp=sharing) to see the latest additions to Slackpoint 3.0.
 
 
-Gamify your slack tasks! 💻
+**Gamify your Slack tasks! 💻**
 
 A lot of teams use Slack to get things done. However when you have ton of things to do with no short term rewards in sight, it gets difficult to check off those tasks. That's where Slackpoint comes to the rescue! Slackpoint aims to make work more fun and get people motivated to finish their tasks by gamifying Slack!
+
+---
 
 ## Built with
 
@@ -50,6 +54,7 @@ A lot of teams use Slack to get things done. However when you have ton of things
 <br/>
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" height="40" /> PostgreSQL
 
+---
 
 ## Scalability
 
@@ -61,11 +66,14 @@ A lot of teams use Slack to get things done. However when you have ton of things
   <img src = './assets/HerokuDB.png' width='650' height='450'/>
   <br/>
 
-### View the features in action:
-https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=sharing
+
+### Features in Action:
 
 https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
 
+Check out [this video](https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=sharing) to see Slackpoint's capabilities in action.
+
+---
 ## NEW Features
 
 Here is a list of features added during phase 3 of this project:
@@ -89,20 +97,26 @@ Here is a list of features added during phase 3 of this project:
 | 9   | Set reminders       | `/create-reminder`         | Sets reminders for upcoming tasks.                                                                |
 
 
-## Project documentation
 
-The `docs` folder incorporates all necessary documents and documentation in our project.
+---
 
-Visit https://csc510-team-wise-vilkomir-sykes.github.io/Slackpoint-Docs/ for the html version of our documentation
+## Project Documentation
 
-## Tools used
+For full documentation, visit our [docs folder](https://csc510-team-wise-vilkomir-sykes.github.io/Slackpoint-Docs/).
 
-Code formatter: black and flake8
+## Tools Used
 
-## 📖 Getting started:
+- Code Formatter: Black and flake8 for consistent styling.
 
-See [INSTALL.md](INSTALL.md)
+---
 
+## 📖 Getting Started:
 
-Citation for [Slackpoint 2.0](https://github.com/kartikson1/slackpoint/blob/main/CITATION.md):
-<br>Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). slackpoint Version (1.0.0). Retrieved November 1, 2024, from https://doi.org/10.5281/zenodo.7402494
+See [INSTALL.md](INSTALL.md) for setup instructions.
+
+---
+
+## Citation
+
+Refer to [Slackpoint 2.0](https://github.com/kartikson1/slackpoint/blob/main/CITATION.md) for citation:
+<br>Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). Slackpoint Version (1.0.0). Retrieved November 1, 2024, from https://doi.org/10.5281/zenodo.7402494
