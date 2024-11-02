@@ -75,7 +75,7 @@ https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=shari
 
 https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
 
-## Features: 
+## Features description: 
 
 | Num | Name                | Command                    | Description                                                                                       |
 |-----|----------------------|----------------------------|---------------------------------------------------------------------------------------------------|
