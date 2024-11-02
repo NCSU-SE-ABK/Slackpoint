@@ -3,7 +3,7 @@
 <img src = "./assets/Logo.png" width="370" height="200"/> 
 
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14026900.svg)](https://doi.org/10.5281/zenodo.14026900)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14027325.svg)](https://doi.org/10.5281/zenodo.14027325)
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
