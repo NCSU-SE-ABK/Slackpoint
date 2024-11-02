@@ -75,85 +75,20 @@ https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=shari
 
 https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
 
-## Features description: 
+## Features: 
 
-#### **1. Create new task:**
+| Num | Name                | Command                    | Description                                                                                       |
+|-----|----------------------|----------------------------|---------------------------------------------------------------------------------------------------|
+| 1   | Create new task     | /create                    | Creates a new task with a description, points, and deadline.                                      |
+| 2   | Mark task as done   | /task-done [task ID]       | Marks a task as completed by the user who posted this command.                                    |
+| 3   | View pending tasks  | /viewpending               | Displays a list of incomplete tasks; no parameters required.                                      |
+| 4   | View completed tasks| /viewcompleted             | Displays a list of completed tasks; no parameters required.                                       |
+| 5   | Leaderboard         | /leaderboard               | Displays the top performers on the channel along with their points; no parameters required.       |
+| 6   | Help                | /help                      | Provides help for using SlackPoint commands; no parameters required.                              |
+| 7   | Request Help        | /requesthelp {id} {teammate} [other teammates...] | Requests help from specified teammates on a particular task.   |
+| 8   | Daily Standup       | [none]                     | Automatically sent to a specific channel at a configurable time, showing tasks per teammate.      |
+| 9   | Set reminders       | /create-reminder           | Sets reminders for upcoming tasks.                                                                |
 
-You can create a new task by simple using the `/create-task` command. We ask for just a few more parameters in addition to that:
-
-Command: `/create`
-
-
-This particular command will create a new task with the description as `Hey! This is my new task` having `100` points and a deadline of `15th October 2022`
-
-#### **2. Mark task as done:**
-
-Here you can mark a task as completed. You just need to give the task ID as a parameter
-
-Command: `/task-done [task ID]`
-
-Example:
-`/task-done 10214`
-
-
-This will mark the task having task ID `10214` as completed. Further, updates records to show that this task is completed by user who posted this command
-
-#### **3. View pending tasks:**
-
-This command will return the list of incomplete tasks. Relax! no parameters required here
-
-Command: `/viewpending [no parameters]`
-
-
-Above command will display a list of pending tasks
-
-#### **4. View completed tasks:**
-
-Like the above command this will return a list of completed tasks. No parameters here as well!
-
-Command: `/viewcompleted [no parameter]`
-
-
-Above command will display a list of completed tasks
-
-#### **5. Leaderboard:**
-
-Want to get competitive? Take a peek at the leaderboard and try to beat the winner!
-
-Command: `/leaderboard [no parameters]`
-
-
-It displays the list of the top performers on the channel along with their points.
-
-#### **6. Help:**
-
-Newbie at using slackpoint? You could use some help...
-
-Command: `/help [no parameters]`
-
-
-
-#### **7. Request Help:**
-
-Request for help from teammates on your task
-
-Command: `/requesthelp {id} {teammate} [other teammates...]`
-
-
-#### **8. Daily Standup:**
-
-Get information about each teammates' upcoming, previous, and current tasks assigned to them
-
-Command: `[none]`
-
-Automatically sent to a specific channel at a configurable time.
-
-
-#### **9. Set reminders:**
-
-Set reminders for your upcoming tasks so you don't forget about them
-
-Command: `/create-reminder`
 
 
 ## Project documentation
