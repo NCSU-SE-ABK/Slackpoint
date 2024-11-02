@@ -61,34 +61,32 @@ A lot of teams use Slack to get things done. However when you have ton of things
   <img src = './assets/HerokuDB.png' width='650' height='450'/>
   <br/>
 
-
-## Features
-
-Here is a list of features added during phase 3 of this project:
-
-- Request help: Users can request help from any number of other users for a specific task.
-- Set reminders for upcoming tasks: Get reminded for upcoming tasks!
-- Daily standup notifications: See quickly who is doing what work as well as recently completed work and upcoming deadlines for each member of the team.
-
 ### View the features in action:
 https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=sharing
 
 https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
 
-## Features description: 
+## NEW Features
+
+Here is a list of features added during phase 3 of this project:
+
+- **Request help:** Users can request help from other users for a specific task.
+- **Daily standup notifications:** Quickly see who is working on what, recently completed work, and upcoming deadlines for each team member.
+- **Set reminders for upcoming tasks:** Users can set reminders for upcoming tasks to stay on track.
+
+## Features Description
 
 | Num | Name                | Command                    | Description                                                                                       |
 |-----|----------------------|----------------------------|---------------------------------------------------------------------------------------------------|
-| 1   | Create new task     | /create                    | Creates a new task with a description, points, and deadline.                                      |
-| 2   | Mark task as done   | /task-done [task ID]       | Marks a task as completed by the user who posted this command.                                    |
-| 3   | View pending tasks  | /viewpending               | Displays a list of incomplete tasks; no parameters required.                                      |
-| 4   | View completed tasks| /viewcompleted             | Displays a list of completed tasks; no parameters required.                                       |
-| 5   | Leaderboard         | /leaderboard               | Displays the top performers on the channel along with their points; no parameters required.       |
-| 6   | Help                | /help                      | Provides help for using SlackPoint commands; no parameters required.                              |
-| 7   | Request Help        | /requesthelp {id} {teammate} [other teammates...] | Requests help from specified teammates on a particular task.   |
-| 8   | Daily Standup       | [none]                     | Automatically sent to a specific channel at a configurable time, showing tasks per teammate.      |
-| 9   | Set reminders       | /create-reminder           | Sets reminders for upcoming tasks.                                                                |
-
+| 1   | Create new task     | `/create`                  | Creates a new task with a description, points, and deadline.                                      |
+| 2   | Mark task as done   | `/task-done [task ID]`     | Marks a task as completed by the user who posted this command.                                    |
+| 3   | View pending tasks  | `/viewpending`             | Displays a list of incomplete tasks; no parameters required.                                      |
+| 4   | View completed tasks| `/viewcompleted`           | Displays a list of completed tasks; no parameters required.                                       |
+| 5   | Leaderboard         | `/leaderboard`             | Displays the top performers on the channel along with their points; no parameters required.       |
+| 6   | Help                | `/help`                    | Provides help for using SlackPoint commands; no parameters required.                              |
+| 7   | Request Help        | `/requesthelp {id} {teammate} [other teammates...]` | Requests help from specified teammates on a particular task.   |
+| 8   | Daily Standup       | [automated]                | Automatically sent to a specific channel at a configurable time, showing tasks per teammate.      |
+| 9   | Set reminders       | `/create-reminder`         | Sets reminders for upcoming tasks.                                                                |
 
 
 ## Project documentation
