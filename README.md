@@ -75,30 +75,7 @@ https://drive.google.com/file/d/1bXHxav2GSvVzRXukVvgQunq2usONtrj1/view?usp=shari
 
 https://github.com/user-attachments/assets/0fa9a46d-cfbd-4c73-8a20-72bf704f742d
 
-
-## Project documentation
-
-The `docs` folder incorporates all necessary documents and documentation in our project.
-
-Visit https://csc510-team-wise-vilkomir-sykes.github.io/Slackpoint-Docs/ for the html version of our documentation
-
-## Tools used
-
-Code formatter: black and flake8
-
-## 📖 Getting started:
-
-See [INSTALL.md](INSTALL.md)
-
-## List of miracles that Slackpoint can perform✨:
-
-- Create a new task
-- Mark task as done
-- View pending tasks
-- View completed tasks
-- Ask for help
-
-Let's go over these one by one...
+## Features description: 
 
 #### **1. Create new task:**
 
@@ -177,6 +154,22 @@ Automatically sent to a specific channel at a configurable time.
 Set reminders for your upcoming tasks so you don't forget about them
 
 Command: `/create-reminder`
+
+
+## Project documentation
+
+The `docs` folder incorporates all necessary documents and documentation in our project.
+
+Visit https://csc510-team-wise-vilkomir-sykes.github.io/Slackpoint-Docs/ for the html version of our documentation
+
+## Tools used
+
+Code formatter: black and flake8
+
+## 📖 Getting started:
+
+See [INSTALL.md](INSTALL.md)
+
 
 Citation for [Slackpoint 2.0](https://github.com/kartikson1/slackpoint/blob/main/CITATION.md):
 <br>Rathod, P., Soni, K., Mundra, N., Maheshwari, S., & Sinha, T. (2022, August 28). slackpoint Version (1.0.0). Retrieved November 1, 2024, from https://doi.org/10.5281/zenodo.7402494
