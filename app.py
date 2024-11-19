@@ -18,18 +18,19 @@ from commands.updatetask import UpdateTask
 from commands.viewmytasks import ViewMyTasks
 from commands.viewdeadlinetasks import ViewDeadlineTasks
 
-
+import logging
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
 db.init_app(app)
 
+logging.basicConfig(level=logging.DEBUG)
 
 # instantiating slack client
 slack_client = WebClient(Config.SLACK_BOT_TOKEN)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
-
+print(f"SlackEventAdapter initialized with signing secret: {Config.SLACK_SIGNING_SECRET}")
 def getUsers(channel_id): 
     users = []
     result = slack_client.conversations_members(channel= channel_id)
@@ -56,6 +57,7 @@ def interactive_endpoint():
     :rtype: Response
     """
     payload = json.loads(request.form.get("payload"))
+    print("payload:",payload)
     if payload["type"] == "block_actions":
         actions = payload["actions"]
         if len(actions) > 0:
@@ -130,7 +132,7 @@ def basic():
     return "Hello World"
 
 
-@app.route("/viewpending", methods=["POST"])
+@app.route("//co", methods=["POST"])
 def vpending():
     """
     Endpoint to view the pending tasks
@@ -216,16 +218,43 @@ def create():
     :rtype: Response
 
     """
-
+    # print(f"Channel ID: {channel_id}, User ID: {user_id}, Blocks: {blocks}")
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
-
+    # print(channel_id)
     ct = CreateTask(getUsers(channel_id))
     blocks = ct.create_task_input_blocks()
 
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
+
+@app.route("/user", methods=["GET"])
+def get_user_id():
+    """
+    Endpoint to respond to the /user Slack slash command.
+    Fetches and returns the user's Slack ID.
+    """
+    # Extract the user ID from the Slack request payload
+    user_id = request.form.get("user_id")
+    user_name = request.form.get("user_name")
+
+    if not user_id:
+        return jsonify({"error": "User ID not found in the request"}), 400
+
+    # Respond with the user ID and name
+    return jsonify({
+        "response_type": "ephemeral",  # Makes the response visible only to the user
+        "text": f"Your Slack User ID: `{user_id}`\nYour Slack Username: `{user_name}`"
+    }), 200
+
+@app.route("/test-help", methods=["GET"])
+def test_help():
+    return jsonify({"message": "Test Help Endpoint"})
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"message":"Hello World!"})
+
 
 @app.route("/updatetask", methods=["POST"])
 def update(): 
@@ -260,6 +289,7 @@ def help():
     :rtype: Response
 
     """
+    print("Request Headers: ", request.headers)
 
     h = Help()
     payload = h.help_all()
