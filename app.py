@@ -290,23 +290,37 @@ def health():
 @app.route("/updatetask", methods=["POST"])
 def update(): 
     """
-    Endpoint to update a task, this endpoint triggers an ephemeral message for the user to edit task details for updation
-    The form will be prepopulated with the values that were entered during the task creation/previous task updation
-    :param:
-    :type:
-    :raise:
-    :return: Response object with 200 HTTP status
-    :rtype: Response
+    Endpoint to update a task, this endpoint triggers an ephemeral message for the user to edit task details.
     """
-    data = request.form
-    channel_id = data.get("channel_id")
-    user_id = data.get("user_id")
-    ut = UpdateTask(user_id, data, getUsers(channel_id))
-    taskExists = ut.checkTaskID()
-    if taskExists:
-        blocks = ut.create_task_input_blocks()
-        slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
-    return Response(), 200
+    try:
+        data = request.form
+        channel_id = data.get("channel_id")
+        user_id = data.get("user_id")
+
+        app.logger.info(f"Received update request: channel_id={channel_id}, user_id={user_id}")
+
+        # Create UpdateTask object
+        ut = UpdateTask(user_id, data, getUsers(channel_id))
+
+        # Check if task exists
+        taskExists = ut.checkTaskID()
+        if taskExists:
+            blocks = ut.create_task_input_blocks()
+
+            # Send the ephemeral message
+            response = slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+            if response.get("ok"):
+                app.logger.info("Ephemeral message sent successfully.")
+                return jsonify({"status": "success", "message": "Task update initiated"}), 200
+            else:
+                app.logger.error(f"Error sending ephemeral message: {response}")
+                return jsonify({"status": "error", "message": "Failed to send message"}), 500
+        else:
+            app.logger.error("Task ID not found.")
+            return jsonify({"status": "error", "message": "Task ID not found"}), 404
+    except Exception as e:
+        app.logger.error(f"Exception occurred: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route("/help", methods=["POST"])
 def help():
