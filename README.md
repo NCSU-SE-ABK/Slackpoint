@@ -1,9 +1,9 @@
-# Slackpoint 2.0
+# Slackpoint 4.0
 
 <img src = "./assets/Logo.png" width="370" height="200"/> 
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
-[![DOI](https://zenodo.org/badge/570734706.svg)](https://zenodo.org/badge/latestdoi/570734706)
+[![DOI](https://zenodo.org/badge/890675627.svg)](https://doi.org/10.5281/zenodo.14210449)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
