@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2022 Kartik Soni, Palash Rathod, Shreya Maheshwari, Nandini Mundra, Tanvi Sinha
+Copyright (c) 2024 Dube Avik, Bharadwaj Katna, Srinivasa Karthikeya Reddy Kovvuri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
