@@ -1,24 +1,84 @@
-# ===== Test marked for later release =====
+import pytest
+from unittest.mock import MagicMock, patch
+from commands.taskdone import TaskDone
+from helpers.errorhelper import ErrorHelper
+from models import Assignment, Task, User
 
-# from commands.taskdone import TaskDone
-# from tests.mockmodels import mock_done_task_1, mock_get_sqlalchemy
-# from werkzeug.datastructures import MultiDict
-# def test_task_done(mock_get_sqlalchemy, mock_done_task_1):
 
-#     #mocking db call
-#     mock_get_sqlalchemy.filter_by.return_value.\
-#         all.return_value = [mock_done_task_1]
-#     data = MultiDict([
-#         ('token', 'ZyiJlmN6ajbgbZP00Bm28ZQ2'), ('team_id', 'T044Z9WJTA6'), ('team_domain', 'slackpoint-test'),
-#         ('channel_id', 'C044WG4RZ1T'), ('channel_name', 'test-bot'),
-#         ('user_id', 'U045BUHTAUR'), ('user_name', 'vaidyaritwik'),
-#         ('command', '/taskdone'), ('text', '1'), ('api_app_id', 'A044ZDK3ZUK'),
-#         ('is_enterprise_install', 'false'), ('response_url', 'https://hooks.slack.com/commands/T044Z9WJTA6/4192198014949/aY2DUeIEJwcEGggGTIJNbLy5'),
-#         ('trigger_id', '4188537755750.4169336639346.83fc3218e71865c9b613c99cfc8064ca')
-#         ])
-#     td = TaskDone(data)
-#     payload = td.update_points()
+@pytest.fixture
+def mock_error_helper():
+    error_helper = MagicMock()
+    error_helper.get_command_help.side_effect = lambda key: {
+        "no_task_id": "Task ID does not exist!",
+        "task_already_done": "The given Task was already completed!",
+        "task_done": "Task marked as completed successfully!",
+        "task_cannot_be_updated": "You are not allowed to update this task!"
+    }[key]
+    return error_helper
 
-#     expected_payload = "The given Task was already completed!"
 
-#     assert payload == expected_payload
+
+@patch('commands.taskdone.db.session')
+def test_task_already_done(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "123", "user_id": "U12345"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
+@patch('commands.taskdone.db.session')
+def test_task_already_done1(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "587", "user_id": "X45895"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
+@patch('commands.taskdone.db.session')
+def test_task_already_done2(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "256", "user_id": "U4702"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
+
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "999", "user_id": "U12345"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id1(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "529", "user_id": "A0987"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id2(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "3032", "user_id": "J8037"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
