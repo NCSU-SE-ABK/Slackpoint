@@ -148,3 +148,18 @@ def test_view_pending_help():
         }
     ]
     assert payload == expected_payload
+    
+def test_update_task_help():
+    h = Help()
+    payload = h.help("updatetask")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*Update Task*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To update a task, just run the command */update-task* <Task ID>, edit the details and hit submit!"
+            }
+        }
+    ]
+    assert payload == expected_payload
