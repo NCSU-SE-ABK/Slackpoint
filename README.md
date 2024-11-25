@@ -12,8 +12,8 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/NCSU-SE-ABK/Slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
 
-[![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
 ![GitHub forks](https://img.shields.io/github/forks/NCSU-SE-ABK/slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
