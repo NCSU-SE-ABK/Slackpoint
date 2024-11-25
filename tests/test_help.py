@@ -178,3 +178,34 @@ def test_leaderboard_help():
         }
     ]
     assert payload == expected_payload
+    
+def test_task_done_help():
+    h = Help()
+    payload = h.help("taskdone")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*Complete Task*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To mark a task as Completed, just try the command */task-done* <Task ID>, and now you are one step closer at being one of the top five contenders!"
+            }
+        }
+    ]
+    assert payload == expected_payload
+
+
+def test_view_completed_help():
+    h = Help()
+    payload = h.help("viewcompleted")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*View Completed Tasks*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks."
+            }
+        }
+    ]
+    assert payload == expected_payload
