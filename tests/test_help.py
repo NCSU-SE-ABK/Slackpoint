@@ -103,3 +103,34 @@ def test_single_command_help():
     }
     assert payload == expected_payload
 
+def test_specific_command_help():
+    h = Help()
+    payload = h.help("viewcompleted")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*View Completed Tasks*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks."
+            }
+        }
+    ]
+    assert payload == expected_payload
+
+
+def test_create_task_help():
+    h = Help()
+    payload = h.help("createtask")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*Create Task*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To create a task, just try the command */create-task* and you would receive a message from Slack to fill out the details of the task.\n>Enter the description, deadline and the points of the task.\n>For example:\n>*Description*: Hey! This is my new task\n>*Deadline*: 12/31/2022 (just select a date from the date picker)\n>*Points*: 5 (select a point from 1 to 5)\n>And that's it! You should receive a reply from Slack with the generated *Task ID*."
+            }
+        }
+    ]
+    assert payload == expected_payload
+
