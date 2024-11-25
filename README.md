@@ -15,7 +15,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
 ![GitHub forks](https://img.shields.io/github/forks/NCSU-SE-ABK/slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
-
+[![GitHub Code_formatter](https://img.shields.io/github/actions/workflow/status/NCSU-SE-ABK/slackpoint/code_formatter.yml?branch=main&label=Code_fromatter%20Status)
 Click on the image below to view the demo video of the project
 
 [![Demo Vidoe of the project](https://img.youtube.com/vi/AG6aSE3xFzE/0.jpg)](https://www.youtube.com/watch?v=AG6aSE3xFzE)
