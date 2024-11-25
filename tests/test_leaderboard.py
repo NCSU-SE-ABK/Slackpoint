@@ -201,5 +201,49 @@ def test_leaderboard_no_completed_task(
     }
     assert payload == expected_payload, payload
 
+def test_leaderboard_one_user(mock_leaderboard_position_1, mock_get_sqlalchemy):
+    """
+    Test leaderboard with only one user
+    """
+    mock_get_sqlalchemy.join.return_value.join.return_value.with_entities.return_value.filter.return_value.group_by.return_value.order_by.return_value = [
+        mock_leaderboard_position_1
+    ]
+
+    lb = Leaderboard()
+    payload = lb.view_leaderboard()
+
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": "1. <@ritwik> has 33 points!"},
+            }
+        ],
+    }
+    assert payload == expected_payload, payload
+    
+def test_leaderboard_empty_db(mock_get_sqlalchemy):
+    """
+    Test leaderboard when the database is empty
+    """
+    mock_get_sqlalchemy.join.return_value.join.return_value.with_entities.return_value.filter.return_value.group_by.return_value.order_by.return_value = []
+
+    lb = Leaderboard()
+    payload = lb.view_leaderboard()
+
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">Looks like the competition hasn't started yet :(",
+                },
+            }
+        ],
+    }
+    assert payload == expected_payload, payload
 
 
