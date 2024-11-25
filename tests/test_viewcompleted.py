@@ -229,3 +229,4 @@ def test_view_completed_0tasks_varying_message(mock_get_sqlalchemy):
     }
 
     assert payload == expected_payload
+
