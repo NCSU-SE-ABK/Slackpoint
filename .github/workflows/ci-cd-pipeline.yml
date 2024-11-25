@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - dubeavik
   pull_request:
     branches:
-      - main
+      - dubeavik
 
 jobs:
   build:
