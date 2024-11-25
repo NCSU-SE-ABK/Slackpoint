@@ -163,3 +163,18 @@ def test_update_task_help():
         }
     ]
     assert payload == expected_payload
+
+def test_leaderboard_help():
+    h = Help()
+    payload = h.help("leaderboard")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*Leaderboard*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To view the leaderboard, just try the command */leaderboard*, and SlackPoint would show you the top five contenders!"
+            }
+        }
+    ]
+    assert payload == expected_payload
