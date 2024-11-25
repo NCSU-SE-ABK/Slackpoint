@@ -245,5 +245,38 @@ def test_leaderboard_empty_db(mock_get_sqlalchemy):
         ],
     }
     assert payload == expected_payload, payload
+    
+def test_leaderboard_top_k_greater_than_users(
+    mock_leaderboard_position_1,
+    mock_leaderboard_position_2,
+    mock_get_sqlalchemy,
+):
+    """
+    Test leaderboard when top_k exceeds the number of users
+    """
+    mock_get_sqlalchemy.join.return_value.join.return_value.with_entities.return_value.filter.return_value.group_by.return_value.order_by.return_value = [
+        mock_leaderboard_position_1,
+        mock_leaderboard_position_2,
+    ]
+
+    lb = Leaderboard()
+    payload = lb.view_leaderboard(top_k=5)
+
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": "1. <@ritwik> has 33 points!"},
+            },
+            {
+                "type": "section",
+                "text": {"type": "mrkdwn", "text": "2. <@rishikesh> has 20 points!"},
+            },
+        ],
+    }
+    assert payload == expected_payload, payload
+    
+
 
 
