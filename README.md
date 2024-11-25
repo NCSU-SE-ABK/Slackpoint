@@ -15,7 +15,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues?q=is%3Aissue+is%3Aclosed)
 ![GitHub forks](https://img.shields.io/github/forks/NCSU-SE-ABK/slackpoint?style=social)
-[![GitHub contributors](https://img.shields.io/github/contributors/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/Auction-Sphere/Running%20Code%20Coverage)](https://github.com/kartikson1/slackpoint/actions)
 
 Click on the image below to view the demo video of the project
