@@ -134,3 +134,17 @@ def test_create_task_help():
     ]
     assert payload == expected_payload
 
+def test_view_pending_help():
+    h = Help()
+    payload = h.help("viewpending")
+    expected_payload = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": "*View Pending Task*"}},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks. To view pending tasks only for yourself, just try the command */view-pending me*, and there you go! SlackPoint would show you a list of tasks assigned to you. To view pending tasks due today, just try the command */view-pending today*, and SlackPoint will show you a list of tasks with today's deadline."
+            }
+        }
+    ]
+    assert payload == expected_payload
