@@ -1,4 +1,8 @@
-from commands.help import Help
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from commands.help import Help # type: ignore
+
 
 
 def test_help():
