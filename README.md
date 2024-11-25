@@ -9,7 +9,7 @@
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kartikson1/slackpoint/Running%20Code%20Coverage)](https://github.com/NCSU-SE-ABK/Slackpoint/actions)
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/kartikson1/slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/NCSU-SE-ABK/Slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
 
 [![GitHub issues](https://img.shields.io/github/issues/kartikson1/slackpoint)](https://github.com/kartikson1/slackpoint/issues)
