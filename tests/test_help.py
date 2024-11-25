@@ -79,5 +79,27 @@ def test_empty_help():
     expected_payload = {"response_type": "ephemeral", "blocks": []}
     assert payload == expected_payload
 
-
+def test_single_command_help():
+    h = Help()
+    h.commands_dictionary = {
+        "createtask": [
+            "*Create Task*",
+            ">To create a task, just try the command */create-task* and you would receive a message from Slack to fill out the details of the task."
+        ]
+    }
+    payload = h.help_all()
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {"type": "section", "text": {"type": "mrkdwn", "text": "*Create Task*"}},
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">To create a task, just try the command */create-task* and you would receive a message from Slack to fill out the details of the task."
+                }
+            }
+        ]
+    }
+    assert payload == expected_payload
 
