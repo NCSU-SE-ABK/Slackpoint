@@ -32,9 +32,8 @@ jobs:
           curl -LO https://go.dev/dl/go1.23.0.linux-amd64.tar.gz
           sudo rm -rf /usr/local/go
           sudo tar -C /usr/local -xzf go1.23.0.linux-amd64.tar.gz
-          echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
-          echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.profile
-          source ~/.bashrc
+          echo "export PATH=/usr/local/go/bin:$PATH" | sudo tee -a /etc/profile
+          source /etc/profile
           go version
       # Step 3: Install Minikube
       - name: Install Minikube
