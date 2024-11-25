@@ -67,17 +67,17 @@ jobs:
           cd ..
           rm -rf cri-dockerd
        - name: Install dependencies and build cri-dockerd
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git make
-          git clone https://github.com/Mirantis/cri-dockerd.git
-          cd cri-dockerd
-          mkdir bin
-          go build -o bin/cri-dockerd
-          sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
-          cd ..
-          rm -rf cri-dockerd
-        shell: bash
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y git make
+            git clone https://github.com/Mirantis/cri-dockerd.git
+            cd cri-dockerd
+            mkdir bin
+            go build -o bin/cri-dockerd
+            sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
+            cd ..
+            rm -rf cri-dockerd
+          shell: bash
       # Step 5: Start Minikube
       - name: Start Minikube
         run: |
