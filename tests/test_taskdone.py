@@ -60,6 +60,48 @@ def test_task_already_done2(mock_db_session, mock_error_helper):
 
     assert td.update_points() == "The given Task was already completed!"
 
+@patch('commands.taskdone.db.session')
+def test_task_already_done3(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "12345", "user_id": "H89902"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
+@patch('commands.taskdone.db.session')
+def test_task_already_done4(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "234", "user_id": "D80902"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
+@patch('commands.taskdone.db.session')
+def test_task_already_done5(mock_db_session, mock_error_helper):
+    """
+    Test case for when the task is already completed.
+    """
+    mock_db_session.query.return_value.scalar.return_value = True  # Task exists
+    mock_db_session.query.return_value.filter_by.return_value.all.return_value = []  # Task progress is not 0.0
+
+    data = {"text": "4576", "user_id": "Ulj802"}
+    td = TaskDone(data)
+    td.helper = mock_error_helper
+
+    assert td.update_points() == "The given Task was already completed!"
+
 
 
 @patch('commands.taskdone.db.session')
@@ -80,5 +122,26 @@ def test_no_task_id1(mock_db_session):
 def test_no_task_id2(mock_db_session):
     mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
     data = {"text": "3032", "user_id": "J8037"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id3(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "6782", "user_id": "S080037"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id4(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "1545", "user_id": "G0890"}
+    td = TaskDone(data)
+    assert td.update_points() == "The given Task ID does not exist! Please try again..."
+
+@patch('commands.taskdone.db.session')
+def test_no_task_id5(mock_db_session):
+    mock_db_session.query.return_value.scalar.return_value = False  # Task ID does not exist
+    data = {"text": "689", "user_id": "Mh7990"}
     td = TaskDone(data)
     assert td.update_points() == "The given Task ID does not exist! Please try again..."
