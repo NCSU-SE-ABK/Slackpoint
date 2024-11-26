@@ -142,6 +142,36 @@ def test_view_pending_tasks_zero_progress(mock_pending_task_2, mock_get_sqlalche
 
     assert payload == expected_payload, f"Payload mismatch:\nExpected: {expected_payload}\nActual: {payload}"
 
+def test_view_pending_tasks_with_progress_lessthan50_1(mock_pending_task_1, mock_get_sqlalchemy):
+    """cls
+    Test the view pending tasks with non-zero progress.
+    """
+    # Mocking DB call
+    mock_get_sqlalchemy.join.return_value.add_columns.return_value.filter.return_value.all.return_value = [
+        mock_pending_task_1,
+    ]
+
+    # Test function
+    vp = ViewPoints(progress=10.0)
+    payload = vp.get_list()
+
+    # Expected output
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">SP-1 (10 SlackPoints) This is Task 1 [Deadline: 2022-10-24]",
+                },
+            }
+        ],
+    }
+
+    assert payload == expected_payload, f"Payload mismatch:\nExpected: {expected_payload}\nActual: {payload}"
+
+
 
 def test_view_pending_tasks_with_progress_lessthan50_2(mock_pending_task_1, mock_get_sqlalchemy):
     """cls
@@ -320,6 +350,63 @@ def test_view_pending_tasks_with_progress_greaterthan50_3(mock_pending_task_1, m
 
     assert payload == expected_payload, f"Payload mismatch:\nExpected: {expected_payload}\nActual: {payload}"
 
+def test_view_pending_tasks_with_progress_greaterthan50_4(mock_pending_task_1, mock_get_sqlalchemy):
+    """
+    Test the view pending tasks with non-zero progress.
+    """
+    # Mocking DB call
+    mock_get_sqlalchemy.join.return_value.add_columns.return_value.filter.return_value.all.return_value = [
+        mock_pending_task_1,
+    ]
+
+    # Test function
+    vp = ViewPoints(progress=90.0)
+    payload = vp.get_list()
+
+    # Expected output
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">SP-1 (10 SlackPoints) This is Task 1 [Deadline: 2022-10-24]",
+                },
+            }
+        ],
+    }
+
+    assert payload == expected_payload, f"Payload mismatch:\nExpected: {expected_payload}\nActual: {payload}"
+
+def test_view_pending_tasks_with_progress_100(mock_pending_task_1, mock_get_sqlalchemy):
+    """
+    Test the view pending tasks with non-zero progress.
+    """
+    # Mocking DB call
+    mock_get_sqlalchemy.join.return_value.add_columns.return_value.filter.return_value.all.return_value = [
+        mock_pending_task_1,
+    ]
+
+    # Test function
+    vp = ViewPoints(progress=100.0)
+    payload = vp.get_list()
+
+    # Expected output
+    expected_payload = {
+        "response_type": "ephemeral",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">SP-1 (10 SlackPoints) This is Task 1 [Deadline: 2022-10-24]",
+                },
+            }
+        ],
+    }
+
+    assert payload == expected_payload, f"Payload mismatch:\nExpected: {expected_payload}\nActual: {payload}"
 
 
 def test_view_deadline_tasks_no_tasks(mock_get_sqlalchemy):
