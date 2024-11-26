@@ -56,14 +56,24 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 ## Features
 
-Here is a list of features added during phase 2 of this project:
+Here is a list of features added during phase 4 of this project:
 
-- Functionality for assigning a user while creating task - tasks can now be assigned to different members of the slack channel.
-- Ensuring that the person updating task to completed has to be the same person who the task has been assigned to.
-- Viewpending tasks for me - Any user can now see what tasks assigned to them specifically are pending. This enables real-time agile board style coordination on slack.
-- Notifications: The person who the task is assigned to gets notified when this happens. Notifications have also been added for a variety of edge cases (for instance, if a user tries to mark a task not assigned to them as completed)
-- Update tasks: A major functionality that allows updating tasks has been added. A wide array of edge cases have been handled here (such as a person who has not created a task cannot update it, etc).
-- View tasks pending today: Users can view the list of tasks pending today.
+Dockerize the Flask Application:
+Create a Dockerfile to containerize the Flask application. Ensure the Docker image includes
+all necessary dependencies and configurations.
+
+Set Up Kubernetes Configuration:
+Create Kubernetes deployment and service YAML files to define how the application should
+be deployed and exposed in the GCP Kubernetes Engine (GKE).
+
+Integrate with CI/CD Tools:
+Use a CI/CD tool to automate the build, test, and deployment process. Configure the pipeline
+to: Build the Docker image. Push the Docker image to a container registry (e.g., Google
+Container Registry). Deploy the application to GKE using the Kubernetes configuration files.
+
+Deploy to GCP:
+Set up a GKE cluster on GCP. Ensure the CI/CD pipeline has the necessary permissions to
+interact with GCP services.
 
 ## Project documentation
 
