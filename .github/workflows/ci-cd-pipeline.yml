@@ -178,4 +178,4 @@ jobs:
       # Step 8: Deploy to Kubernetes (you should have your k8s/deployment.yaml configured)
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f deployment.yaml
+          kubectl apply -f deployment.yml
