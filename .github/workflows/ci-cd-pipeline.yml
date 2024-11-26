@@ -140,7 +140,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-     environment: docker
+    environment: docker
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout repository
