@@ -9,6 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/NCSU-SE-ABK/slackpoint/Running%20Code%20Coverage)](https://github.com/NCSU-SE-ABK/Slackpoint/actions)
+[![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/code_formatter.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/code_formatter.yml)
+[![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/style-checker.yml)
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/NCSU-SE-ABK/Slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
@@ -17,6 +19,9 @@
 ![Forks](https://img.shields.io/github/forks/NCSU-SE-ABK/Slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
 ![Lines of code](https://tokei.rs/b1/github/NCSU-SE-ABK/Slackpoint)
+![repo-size](https://img.shields.io/github/repo-size/NCSU-SE-ABK/Slackpoint)
+![file count](https://img.shields.io/github/directory-file-count/NCSU-SE-ABK/Slackpoint)
+![language_count](https://img.shields.io/github/languages/count/NCSU-SE-ABK/Slackpoint)
 
 Click on the image below to view the demo video of the project
 
