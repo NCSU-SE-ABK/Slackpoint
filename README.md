@@ -13,7 +13,7 @@
 [![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/ci-cd-pipeline.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/ci-cd-pipeline.yml)
 [![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/NCSU-SE-ABK/Slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
-[![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
+[![codecov](https://codecov.io/gh/NCSU-SE-ABK/Slackpoint/graph/badge.svg?token=9OKXD0QUTP)](https://codecov.io/gh/NCSU-SE-ABK/Slackpoint)
 [![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
 ![Forks](https://img.shields.io/github/forks/NCSU-SE-ABK/Slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
