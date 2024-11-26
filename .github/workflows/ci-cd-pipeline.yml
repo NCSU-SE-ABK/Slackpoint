@@ -83,11 +83,17 @@ jobs:
       #Install CNI Plugins
       - name: Install CNI Plugins
         run: |
-          CNI_PLUGIN_VERSION="1.1.1"  # Replace with the desired version
+          CNI_PLUGIN_VERSION="1.3.0"  # Replace with the desired version
           CNI_PLUGIN_TAR="cni-plugins-linux-amd64-$CNI_PLUGIN_VERSION.tgz"
-          CNI_PLUGIN_INSTALL_DIR="/opt/cni/bin"
-          
+          CNI_PLUGIN_INSTALL_DIR="/opt/cni/bin"  
+        # Download the CNI plugin tarball
           curl -LO "https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGIN_VERSION/$CNI_PLUGIN_TAR"
+          # Validate the downloaded file
+          if [ ! -f "$CNI_PLUGIN_TAR" ]; then
+            echo "Error: CNI plugin tarball not found!" >&2
+          exit 1
+          fi
+          # Extract the tarball
           sudo mkdir -p "$CNI_PLUGIN_INSTALL_DIR"
           sudo tar -xf "$CNI_PLUGIN_TAR" -C "$CNI_PLUGIN_INSTALL_DIR"
           rm "$CNI_PLUGIN_TAR"
