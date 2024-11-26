@@ -13,7 +13,7 @@
 [![codecov](https://codecov.io/gh/kartikson1/slackpoint/branch/main/graph/badge.svg?token=7bccee64-52d3-47c7-a85d-5c1805171b8c)](https://codecov.io/gh/kartikson1/slackpoint)
 
 [![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
-![GitHub forks](https://img.shields.io/github/forks/NCSU-SE-ABK/slackpoint?style=social)
+![Forks](https://img.shields.io/github/forks/NCSU-SE-ABK/Slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
 
 Click on the image below to view the demo video of the project
