@@ -58,20 +58,20 @@ A lot of teams use Slack to get things done. However when you have ton of things
 
 Here is a list of features added during phase 4 of this project:
 
-Dockerize the Flask Application:
+1) ## Dockerize the Flask Application:
 Create a Dockerfile to containerize the Flask application. Ensure the Docker image includes
 all necessary dependencies and configurations.
 
-Set Up Kubernetes Configuration:
+2) ## Set Up Kubernetes Configuration:
 Create Kubernetes deployment and service YAML files to define how the application should
 be deployed and exposed in the GCP Kubernetes Engine (GKE).
 
-Integrate with CI/CD Tools:
+3) ## Integrate with CI/CD Tools:
 Use a CI/CD tool to automate the build, test, and deployment process. Configure the pipeline
 to: Build the Docker image. Push the Docker image to a container registry (e.g., Google
 Container Registry). Deploy the application to GKE using the Kubernetes configuration files.
 
-Deploy to GCP:
+4) ## Deploy to GCP:
 Set up a GKE cluster on GCP. Ensure the CI/CD pipeline has the necessary permissions to
 interact with GCP services.
 
@@ -83,7 +83,7 @@ The `docs` folder incorporates all necessary documents and documentation in our 
 
 Code formatter: black and flake8
 
-Tech stack: Flask, PostgreSQL
+Tech stack: Flask, PostgreSQL, Python
 
 ## 📖 Getting started:
 
@@ -180,9 +180,7 @@ Next command to create the database - 'db.create_all()'
 - pytest-cov
 
 
-# Slackpoint 1.0
-
-List of miracles that slackpoint can perform✨:
+# Slackpoint 4.0
 
 - Create a new task
 - Mark task as done
