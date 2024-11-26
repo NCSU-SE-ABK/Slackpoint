@@ -16,6 +16,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
 ![Forks](https://img.shields.io/github/forks/NCSU-SE-ABK/Slackpoint?style=social)
 [![GitHub contributors](https://img.shields.io/github/contributors/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/graphs/contributors)
+[![Lines of code](https://tokei.rs/b1/github/NCSU-SE-ABK/Slackpoint)
 
 Click on the image below to view the demo video of the project
 
