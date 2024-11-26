@@ -1,128 +1,155 @@
-name: CI/CD Pipeline with Minikube and Docker Hub
+# name: CI/CD Pipeline with Minikube and Docker Hub
+
+# on:
+#   push:
+#     branches:
+#       - dubeavik
+#   pull_request:
+#     branches:
+#       - dubeavik
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Step 1: Checkout code
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+
+#       # Step 2: Install Docker
+#       - name: Install Docker
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+#           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+#           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+#           sudo apt-get update
+#           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+#       # Step 3: Install Go 1.23
+#       - name: Install Go 1.23
+#         run: |
+#           curl -LO https://go.dev/dl/go1.23.0.linux-amd64.tar.gz
+#           sudo rm -rf /usr/local/go
+#           sudo tar -C /usr/local -xzf go1.23.0.linux-amd64.tar.gz
+#           echo "export PATH=/usr/local/go/bin:$PATH" | sudo tee -a ~/.bashrc
+#           source ~/.bashrc
+#           go version
+
+#       # Step 3: Install Minikube
+#       - name: Install Minikube
+#         run: |
+#           curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+#           chmod +x minikube
+#           sudo mv minikube /usr/local/bin/
+#           sudo apt-get install -y conntrack # Required for Minikube
+
+#       # Step 4: Install kubectl
+#       - name: Install kubectl
+#         run: |
+#           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#           chmod +x kubectl
+#           sudo mv kubectl /usr/local/bin/
+#       - name: Install crictl
+#         run: |
+#           CRICTL_VERSION="v1.22.0" # You can adjust the version based on the Kubernetes version
+#           curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
+#           tar -C /tmp -xvzf crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
+#           sudo mv /tmp/crictl /usr/local/bin/
+#       # Step 6: Install cri-dockerd
+#       # - name: Install cri-dockerd
+#       - name: Install cri-dockerd
+#         run: |
+#           git clone https://github.com/Mirantis/cri-dockerd.git
+#           cd cri-dockerd
+#           mkdir bin
+#           go build -o bin/cri-dockerd
+#           sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
+#           cd ..
+#           rm -rf cri-dockerd
+
+#       - name: Install dependencies and build cri-dockerd
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y git make
+#           git clone https://github.com/Mirantis/cri-dockerd.git
+#           cd cri-dockerd
+#           mkdir bin
+#           go build -o bin/cri-dockerd
+#           sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
+#           cd ..
+#           rm -rf cri-dockerd
+#         shell: bash
+#       #Install CNI Plugins
+#       - name: Install CNI Plugins
+#         run: |
+#           CNI_PLUGIN_VERSION="1.6.0"
+#           CNI_PLUGIN_TAR=" cni-plugins-linux-amd64-v1.6.0.tgz"
+#           CNI_PLUGIN_INSTALL_DIR="/opt/cni/bin"
+#           curl -LO "https://github.com/containernetworking/plugins/releases/download/v1.6.0/cni-plugins-linux-amd64-v1.6.0.tgz"
+#           sudo mkdir -p "$CNI_PLUGIN_INSTALL_DIR"
+#           sudo tar -xf "$CNI_PLUGIN_TAR" -C "$CNI_PLUGIN_INSTALL_DIR"
+#           rm "$CNI_PLUGIN_TAR"
+#       # Step 5: Start Minikube
+#       - name: Start Minikube
+#         run: |
+#           sudo minikube start --driver=none
+#           sudo minikube status
+
+#       # Step 6: Log in to Docker Hub
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       # Step 7: Build and Push Docker Image
+#       - name: Build and Push Docker Image
+#         run: |
+#           eval $(sudo minikube docker-env)
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-slack-app .
+#           docker push ${{ secrets.DOCKER_USERNAME }}/flask-slack-app
+
+#       # Step 8: Pull Docker Image into Minikube
+#       - name: Pull Docker Image into Minikube
+#         run: |
+#           eval $(sudo minikube docker-env)
+#           docker pull ${{ secrets.DOCKER_USERNAME }}/flask-slack-app
+#           docker tag ${{ secrets.DOCKER_USERNAME }}/flask-slack-app flask-slack-app:latest
+
+#       # Step 9: Deploy to Kubernetes
+#       - name: Deploy to Kubernetes
+#         run: |
+#           kubectl apply -f deployment.yml
+
+#       # Step 10: Verify Deployment
+#       - name: Verify Deployment
+#         run: |
+#           kubectl get pods
+
+name: Build, Test, and Deploy Docker Image
 
 on:
   push:
     branches:
-      - dubeavik
-  pull_request:
-    branches:
-      - dubeavik
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # Step 2: Install Docker
-      - name: Install Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-      # Step 3: Install Go 1.23
-      - name: Install Go 1.23
-        run: |
-          curl -LO https://go.dev/dl/go1.23.0.linux-amd64.tar.gz
-          sudo rm -rf /usr/local/go
-          sudo tar -C /usr/local -xzf go1.23.0.linux-amd64.tar.gz
-          echo "export PATH=/usr/local/go/bin:$PATH" | sudo tee -a ~/.bashrc
-          source ~/.bashrc
-          go version
-
-      # Step 3: Install Minikube
-      - name: Install Minikube
-        run: |
-          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          chmod +x minikube
-          sudo mv minikube /usr/local/bin/
-          sudo apt-get install -y conntrack # Required for Minikube
-
-      # Step 4: Install kubectl
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-      - name: Install crictl
-        run: |
-          CRICTL_VERSION="v1.22.0" # You can adjust the version based on the Kubernetes version
-          curl -LO https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
-          tar -C /tmp -xvzf crictl-${CRICTL_VERSION}-linux-amd64.tar.gz
-          sudo mv /tmp/crictl /usr/local/bin/
-      # Step 6: Install cri-dockerd
-      # - name: Install cri-dockerd
-      - name: Install cri-dockerd
-        run: |
-          git clone https://github.com/Mirantis/cri-dockerd.git
-          cd cri-dockerd
-          mkdir bin
-          go build -o bin/cri-dockerd
-          sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
-          cd ..
-          rm -rf cri-dockerd
-
-      - name: Install dependencies and build cri-dockerd
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git make
-          git clone https://github.com/Mirantis/cri-dockerd.git
-          cd cri-dockerd
-          mkdir bin
-          go build -o bin/cri-dockerd
-          sudo install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/
-          cd ..
-          rm -rf cri-dockerd
-        shell: bash
-      #Install CNI Plugins
-      - name: Install CNI Plugins
-        run: |
-          CNI_PLUGIN_VERSION="1.6.0"
-          CNI_PLUGIN_TAR=" cni-plugins-linux-amd64-v1.6.0.tgz"
-          CNI_PLUGIN_INSTALL_DIR="/opt/cni/bin"
-          curl -LO "https://github.com/containernetworking/plugins/releases/download/v1.6.0/cni-plugins-linux-amd64-v1.6.0.tgz"
-          sudo mkdir -p "$CNI_PLUGIN_INSTALL_DIR"
-          sudo tar -xf "$CNI_PLUGIN_TAR" -C "$CNI_PLUGIN_INSTALL_DIR"
-          rm "$CNI_PLUGIN_TAR"
-      # Step 5: Start Minikube
-      - name: Start Minikube
-        run: |
-          sudo minikube start --driver=none
-          sudo minikube status
-
-      # Step 6: Log in to Docker Hub
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: docker build -t my-app .
+      - name: Run Tests
+        run: npm test
+      - name: Push Docker Image to Registry
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      # Step 7: Build and Push Docker Image
-      - name: Build and Push Docker Image
-        run: |
-          eval $(sudo minikube docker-env)
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-slack-app .
-          docker push ${{ secrets.DOCKER_USERNAME }}/flask-slack-app
-
-      # Step 8: Pull Docker Image into Minikube
-      - name: Pull Docker Image into Minikube
-        run: |
-          eval $(sudo minikube docker-env)
-          docker pull ${{ secrets.DOCKER_USERNAME }}/flask-slack-app
-          docker tag ${{ secrets.DOCKER_USERNAME }}/flask-slack-app flask-slack-app:latest
-
-      # Step 9: Deploy to Kubernetes
+      - name: Push Docker Image
+        run: docker push my-app
       - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f deployment.yml
-
-      # Step 10: Verify Deployment
-      - name: Verify Deployment
-        run: |
-          kubectl get pods
+        run: kubectl apply -f k8s/deployment.yaml
