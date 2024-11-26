@@ -98,7 +98,7 @@ Tech stack: Flask, PostgreSQL, Python
 Clone the project
 
 ```bash
-  git clone https://github.com/kartikson1/slackpoint.git
+  git clone https://github.com/NCSU-SE-ABK/Slackpoint.git
 ```
 
 Go to the project directory
