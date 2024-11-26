@@ -160,7 +160,7 @@ jobs:
 
       # Step 4: Build Docker image
       - name: Build Docker Image
-        run: docker build -t flask-slack-app .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-slack-app .
 
       # Step 6: Docker login to Docker Hub (using GitHub secrets)
       - name: Docker login
@@ -173,7 +173,7 @@ jobs:
         run: docker images
       # Step 7: Push Docker image to Docker Hub
       - name: Push Docker Images
-        run: docker push flask-slack-app:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/flask-slack-app:latest
 
       # Step 8: Deploy to Kubernetes (you should have your k8s/deployment.yaml configured)
       - name: Deploy to Kubernetes
