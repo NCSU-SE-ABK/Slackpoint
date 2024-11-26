@@ -1,6 +1,7 @@
 # Slackpoint 4.0
 
-<img src = "./assets/Logo.png" width="370" height="200"/> 
+<img width="338" alt="Screenshot 2024-11-24 at 8 07 18 PM" src="https://github.com/user-attachments/assets/8be955ed-dc77-4384-9012-6e70410cb319">
+
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
 [![DOI](https://zenodo.org/badge/890675627.svg)](https://doi.org/10.5281/zenodo.14210449)
