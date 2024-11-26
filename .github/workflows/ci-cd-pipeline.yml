@@ -130,12 +130,13 @@
 name: Build, Test, and Deploy Docker Image
 
 on:
- push:
+  push:
     branches:
       - dubeavik
   pull_request:
     branches:
       - dubeavik
+      
 
 jobs:
   build:
