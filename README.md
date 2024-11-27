@@ -11,7 +11,7 @@
 [![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/code_formatter.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/code_formatter.yml)
 [![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/style-checker.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/style-checker.yml)
 [![npm_build](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/ci-cd-pipeline.yml/badge.svg)](https://github.com/NCSU-SE-ABK/Slackpoint/actions/workflows/ci-cd-pipeline.yml)
-[![GitHub top language](https://img.shields.io/github/languages/top/kartikson1/slackpoint)](https://docs.python.org/3/)
+[![GitHub top language](https://img.shields.io/github/languages/top/NCSU-SE-ABK/slackpoint)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/NCSU-SE-ABK/Slackpoint)](https://github.com/NCSU-SE-ABK/Slackpoint/commits/main/)
 [![codecov](https://codecov.io/gh/NCSU-SE-ABK/Slackpoint/graph/badge.svg?token=9OKXD0QUTP)](https://codecov.io/gh/NCSU-SE-ABK/Slackpoint)
 [![GitHub issues](https://img.shields.io/github/issues/NCSU-SE-ABK/slackpoint)](https://github.com/NCSU-SE-ABK/slackpoint/issues)
