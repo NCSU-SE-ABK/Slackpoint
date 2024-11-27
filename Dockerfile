@@ -12,6 +12,6 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy all files from the current directory (on the host) to the container
 COPY . .
-
+EXPOSE 8080
 # Define the default command to run the Flask app, accessible from any network interface
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]

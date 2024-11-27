@@ -96,8 +96,6 @@ def test_view_completed_0tasks(
     }
 
     assert payload == expected_payload
-<<<<<<< HEAD
-=======
 
 
 def test_view_completed_1task(mock_completed_task_3, mock_get_sqlalchemy):
@@ -334,4 +332,3 @@ def test_view_completed_0tasks_varying_message1(mock_get_sqlalchemy):
     }
 
     assert payload == expected_payload
->>>>>>> 135027d (added three new test cases)
